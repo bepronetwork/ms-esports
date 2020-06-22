@@ -35,8 +35,62 @@ paths:
         - in: body
           name: Get VideoGames All
           description: Get All Videogames from Panda Score and DB
+      responses:
+        "200":
+          description: Success
           schema:
-            $ref: '#/definitions/getVideoGamesAllRequest'
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/match/specific :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Specifc Matches from Panda Score and DB
+      operationId: getSpecificMatch
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Matches Specifc
+          description: Get Specifc Matches from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetSpecificMatchRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/matches/games :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Game Matches from Panda Score and DB
+      operationId: getGameMatches
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Matches Game
+          description: Get Game Matches from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetGameMatchesRequest'
       responses:
         "200":
           description: Success
@@ -82,15 +136,29 @@ paths:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  getVideoGamesAllRequest :
+  GetSpecificMatchRequest:
+    type: object
+    required :
+      - match_id
+    properties:
+      match_id:
+        type : string
+        example: "24234g234g23g"
+        description: |
+          Match ID
+  GetGameMatchesRequest:
     type: object
     properties:
-      name:
+      game_id:
         type : string
-        format: name
-        example: "wertwertwertwert"
+        example: "24234g234g23g"
         description: |
-          Name Example
+          Game ID
+      serie_id:
+        type : string
+        example: "24234g234g23g"
+        description: |
+          Serie ID
   GeneralResponse : 
     type: object
     required:

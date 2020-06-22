@@ -1,8 +1,8 @@
 class PandaScore {
-    async matchPandaScoreAndDatabase(series, pandaScore) {
+    async matchPandaScoreAndDatabase(database, pandaScore) {
         var listMatchSeries = [];
-        for (let serie of series) {
-            let res = await pandaScore.find(panda_id => panda_id.id == serie.external_id);
+        for (let data of database) {
+            let res = await pandaScore.find(panda_id => panda_id.id == data.external_id);
             if (res) {
                 listMatchSeries.push(res);
             }

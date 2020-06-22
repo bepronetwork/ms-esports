@@ -39,6 +39,21 @@ class MatchRepository {
             throw (err)
         }
     }
+
+    async findMatchByGameId(_id) {
+        try {
+            return new Promise((resolve, reject) => {
+                SerieSchema.prototype.schema.model.findById({videogame_id: _id})
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
 }
 
 MatchSchema.prototype.schema = new MatchSchema();

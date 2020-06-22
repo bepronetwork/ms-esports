@@ -31,7 +31,7 @@ const processActions = {
 		for (let game of games) {
 			let series = await SerieRepository.prototype.findSerieByGameId({ _id: game.external_id })
 			let pandaScore = await axios.get(`https://api.pandascore.co/series/${game.slug}?token=${PANDA_SCORE_TOKEN}`)
-			game["series"] = await PandaScore.prototype.matchPandaScoreAndDatabase({series, pandaScore});
+			game["series"] = await PandaScore.prototype.matchPandaScoreAndDatabase({database: series, pandaScore});
 		}
 		return games;
 	}

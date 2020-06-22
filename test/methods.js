@@ -8,6 +8,18 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
+    async getGameMatches(params) {
+        return request(global.server)
+        .post('/api/get/matches/games')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
+    async getSpecificMatch(params) {
+        return request(global.server)
+        .post('/api/get/match/specific')
+        .send(params)
+        .then(res => detectServerError(res))
+    },
     async pingPost(params, bearerToken, payload){
         return request(global.server)
         .post('/api/status/post')
