@@ -20,24 +20,23 @@ consumes:
 produces:
   - application/json
 paths:
-  /hello/world :
-    x-swagger-router-controller: hello
+  /get/videogames/all :
+    x-swagger-router-controller: pandaScore
     post:
       tags:
-      - hello
-      summary: Example Method
-      operationId: helloWorld
+      - pandaScore
+      summary: Get All Videogames from Panda Score and DB
+      operationId: getVideoGamesAll
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
         - in: body
-          name: hello
-          description: Example Method
-          required: true
+          name: Get VideoGames All
+          description: Get All Videogames from Panda Score and DB
           schema:
-            $ref: '#/definitions/helloWorldRequest'
+            $ref: '#/definitions/getVideoGamesAllRequest'
       responses:
         "200":
           description: Success
@@ -83,10 +82,8 @@ paths:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  helloWorldRequest :
+  getVideoGamesAllRequest :
     type: object
-    required:
-      - name
     properties:
       name:
         type : string

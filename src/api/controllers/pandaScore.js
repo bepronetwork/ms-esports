@@ -1,5 +1,5 @@
 import {
-    Hello
+    Videogame
 } from '../../models';
 import MiddlewareSingleton from '../helpers/middleware';
 
@@ -14,11 +14,11 @@ import MiddlewareSingleton from '../helpers/middleware';
  * @todo Add description of AdminsController
  */
 
-async function helloWorld(req, res) {
+async function getVideoGamesAll(req, res) {
     try {
         let params = req.body;
-        let hello = new Hello(params);
-        let data = await hello.register();
+        let videogame = new Videogame(params);
+        let data = await videogame.getVideoGamesAll();
         MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
@@ -28,5 +28,5 @@ async function helloWorld(req, res) {
 }
 
 export {
-    helloWorld
+    getVideoGamesAll
 }

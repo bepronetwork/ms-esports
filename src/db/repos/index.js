@@ -1,7 +1,11 @@
-import HelloRepository from "./hello";
+import VideogameRepository from "./videogame";
+import SerieRepository from "./serie";
+import MatchRepository from "./match";
 import LogRepository from './log';
 
 export {
-    HelloRepository,
+    VideogameRepository,
+    SerieRepository,
+    MatchRepository,
     LogRepository
 }

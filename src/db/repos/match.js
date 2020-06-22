@@ -1,4 +1,4 @@
-import { HelloSchema } from '../schemas';
+import { MatchSchema } from '../schemas';
 
 /**
  * Accounts database interaction class.
@@ -11,24 +11,24 @@ import { HelloSchema } from '../schemas';
  * @see Parent: {@link db.repos.accounts}
  */
 
-class HelloRepository {
+class MatchRepository {
 
     constructor() {
     }
     /**
-     * @function setHelloModel
-     * @param Hello Model
-     * @return {Schema} HelloModel
+     * @function setMatchModel
+     * @param Match Model
+     * @return {Schema} MatchModel
      */
 
-    setModel = (Hello) => {
-        return HelloSchema.prototype.schema.model(Hello)
+    setModel = (Match) => {
+        return MatchSchema.prototype.schema.model(Match)
     }
 
-    async findHelloById(_id) {
+    async findMatchById(_id) {
         try {
             return new Promise((resolve, reject) => {
-                HelloSchema.prototype.schema.model.findById(_id)
+                MatchSchema.prototype.schema.model.findById(_id)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
@@ -41,7 +41,7 @@ class HelloRepository {
     }
 }
 
-HelloSchema.prototype.schema = new HelloSchema();
+MatchSchema.prototype.schema = new MatchSchema();
 
 
-export default HelloRepository;
+export default MatchRepository;

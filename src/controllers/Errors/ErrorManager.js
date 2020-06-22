@@ -23,7 +23,7 @@ class ErrorManager {
         }
     }
 
-    hello = function (object, type){
+    videogame = function (object, type){
         try{
             switch(type){
                

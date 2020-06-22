@@ -2,9 +2,9 @@ import request from 'supertest';
 import _ from 'lodash';
 
 module.exports = {
-    async helloWorld(params) {
+    async getVideogames(params) {
         return request(global.server)
-        .post('/api/hello/world ')
+        .post('/api/get/videogames/all')
         .send(params)
         .then(res => detectServerError(res))
     },

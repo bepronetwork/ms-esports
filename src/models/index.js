@@ -1,5 +1,5 @@
-import Hello from "./hello";
+import Videogame from "./videogame";
 
 export {
-    Hello,
+    Videogame,
 }

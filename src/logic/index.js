@@ -1,9 +1,9 @@
-import HelloLogic from "./hello";
+import VideogameLogic from "./videogame";
 import LogLogic from './log';
 
 
 export {
-    HelloLogic,
+    VideogameLogic,
     LogLogic
 }
 
