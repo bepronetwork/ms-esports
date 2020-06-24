@@ -28,15 +28,16 @@ let __private = {};
 
 const processActions = {
     __getGameMatches: async (params) => {
-        let game = await VideogameRepository.prototype.findVideogameById({_id: params.game_id});
-        let serie = await SerieRepository.prototype.findSerieById({_id: params.serie_id});
-        if(serie){return serie}
-        if(game){return game}
+        let game = await MatchRepository.prototype.findMatchByGameId({ videogame_id: params.game_id });
+        let serie = await MatchRepository.prototype.findMatchBySerieId({ serie_id: params.serie_id });
+        if (serie.length > 0) { return serie }
+        if (game.length > 0) { return game }
+        return [];
     },
 
     __getSpecificMatch: async (params) => {
         let match = MatchRepository.prototype.findMatchById({ _id: params.match_id });
-        if(!match){
+        if (!match) {
             throwError('MATCH_NOT_EXISTENT');
         }
         return match;

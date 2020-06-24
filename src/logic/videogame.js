@@ -3,7 +3,7 @@ import LogicComponent from './logicComponent';
 import _ from 'lodash';
 import { VideogameRepository, SerieRepository } from '../db/repos';
 import { PANDA_SCORE_TOKEN } from '../config';
-import { matchPandaScoreAndDatabase, PandaScore } from '../helpers/matchVideogameSeries';
+import { PandaScoreSingleton } from '../helpers/matchVideogameSeries';
 let error = new ErrorManager();
 const axios = require('axios');
 
@@ -29,9 +29,9 @@ const processActions = {
 	__getVideoGamesAll: async (params) => {
 		let games = await VideogameRepository.prototype.findAllVideogame();
 		for (let game of games) {
-			let series = await SerieRepository.prototype.findSerieByGameId({ _id: game.external_id })
-			let pandaScore = await axios.get(`https://api.pandascore.co/series/${game.slug}?token=${PANDA_SCORE_TOKEN}`)
-			game["series"] = await PandaScore.prototype.matchPandaScoreAndDatabase({database: series, pandaScore});
+			let series = await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id : game.external_id });
+			let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/series?token=${PANDA_SCORE_TOKEN}`);
+			game["series"] = await PandaScoreSingleton.matchPandaScoreAndDatabase({database: series, pandaScore: pandaScore.data});
 		}
 		return games;
 	}

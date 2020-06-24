@@ -35,6 +35,8 @@ paths:
         - in: body
           name: Get VideoGames All
           description: Get All Videogames from Panda Score and DB
+          schema:
+            $ref: '#/definitions/VideogamesAllRequest'
       responses:
         "200":
           description: Success
@@ -150,15 +152,23 @@ definitions:
     type: object
     properties:
       game_id:
-        type : string
-        example: "24234g234g23g"
+        type : number
+        example: 1
         description: |
           Game ID
       serie_id:
+        type : number
+        example: 1
+        description: |
+          Serie ID
+  VideogamesAllRequest:
+    type: object
+    properties:
+      slug:
         type : string
         example: "24234g234g23g"
         description: |
-          Serie ID
+          Slug Of Game
   GeneralResponse : 
     type: object
     required:

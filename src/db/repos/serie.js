@@ -1,4 +1,5 @@
 import { SerieSchema } from '../schemas';
+import MongoComponent from './MongoComponent';
 
 /**
  * Accounts database interaction class.
@@ -11,9 +12,10 @@ import { SerieSchema } from '../schemas';
  * @see Parent: {@link db.repos.accounts}
  */
 
-class SerieRepository {
+class SerieRepository extends MongoComponent{
 
     constructor() {
+        super(SerieSchema)
     }
     /**
      * @function setSerieModel
@@ -22,13 +24,13 @@ class SerieRepository {
      */
 
     setModel = (Serie) => {
-        return SerieSchema.prototype.schema.model(Serie)
+        return SerieRepository.prototype.schema.model(Serie)
     }
 
-    async findSerieById(_id) {
+    async findSerieByExternalId(external_id) {
         try {
             return new Promise((resolve, reject) => {
-                SerieSchema.prototype.schema.model.findById(_id)
+                SerieRepository.prototype.schema.model.findOne(external_id)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
@@ -40,10 +42,10 @@ class SerieRepository {
         }
     }
 
-    async findSerieByGameId(_id) {
+    async findSerieByGameExternalId(videogame_id) {
         try {
             return new Promise((resolve, reject) => {
-                SerieSchema.prototype.schema.model.findById({videogame_id: _id})
+                SerieRepository.prototype.schema.model.find(videogame_id)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
@@ -56,7 +58,7 @@ class SerieRepository {
     }
 }
 
-SerieSchema.prototype.schema = new SerieSchema();
+SerieRepository.prototype.schema = new SerieSchema();
 
 
 export default SerieRepository;

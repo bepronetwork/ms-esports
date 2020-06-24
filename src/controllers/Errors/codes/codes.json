@@ -14,5 +14,9 @@
     "003" : {
         "key"      : "SERIE_NOT_EXISTENT",
         "message"   : "This Serie Doesn't Exist"
+    },
+    "004" : {
+        "key"      : "WRONG_PARAMS",
+        "message"   : "This Params are wrong or dont exist"
     }
 }

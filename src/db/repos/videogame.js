@@ -1,4 +1,5 @@
 import { VideogameSchema } from '../schemas';
+import MongoComponent from './MongoComponent';
 
 /**
  * Accounts database interaction class.
@@ -11,9 +12,10 @@ import { VideogameSchema } from '../schemas';
  * @see Parent: {@link db.repos.accounts}
  */
 
-class VideogameRepository {
+class VideogameRepository extends MongoComponent{
 
     constructor() {
+        super(VideogameSchema)
     }
     /**
      * @function setVideogameModel
@@ -22,13 +24,13 @@ class VideogameRepository {
      */
 
     setModel = (Videogame) => {
-        return VideogameSchema.prototype.schema.model(Videogame)
+        return VideogameRepository.prototype.schema.model(Videogame)
     }
 
-    async findAllVideogame(_id) {
+    async findAllVideogame() {
         try {
             return new Promise((resolve, reject) => {
-                VideogameSchema.prototype.schema.model.find()
+                VideogameRepository.prototype.schema.model.find()
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
@@ -40,10 +42,10 @@ class VideogameRepository {
         }
     }
 
-    async findVideogameById(_id) {
+    async findVideogameByExternalId(external_id) {
         try {
             return new Promise((resolve, reject) => {
-                VideogameSchema.prototype.schema.model.findById(_id)
+                VideogameRepository.prototype.schema.model.findOne(external_id)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
@@ -56,7 +58,7 @@ class VideogameRepository {
     }
 }
 
-VideogameSchema.prototype.schema = new VideogameSchema();
+VideogameRepository.prototype.schema = new VideogameSchema();
 
 
 export default VideogameRepository;

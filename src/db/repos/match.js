@@ -1,4 +1,5 @@
 import { MatchSchema } from '../schemas';
+import MongoComponent from './MongoComponent';
 
 /**
  * Accounts database interaction class.
@@ -11,9 +12,10 @@ import { MatchSchema } from '../schemas';
  * @see Parent: {@link db.repos.accounts}
  */
 
-class MatchRepository {
+class MatchRepository extends MongoComponent{
 
     constructor() {
+        super(MatchSchema);
     }
     /**
      * @function setMatchModel
@@ -22,13 +24,13 @@ class MatchRepository {
      */
 
     setModel = (Match) => {
-        return MatchSchema.prototype.schema.model(Match)
+        return MatchRepository.prototype.schema.model(Match)
     }
 
     async findMatchById(_id) {
         try {
             return new Promise((resolve, reject) => {
-                MatchSchema.prototype.schema.model.findById(_id)
+                MatchRepository.prototype.schema.model.findById(_id)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
@@ -40,10 +42,25 @@ class MatchRepository {
         }
     }
 
-    async findMatchByGameId(_id) {
+    async findMatchByGameId(videogame_id) {
         try {
             return new Promise((resolve, reject) => {
-                SerieSchema.prototype.schema.model.findById({videogame_id: _id})
+                MatchRepository.prototype.schema.model.find(videogame_id)
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findMatchBySerieId(serie_id) {
+        try {
+            return new Promise((resolve, reject) => {
+                MatchRepository.prototype.schema.model.find(serie_id)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
@@ -56,7 +73,7 @@ class MatchRepository {
     }
 }
 
-MatchSchema.prototype.schema = new MatchSchema();
+MatchRepository.prototype.schema = new MatchSchema();
 
 
 export default MatchRepository;
