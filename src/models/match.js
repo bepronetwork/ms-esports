@@ -23,9 +23,9 @@ class Match extends ModelComponent {
         );
     }
 
-    async getGameMatches() {
+    async getSeriesMatches() {
         try {
-            let res = await this.process('GetGameMatches');
+            let res = await this.process('GetSeriesMatches');
             return res;
             // return MapperMatchSingleton.output('Match', res._doc);
         } catch (err) {

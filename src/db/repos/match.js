@@ -27,10 +27,10 @@ class MatchRepository extends MongoComponent{
         return MatchRepository.prototype.schema.model(Match)
     }
 
-    async findMatchById(_id) {
+    async findMatchByExternalId(external_id) {
         try {
             return new Promise((resolve, reject) => {
-                MatchRepository.prototype.schema.model.findById(_id)
+                MatchRepository.prototype.schema.model.find(external_id)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
@@ -60,7 +60,7 @@ class MatchRepository extends MongoComponent{
     async findMatchBySerieId(serie_id) {
         try {
             return new Promise((resolve, reject) => {
-                MatchRepository.prototype.schema.model.find(serie_id)
+                MatchRepository.prototype.schema.model.find({serie_id: {$in: serie_id}})
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }

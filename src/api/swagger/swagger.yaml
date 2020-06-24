@@ -76,23 +76,23 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /get/matches/games :
+  /get/matches/series :
     x-swagger-router-controller: pandaScore
     post:
       tags:
       - pandaScore
-      summary: Get Game Matches from Panda Score and DB
-      operationId: getGameMatches
+      summary: Get Series Matches from Panda Score and DB
+      operationId: getSeriesMatches
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
         - in: body
-          name: Get Matches Game
-          description: Get Game Matches from Panda Score and DB
+          name: Get Series Game
+          description: Get Series Matches from Panda Score and DB
           schema:
-            $ref: '#/definitions/GetGameMatchesRequest'
+            $ref: '#/definitions/GetSeriesMatchesRequest'
       responses:
         "200":
           description: Success
@@ -144,23 +144,22 @@ definitions:
       - match_id
     properties:
       match_id:
-        type : string
+        type : number
         example: "24234g234g23g"
         description: |
           Match ID
-  GetGameMatchesRequest:
+  GetSeriesMatchesRequest:
     type: object
+    required:
+      - serie_id
     properties:
-      game_id:
-        type : number
-        example: 1
-        description: |
-          Game ID
       serie_id:
-        type : number
-        example: 1
-        description: |
-          Serie ID
+        type : array
+        items:
+          type : number
+          example: 15
+          description: |
+            Series_ids
   VideogamesAllRequest:
     type: object
     properties:

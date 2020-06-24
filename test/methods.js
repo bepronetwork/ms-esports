@@ -8,9 +8,9 @@ module.exports = {
         .send(params)
         .then(res => detectServerError(res))
     },
-    async getGameMatches(params) {
+    async getSeriesMatches(params) {
         return request(global.server)
-        .post('/api/get/matches/games')
+        .post('/api/get/matches/series')
         .send(params)
         .then(res => detectServerError(res))
     },

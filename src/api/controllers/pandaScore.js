@@ -28,11 +28,11 @@ async function getVideoGamesAll(req, res) {
     }
 }
 
-async function getGameMatches(req, res) {
+async function getSeriesMatches(req, res) {
     try {
         let params = req.body;
         let match = new Match(params);
-        let data = await match.getGameMatches();
+        let data = await match.getSeriesMatches();
         MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
@@ -56,6 +56,6 @@ async function getSpecificMatch(req, res) {
 
 export {
     getVideoGamesAll,
-    getGameMatches,
+    getSeriesMatches,
     getSpecificMatch
 }

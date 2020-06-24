@@ -3,7 +3,7 @@ import LogicComponent from './logicComponent';
 import _ from 'lodash';
 import { VideogameRepository, MatchRepository, SerieRepository } from '../db/repos';
 import { PANDA_SCORE_TOKEN } from '../config';
-import { PandaScore } from '../helpers/matchVideogameSeries';
+import { PandaScoreSingleton } from '../helpers/matchVideogameSeries';
 import { throwError } from '../controllers/Errors/ErrorManager';
 let error = new ErrorManager();
 const axios = require('axios');
@@ -27,20 +27,15 @@ let __private = {};
 
 
 const processActions = {
-    __getGameMatches: async (params) => {
-        let game = await MatchRepository.prototype.findMatchByGameId({ videogame_id: params.game_id });
-        let serie = await MatchRepository.prototype.findMatchBySerieId({ serie_id: params.serie_id });
-        if (serie.length > 0) { return serie }
-        if (game.length > 0) { return game }
-        return [];
+    __getSeriesMatches: async (params) => {
+        let serie = await MatchRepository.prototype.findMatchBySerieId(params.serie_id);
+        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter[serie_id]=${params.serie_id}&token=${PANDA_SCORE_TOKEN}`);
+        return await PandaScoreSingleton.matchPandaScoreAndDatabase({ database: serie, pandaScore: pandaScore.data });
     },
 
     __getSpecificMatch: async (params) => {
-        let match = MatchRepository.prototype.findMatchById({ _id: params.match_id });
-        if (!match) {
-            throwError('MATCH_NOT_EXISTENT');
-        }
-        return match;
+        let pandaScore = await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
+        return pandaScore.data;
     }
 }
 
@@ -54,7 +49,7 @@ const processActions = {
 
 
 const progressActions = {
-    __getGameMatches: async (params) => {
+    __getSeriesMatches: async (params) => {
         try {
             return params;
         } catch (err) {
@@ -119,8 +114,8 @@ class MatchLogic extends LogicComponent {
     async objectNormalize(params, processAction) {
         try {
             switch (processAction) {
-                case 'GetGameMatches': {
-                    return library.process.__getGameMatches(params); break;
+                case 'GetSeriesMatches': {
+                    return library.process.__getSeriesMatches(params); break;
                 };
                 case 'GetSpecificMatch': {
                     return library.process.__getSpecificMatch(params); break;
@@ -152,8 +147,8 @@ class MatchLogic extends LogicComponent {
     async progress(params, progressAction) {
         try {
             switch (progressAction) {
-                case 'GetGameMatches': {
-                    return await library.progress.__getGameMatches(params);
+                case 'GetSeriesMatches': {
+                    return await library.progress.__getSeriesMatches(params);
                 }
                 case 'GetSpecificMatch': {
                     return await library.progress.__getSpecificMatch(params);
