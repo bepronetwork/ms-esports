@@ -1,5 +1,5 @@
 import {
-    helloWorld
+    getVideogames
 } from '../../methods';
 
 import chai from 'chai';
@@ -7,10 +7,10 @@ import { detectValidationErrors, mochaAsync } from '../../utils';
 
 const expect = chai.expect;
 
-context('Hello World', async () => {
+context('Videogame', async () => {
 
-    it('should register hello world', mochaAsync(async () => {
-        var res = await helloWorld({name: "Hello World - Test"});
+    it('should get All Videogames', mochaAsync(async () => {
+        var res = await getVideogames({});
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
     }));
