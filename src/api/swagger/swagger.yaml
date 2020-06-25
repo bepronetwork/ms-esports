@@ -1,0 +1,208 @@
+swagger: "2.0"
+info:
+  version: "0.3.6"
+  title: BetProtocol API
+# during dev, should point to your local machine
+host: localhost:8080
+# basePath prefixes all resource paths 
+basePath: /api
+# 
+
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+  - application/x-www-form-urlencoded
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /get/videogames/all :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get All Videogames from Panda Score and DB
+      operationId: getVideoGamesAll
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get VideoGames All
+          description: Get All Videogames from Panda Score and DB
+          schema:
+            $ref: '#/definitions/VideogamesAllRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/match/specific :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Specifc Matches from Panda Score and DB
+      operationId: getSpecificMatch
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Matches Specifc
+          description: Get Specifc Matches from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetSpecificMatchRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/matches/series :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Series Matches from Panda Score and DB
+      operationId: getSeriesMatches
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Series Game
+          description: Get Series Matches from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetSeriesMatchesRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /status/post:
+    x-swagger-router-controller: ping
+    post:
+      tags:
+      - ping
+      summary: Test Ping
+      operationId: pingPost
+      description: Test Ping for post.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ping
+          description: Ping Object for test
+          required: true
+          schema:
+            $ref: '#/definitions/PingPost'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  GetSpecificMatchRequest:
+    type: object
+    required :
+      - match_id
+    properties:
+      match_id:
+        type : number
+        example: "24234g234g23g"
+        description: |
+          Match ID
+  GetSeriesMatchesRequest:
+    type: object
+    required:
+      - serie_id
+    properties:
+      serie_id:
+        type : array
+        items:
+          type : number
+          example: 15
+          description: |
+            Series_ids
+  VideogamesAllRequest:
+    type: object
+    properties:
+      slug:
+        type : string
+        example: "24234g234g23g"
+        description: |
+          Slug Of Game
+  GeneralResponse : 
+    type: object
+    required:
+      - data
+      - meta
+    properties:
+      data:
+        type : object
+        format: data
+        description: |
+          Unique identifier of the user, besides the ID
+      meta:
+        type : object
+        format: meta
+        description: |
+          User Real Name
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  PingPost:
+    type: object
+    required :
+      - type
+    properties:
+      type:
+        type : string
+        example: "24234g234g23g"
+        minLength: 1
+        description: |
+          Type Auth
+      app:
+        type : string
+        example: "24234g234g23g"
+        description: |
+          APP ID
