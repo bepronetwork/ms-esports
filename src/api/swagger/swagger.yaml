@@ -142,16 +142,22 @@ definitions:
     type: object
     required :
       - match_id
+      - admin
     properties:
       match_id:
         type : number
         example: "24234g234g23g"
         description: |
           Match ID
+      admin:
+        type : string
+        description: |
+          Admin ID
   GetSeriesMatchesRequest:
     type: object
     required:
       - serie_id
+      - admin
     properties:
       serie_id:
         type : array
@@ -170,14 +176,19 @@ definitions:
         example: 15
         description: |
           Offset of document
+      admin:
+        type : string
+        description: |
+          Admin ID
   VideogamesAllRequest:
     type: object
+    required:
+      - admin
     properties:
-      slug:
+      admin:
         type : string
-        example: "24234g234g23g"
         description: |
-          Slug Of Game
+          Admin ID
   GeneralResponse : 
     type: object
     required:
