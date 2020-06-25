@@ -160,6 +160,16 @@ definitions:
           example: 15
           description: |
             Series_ids
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of Document
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of document
   VideogamesAllRequest:
     type: object
     properties:
