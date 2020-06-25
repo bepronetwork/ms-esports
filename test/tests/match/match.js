@@ -2,7 +2,8 @@ import {
     getSpecificMatch,
     getSeriesMatches,
     registerAdmin,
-    loginAdmin
+    loginAdmin,
+    getMatchAll
 } from '../../methods';
 
 import chai from 'chai';
@@ -36,6 +37,14 @@ context('Match', async () => {
     it('should get Matches by Id', mochaAsync(async () => {
         var res = await getSpecificMatch({
             "match_id": 564849,
+            admin : admin.id
+        }, admin.bearerToken , {id : admin.id});
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should get Matches by All', mochaAsync(async () => {
+        var res = await getMatchAll({
             admin : admin.id
         }, admin.bearerToken , {id : admin.id});
         detectValidationErrors(res);

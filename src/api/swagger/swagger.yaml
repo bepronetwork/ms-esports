@@ -48,6 +48,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /get/matches/all :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get All Matches from Panda Score and DB
+      operationId: getMatchesAll
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get VideoGames All
+          description: Get All Matches from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetMatchesAllRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/match/specific :
     x-swagger-router-controller: pandaScore
     post:
@@ -153,6 +181,25 @@ definitions:
         type : string
         description: |
           Admin ID
+  GetMatchesAllRequest:
+    type: object
+    required :
+      - admin
+    properties:
+      admin:
+        type : string
+        description: |
+          Admin ID
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of Document
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of document
   GetSeriesMatchesRequest:
     type: object
     required:

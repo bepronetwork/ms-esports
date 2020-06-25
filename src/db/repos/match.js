@@ -42,10 +42,12 @@ class MatchRepository extends MongoComponent{
         }
     }
 
-    async findMatchByGameId(videogame_id) {
+    async findMatchByGameId({videogame_id, offset, size}) {
         try {
             return new Promise((resolve, reject) => {
                 MatchRepository.prototype.schema.model.find(videogame_id)
+                    .skip(offset == undefined ? 0 : offset)
+                    .limit((size > 30 || !size || size <= 0) ? 30 : size)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
@@ -61,6 +63,23 @@ class MatchRepository extends MongoComponent{
         try {
             return new Promise((resolve, reject) => {
                 MatchRepository.prototype.schema.model.find({serie_id: {$in: serie_id}})
+                    .skip(offset == undefined ? 0 : offset)
+                    .limit((size > 30 || !size || size <= 0) ? 30 : size)
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findMatchAll({offset, size}) {
+        try {
+            return new Promise((resolve, reject) => {
+                MatchRepository.prototype.schema.model.find()
                     .skip(offset == undefined ? 0 : offset)
                     .limit((size > 30 || !size || size <= 0) ? 30 : size)
                     .lean()
