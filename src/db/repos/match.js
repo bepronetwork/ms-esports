@@ -57,10 +57,12 @@ class MatchRepository extends MongoComponent{
         }
     }
 
-    async findMatchBySerieId(serie_id) {
+    async findMatchBySerieId({serie_id, offset, size}) {
         try {
             return new Promise((resolve, reject) => {
                 MatchRepository.prototype.schema.model.find({serie_id: {$in: serie_id}})
+                    .skip(offset == undefined ? 0 : offset)
+                    .limit((size > 30 || !size || size <= 0) ? 30 : size)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }

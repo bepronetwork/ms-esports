@@ -28,8 +28,12 @@ let __private = {};
 
 const processActions = {
     __getSeriesMatches: async (params) => {
-        let serie = await MatchRepository.prototype.findMatchBySerieId(params.serie_id);
-        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter[serie_id]=${params.serie_id}&token=${PANDA_SCORE_TOKEN}`);
+        let serie = await MatchRepository.prototype.findMatchBySerieId({
+            serie_id : params.serie_id,
+            offset: params.offset,
+            size: params.size,
+        });
+        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bserie_id%5D=${params.serie_id.toString()}&per_page=100&token=${PANDA_SCORE_TOKEN}`);
         return await PandaScoreSingleton.matchPandaScoreAndDatabase({ database: serie, pandaScore: pandaScore.data });
     },
 
