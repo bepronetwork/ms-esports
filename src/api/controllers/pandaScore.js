@@ -3,6 +3,7 @@ import {
     Match
 } from '../../models';
 import MiddlewareSingleton from '../helpers/middleware';
+import SecuritySingleton from "../helpers/security";
 
 /**
  * Description of the function.
@@ -17,6 +18,7 @@ import MiddlewareSingleton from '../helpers/middleware';
 
 async function getVideoGamesAll(req, res) {
     try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
         let params = req.body;
         let videogame = new Videogame(params);
         let data = await videogame.getVideoGamesAll();
@@ -30,6 +32,7 @@ async function getVideoGamesAll(req, res) {
 
 async function getSeriesMatches(req, res) {
     try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
         let params = req.body;
         let match = new Match(params);
         let data = await match.getSeriesMatches();
@@ -43,6 +46,7 @@ async function getSeriesMatches(req, res) {
 
 async function getSpecificMatch(req, res) {
     try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
         let params = req.body;
         let match = new Match(params);
         let data = await match.getSpecificMatch();
