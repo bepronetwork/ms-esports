@@ -42,6 +42,16 @@ class Match extends ModelComponent {
             throw err;
         }
     }
+
+    async getMatchesAll() {
+        try {
+            let res = await this.process('GetMatchesAll');
+            return res;
+            // return MapperMatchSingleton.output('Match', res._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 export default Match;

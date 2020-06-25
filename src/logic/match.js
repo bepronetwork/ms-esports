@@ -29,7 +29,7 @@ let __private = {};
 const processActions = {
     __getSeriesMatches: async (params) => {
         let serie = await MatchRepository.prototype.findMatchBySerieId({
-            serie_id : params.serie_id,
+            serie_id: params.serie_id,
             offset: params.offset,
             size: params.size,
         });
@@ -40,6 +40,21 @@ const processActions = {
     __getSpecificMatch: async (params) => {
         let pandaScore = await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
         return pandaScore.data;
+    },
+
+    __getMatchesAll: async (params) => {
+        let array = [];
+        let matches = await MatchRepository.prototype.findMatchAll({
+            offset: params.offset,
+            size: params.size,
+        });
+        for (let item of matches) {
+            if (array.indexOf(item.serie_id) == -1) {
+                array.push(item.serie_id);
+            }
+        }
+        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bserie_id%5D=${array.toString()}&per_page=100&token=${PANDA_SCORE_TOKEN}`);
+        return await PandaScoreSingleton.matchPandaScoreAndDatabase({ database: matches, pandaScore: pandaScore.data });
     }
 }
 
@@ -62,6 +77,14 @@ const progressActions = {
     },
 
     __getSpecificMatch: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getMatchesAll: async (params) => {
         try {
             return params;
         } catch (err) {
@@ -124,6 +147,9 @@ class MatchLogic extends LogicComponent {
                 case 'GetSpecificMatch': {
                     return library.process.__getSpecificMatch(params); break;
                 };
+                case 'GetMatchesAll': {
+                    return library.process.__getMatchesAll(params); break;
+                };
             }
         } catch (err) {
             throw err;
@@ -156,6 +182,9 @@ class MatchLogic extends LogicComponent {
                 }
                 case 'GetSpecificMatch': {
                     return await library.progress.__getSpecificMatch(params);
+                }
+                case 'GetMatchesAll': {
+                    return await library.progress.__getMatchesAll(params);
                 }
             }
         } catch (err) {
