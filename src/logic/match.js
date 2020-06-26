@@ -28,13 +28,17 @@ let __private = {};
 
 const processActions = {
     __getSeriesMatches: async (params) => {
-        let serie = await MatchRepository.prototype.findMatchBySerieId({
+        let matches = await MatchRepository.prototype.findMatchBySerieId({
             serie_id: params.serie_id,
             offset: params.offset,
             size: params.size,
         });
-        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bserie_id%5D=${params.serie_id.toString()}&per_page=100&token=${PANDA_SCORE_TOKEN}`);
-        return await PandaScoreSingleton.matchPandaScoreAndDatabase({ database: serie, pandaScore: pandaScore.data });
+        let matchesId = []
+        for(let match of matches){
+            matchesId.push(match.external_id)
+        }
+        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=100&token=${PANDA_SCORE_TOKEN}`);
+        return pandaScore.data;
     },
 
     __getSpecificMatch: async (params) => {
@@ -43,18 +47,16 @@ const processActions = {
     },
 
     __getMatchesAll: async (params) => {
-        let array = [];
         let matches = await MatchRepository.prototype.findMatchAll({
             offset: params.offset,
             size: params.size,
         });
-        for (let item of matches) {
-            if (array.indexOf(item.serie_id) == -1) {
-                array.push(item.serie_id);
-            }
+        let matchesId = []
+        for(let match of matches){
+            matchesId.push(match.external_id)
         }
-        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bserie_id%5D=${array.toString()}&per_page=100&token=${PANDA_SCORE_TOKEN}`);
-        return await PandaScoreSingleton.matchPandaScoreAndDatabase({ database: matches, pandaScore: pandaScore.data });
+        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=100&token=${PANDA_SCORE_TOKEN}`);
+        return pandaScore.data;
     }
 }
 
