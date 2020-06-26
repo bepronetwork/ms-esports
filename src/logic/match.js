@@ -37,7 +37,7 @@ const processActions = {
         for(let match of matches){
             matchesId.push(match.external_id)
         }
-        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=100&token=${PANDA_SCORE_TOKEN}`);
+        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
         return pandaScore.data;
     },
 
@@ -55,7 +55,7 @@ const processActions = {
         for(let match of matches){
             matchesId.push(match.external_id)
         }
-        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=100&token=${PANDA_SCORE_TOKEN}`);
+        let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
         return pandaScore.data;
     }
 }
