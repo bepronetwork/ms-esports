@@ -34,6 +34,18 @@ const processActions = {
 			game["series"] = await PandaScoreSingleton.matchPandaScoreAndDatabase({database: series, pandaScore: pandaScore.data});
 		}
 		return games;
+	},
+
+	__getTeam: async (params) => {
+		let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
+		let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/teams/${params.team_id}/stats?token=${PANDA_SCORE_TOKEN}`);
+		return pandaScore.data;
+	},
+
+	__getPlayer: async (params) => {
+		let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
+		let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/players/${params.player_id}/stats?token=${PANDA_SCORE_TOKEN}`);
+		return pandaScore.data;
 	}
 }
 
@@ -48,6 +60,22 @@ const processActions = {
 
 const progressActions = {
 	__getVideoGamesAll: async (params) => {
+		try {
+			return params;
+		} catch (err) {
+			throw err;
+		}
+	},
+
+	__getTeam: async (params) => {
+		try {
+			return params;
+		} catch (err) {
+			throw err;
+		}
+	},
+
+	__getPlayer: async (params) => {
 		try {
 			return params;
 		} catch (err) {
@@ -107,6 +135,12 @@ class VideogameLogic extends LogicComponent {
 				case 'GetVideoGamesAll': {
 					return library.process.__getVideoGamesAll(params); break;
 				};
+				case 'GetTeam': {
+					return library.process.__getTeam(params); break;
+				};
+				case 'GetPlayer': {
+					return library.process.__getPlayer(params); break;
+				};
 			}
 		} catch (err) {
 			throw err;
@@ -137,6 +171,12 @@ class VideogameLogic extends LogicComponent {
 				case 'GetVideoGamesAll': {
 					return await library.progress.__getVideoGamesAll(params);
 				}
+				case 'GetTeam': {
+					return library.progress.__getTeam(params); break;
+				};
+				case 'GetPlayer': {
+					return library.progress.__getPlayer(params); break;
+				};
 			}
 		} catch (err) {
 			throw err;
