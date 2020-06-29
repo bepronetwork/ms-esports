@@ -33,6 +33,15 @@ class ErrorManager {
         }
     }
 
+    bookedMatch = function (object, type){
+        try{
+            switch(type){
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     match = function (object, type){
         try{
             switch(type){
