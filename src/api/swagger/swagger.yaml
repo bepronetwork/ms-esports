@@ -160,6 +160,62 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /get/videogame/team :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Team from Panda Score and DB
+      operationId: getTeam
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Team
+          description: Get Team from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetTeamRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/videogame/player :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Player from Panda Score and DB
+      operationId: getPlayer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Player
+          description: Get Player from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetPlayerRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /status/post:
     x-swagger-router-controller: ping
     post:
@@ -205,6 +261,48 @@ definitions:
         example: "24234g234g23g"
         description: |
           Match ID
+      admin:
+        type : string
+        description: |
+          Admin ID
+  GetTeamRequest:
+    type: object
+    required :
+      - team_id
+      - slug
+      - admin
+    properties:
+      team_id:
+        type : number
+        example: 2423
+        description: |
+          Team ID
+      slug:
+        type : string
+        example: "cs-go"
+        description: |
+          Slug of Videogame
+      admin:
+        type : string
+        description: |
+          Admin ID
+  GetPlayerRequest:
+    type: object
+    required :
+      - player_id
+      - slug
+      - admin
+    properties:
+      player_id:
+        type : number
+        example: 2423
+        description: |
+          Player ID
+      slug:
+        type : string
+        example: "cs-go"
+        description: |
+          Slug of Videogame
       admin:
         type : string
         description: |

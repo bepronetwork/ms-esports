@@ -1,5 +1,5 @@
 import {
-    getVideogames, registerAdmin, loginAdmin, getVideogamesLayout
+    getVideogames, registerAdmin, loginAdmin, getTeam, getPlayer, getVideogamesLayout
 } from '../../methods';
 
 import chai from 'chai';
@@ -36,6 +36,26 @@ context('Videogame', async () => {
             user : user.id,
             app : app.id,
         }, user.bearerToken , {id : user.id});
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
+    
+    it('should get Team', mochaAsync(async () => {
+        var res = await getTeam({
+            team_id: 318,
+            slug: "league-of-legends",
+            admin : admin.id
+        }, admin.bearerToken , {id : admin.id});
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should get Player', mochaAsync(async () => {
+        var res = await getPlayer({
+            player_id: 1027,
+            slug: "league-of-legends",
+            admin : admin.id
+        }, admin.bearerToken , {id : admin.id});
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
     }));

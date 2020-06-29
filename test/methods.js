@@ -20,6 +20,22 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async getTeam(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/videogame/team')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getPlayer(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/videogame/player')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
     async getSeriesMatches(params, bearerToken, payload) {
         return request(global.server)
             .post('/api/get/matches/series')
