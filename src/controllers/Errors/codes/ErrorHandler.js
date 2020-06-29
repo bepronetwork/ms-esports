@@ -18,7 +18,9 @@ ErrorHandler.prototype.KEYS =  {
     'MATCH_NOT_EXISTENT'                    : "001",
     'GAME_NOT_EXISTENT'                     : "002",
     'SERIE_NOT_EXISTENT'                    : "003",
-    'WRONG_PARAMS'                          : "004"
+    'WRONG_PARAMS'                          : "004",
+    'USER_NOT_EXISTENT'                     : "005",
+    'APP_NOT_EXISTENT'                      : "006"
 };
 
 /***************************

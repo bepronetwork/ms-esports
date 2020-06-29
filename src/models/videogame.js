@@ -32,6 +32,16 @@ class Videogame extends ModelComponent {
             throw err;
         }
     }
+
+    async getVideoGamesLayout() {
+        try {
+            let res = await this.process('GetVideoGamesLayout');
+            return res;
+            // return MapperVideogameSingleton.output('Videogame', res._doc);
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 export default Videogame;

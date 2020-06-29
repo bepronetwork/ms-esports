@@ -30,6 +30,20 @@ async function getVideoGamesAll(req, res) {
     }
 }
 
+async function getVideoGamesLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new Videogame(params);
+        let data = await videogame.getVideoGamesLayout();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 async function getSeriesMatches(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
@@ -91,5 +105,6 @@ export {
     getSeriesMatches,
     getSpecificMatch,
     getMatchesAll,
-    setBookedMatch
+    setBookedMatch,
+    getVideoGamesLayout
 }

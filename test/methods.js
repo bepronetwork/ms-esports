@@ -12,6 +12,14 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async getVideogamesLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/videogames/layout')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
     async getSeriesMatches(params, bearerToken, payload) {
         return request(global.server)
             .post('/api/get/matches/series')

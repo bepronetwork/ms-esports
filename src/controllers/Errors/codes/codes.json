@@ -18,5 +18,13 @@
     "004" : {
         "key"      : "WRONG_PARAMS",
         "message"   : "This Params are wrong or dont exist"
+    },
+    "005" : {
+        "key"      : "USER_NOT_EXISTENT",
+        "message"   : "User is not attributed"
+    },
+    "006" : {
+        "key"      : "APP_NOT_EXISTENT",
+        "message"   : "App is not attributed"
     }
 }
