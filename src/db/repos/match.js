@@ -30,11 +30,11 @@ class MatchRepository extends MongoComponent{
     async findMatchByExternalId(external_id) {
         try {
             return new Promise((resolve, reject) => {
-                MatchRepository.prototype.schema.model.find(external_id)
+                MatchRepository.prototype.schema.model.findOne({external_id})
                     .lean()
-                    .exec((err, user) => {
+                    .exec((err, item) => {
                         if (err) { reject(err) }
-                        resolve(user);
+                        resolve(item);
                     });
             });
         } catch (err) {

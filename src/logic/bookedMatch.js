@@ -1,8 +1,10 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { BookedMatchRepository, UsersRepository, AppRepository, VideogameRepository } from '../db/repos';
+import { BookedMatchRepository, MatchRepository, UsersRepository, AppRepository, VideogameRepository } from '../db/repos';
+
 import { PANDA_SCORE_TOKEN } from '../config';
+import { throwError } from '../controllers/Errors/ErrorManager';
 let error = new ErrorManager();
 const axios = require('axios');
 
@@ -24,14 +26,35 @@ let __private = {};
 
 
 const processActions = {
-    __register: async (params) => {
-        try {
-            return;
-        } catch (err) {
-            throw err;
-        }
-    },
+    __register : async (params) => {
+		try {
+            let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
+            let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
 
+            return {
+                app            : params.app,
+                match          : match._id,
+                external_serie : match.serie_id,
+                isRegister     : (bookedMatch == null)
+
+            };
+		} catch(err) {
+			throw err;
+		}
+    },
+    __remove : async (params) => {
+		try {
+            let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
+            let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
+            if(!bookedMatch) {throwError("MATCH_NOT_EXISTENT")}
+            return {
+                app         : params.app,
+                matchBooked : bookedMatch._id,
+            };
+		} catch(err) {
+			throw err;
+		}
+	},
     __getMatchesLayout: async (params) => {
         try {
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -52,7 +75,6 @@ const processActions = {
             throw err;
         }
     },
-
     __getSeriesMatchesLayout: async (params) => {
         try {
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -74,7 +96,6 @@ const processActions = {
             throw err;
         }
     },
-
     __getSpecificMatchLayout: async (params) => {
         try {
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -87,7 +108,6 @@ const processActions = {
             throw err;
         }
     },
-
     __getTeamLayout: async (params) => {
         try {
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -101,7 +121,6 @@ const processActions = {
             throw err;
         }
     },
-
     __getPlayerLayout: async (params) => {
         try {
             let user = await UsersRepository.prototype.findUserById(params.user);
@@ -127,15 +146,24 @@ const processActions = {
 
 
 const progressActions = {
-    __register: async (params) => {
-        try {
-            let bookedMatch = await self.save(params);
-            return { status: true };
-        } catch (err) {
-            throw err;
-        }
+    __register : async (params) => {
+		try {
+            if(params.isRegister){
+                await self.save(params);
+            }
+			return {status: true};
+		} catch(err) {
+			throw err;
+		}
     },
-
+    __remove : async (params) => {
+		try {
+            await BookedMatchRepository.prototype.removeByMatchId({_id: params.matchBooked, app: params.app})
+			return {status: true};
+		} catch(err) {
+			throw err;
+		}
+	},
     __getMatchesLayout: async (params) => {
         try {
             return params;
@@ -143,7 +171,6 @@ const progressActions = {
             throw err;
         }
     },
-
     __getSeriesMatchesLayout: async (params) => {
         try {
             return params;
@@ -151,7 +178,6 @@ const progressActions = {
             throw err;
         }
     },
-
     __getSpecificMatchLayout: async (params) => {
         try {
             return params;
@@ -159,7 +185,6 @@ const progressActions = {
             throw err;
         }
     },
-
     __getTeamLayout: async (params) => {
         try {
             return params;
@@ -167,7 +192,6 @@ const progressActions = {
             throw err;
         }
     },
-
     __getPlayerLayout: async (params) => {
         try {
             return params;
@@ -225,9 +249,12 @@ class BookedMatchLogic extends LogicComponent {
     async objectNormalize(params, processAction) {
         try {
             switch (processAction) {
-                case 'Register': {
-                    return library.process.__register(params); break;
+                case 'Register' : {
+					return library.process.__register(params); break;
                 };
+                case 'Remove' : {
+					return library.process.__remove(params); break;
+				};
                 case 'GetMatchesLayout': {
                     return library.process.__getMatchesLayout(params); break;
                 };
@@ -268,9 +295,12 @@ class BookedMatchLogic extends LogicComponent {
     async progress(params, progressAction) {
         try {
             switch (progressAction) {
-                case 'Register': {
-                    return await library.progress.__register(params);
+                case 'Register' : {
+					return await library.progress.__register(params);
                 }
+                case 'Remove' : {
+					return await library.progress.__remove(params);
+				}
                 case 'GetMatchesLayout': {
                     return library.progress.__getMatchesLayout(params); break;
                 };

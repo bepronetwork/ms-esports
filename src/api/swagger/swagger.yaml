@@ -104,6 +104,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /set/matches/booked :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Set Matches Booked from Panda Score and DB
+      operationId: setBookedMatch
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Set Match Booked
+          description: Set Matches Booked from Panda Score and DB
+          schema:
+            $ref: '#/definitions/SetMatchesBookedRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/matches/all/layout :
     x-swagger-router-controller: pandaScore
     post:
@@ -121,6 +149,34 @@ paths:
           description: Get All Matches from Panda Score and DB for Layout
           schema:
             $ref: '#/definitions/GetMatchesLayoutRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /remove/matches/booked :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Remove Matches Booked from Panda Score and DB
+      operationId: removeBookedMatch
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Remove Match Booked
+          description: Remove Matches Booked from Panda Score and DB
+          schema:
+            $ref: '#/definitions/RemoveMatchesBookedRequest'
       responses:
         "200":
           description: Success
@@ -515,6 +571,40 @@ definitions:
         type : string
         description: |
           User ID
+      app:
+        type : string
+        description: |
+          App ID
+  RemoveMatchesBookedRequest:
+    type: object
+    required :
+      - admin
+    properties:
+      admin:
+        type : string
+        description: |
+          Admin ID
+      match_external_id:
+        type : number
+        description: |
+          Match External ID
+      app:
+        type : string
+        description: |
+          App ID
+  SetMatchesBookedRequest:
+    type: object
+    required :
+      - admin
+    properties:
+      admin:
+        type : string
+        description: |
+          Admin ID
+      match_external_id:
+        type : number
+        description: |
+          Match External ID
       app:
         type : string
         description: |
