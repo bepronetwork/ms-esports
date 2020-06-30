@@ -104,6 +104,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /get/matches/all/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get All Matches from Panda Score and DB for Layout
+      operationId: getMatchesLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get VideoGames All Layout
+          description: Get All Matches from Panda Score and DB for Layout
+          schema:
+            $ref: '#/definitions/GetMatchesLayoutRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/match/specific :
     x-swagger-router-controller: pandaScore
     post:
@@ -316,6 +344,30 @@ definitions:
         type : string
         description: |
           Admin ID
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of Document
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of document
+  GetMatchesLayoutRequest:
+    type: object
+    required :
+      - user
+      - app
+    properties:
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
       size:
         type : number
         example: 15

@@ -1,5 +1,6 @@
 import { BookedMatchSchema } from '../schemas';
 import MongoComponent from './MongoComponent';
+import { populate_match } from './populates';
 
 /**
  * Accounts database interaction class.
@@ -12,7 +13,7 @@ import MongoComponent from './MongoComponent';
  * @see Parent: {@link db.repos.accounts}
  */
 
-class BookedMatchRepository extends MongoComponent{
+class BookedMatchRepository extends MongoComponent {
 
     constructor() {
         super(BookedMatchSchema);
@@ -31,6 +32,24 @@ class BookedMatchRepository extends MongoComponent{
         try {
             return new Promise((resolve, reject) => {
                 BookedMatchRepository.prototype.schema.model.find(external_id)
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findMatchAll({ offset, size }) {
+        try {
+            return new Promise((resolve, reject) => {
+                BookedMatchRepository.prototype.schema.model.find()
+                    .populate(populate_match)
+                    .skip(offset == undefined ? 0 : offset)
+                    .limit((size > 10 || !size || size <= 0) ? 10 : size)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }
