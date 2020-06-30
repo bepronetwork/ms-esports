@@ -60,6 +60,22 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async getMatchLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/matches/all/layout')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getSeriesMatchesLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/matches/series/layout')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
     async registerAdmin(params) {
         return (await axios.post(`${MS_MASTER_URL}/api/admins/register`, params)).data;
     },

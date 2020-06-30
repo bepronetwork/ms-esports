@@ -1,7 +1,7 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { BookedMatchRepository } from '../db/repos';
+import { BookedMatchRepository, UsersRepository, AppRepository } from '../db/repos';
 import { PANDA_SCORE_TOKEN } from '../config';
 let error = new ErrorManager();
 const axios = require('axios');
@@ -24,13 +24,56 @@ let __private = {};
 
 
 const processActions = {
-    __register : async (params) => {
-		try {
-            return ;
-		} catch(err) {
-			throw err;
-		}
-	}
+    __register: async (params) => {
+        try {
+            return;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getMatchesLayout: async (params) => {
+        try {
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const app = await AppRepository.prototype.findAppById(user.app_id);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let matches = await BookedMatchRepository.prototype.findMatchAll({
+                offset: params.offset,
+                size: params.size,
+            });
+            let matchesId = []
+            for (let matchResult of matches) {
+                matchesId.push(matchResult.match.external_id)
+            }
+            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getSeriesMatchesLayout: async (params) => {
+        try {
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const app = await AppRepository.prototype.findAppById(user.app_id);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let matches = await BookedMatchRepository.prototype.findMatchBySerieId({
+                external_serie: params.serie_id,
+                offset: params.offset,
+                size: params.size,
+            });
+            let matchesId = []
+            for(let matchResult of matches){
+                matchesId.push(matchResult.match.external_id)
+            }
+            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 /**
@@ -43,14 +86,30 @@ const processActions = {
 
 
 const progressActions = {
-    __register : async (params) => {
-		try {
+    __register: async (params) => {
+        try {
             let bookedMatch = await self.save(params);
-			return {status: true};
-		} catch(err) {
-			throw err;
-		}
-	}
+            return { status: true };
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getMatchesLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getSeriesMatchesLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 /**
@@ -101,9 +160,15 @@ class BookedMatchLogic extends LogicComponent {
     async objectNormalize(params, processAction) {
         try {
             switch (processAction) {
-                case 'Register' : {
-					return library.process.__register(params); break;
-				};
+                case 'Register': {
+                    return library.process.__register(params); break;
+                };
+                case 'GetMatchesLayout': {
+                    return library.process.__getMatchesLayout(params); break;
+                };
+                case 'GetSeriesMatchesLayout': {
+                    return library.process.__getSeriesMatchesLayout(params); break;
+                };
             }
         } catch (err) {
             throw err;
@@ -129,9 +194,15 @@ class BookedMatchLogic extends LogicComponent {
     async progress(params, progressAction) {
         try {
             switch (progressAction) {
-                case 'Register' : {
-					return await library.progress.__register(params);
-				}
+                case 'Register': {
+                    return await library.progress.__register(params);
+                }
+                case 'GetMatchesLayout': {
+                    return library.progress.__getMatchesLayout(params); break;
+                };
+                case 'GetSeriesMatchesLayout': {
+                    return library.progress.__getSeriesMatchesLayout(params); break;
+                };
             }
         } catch (err) {
             throw err;

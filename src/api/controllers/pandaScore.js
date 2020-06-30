@@ -1,6 +1,7 @@
 import {
     Videogame,
-    Match
+    Match,
+    BookedMatch
 } from '../../models';
 import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from "../helpers/security";
@@ -100,6 +101,34 @@ async function getMatchesAll(req, res) {
     }
 }
 
+async function getMatchesLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getMatchesLayout();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getSeriesMatchesLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getSeriesMatchesLayout();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 async function getSpecificMatch(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
@@ -136,5 +165,7 @@ export {
     setBookedMatch,
     getVideoGamesLayout,
     getTeam,
-    getPlayer
+    getPlayer,
+    getMatchesLayout,
+    getSeriesMatchesLayout
 }
