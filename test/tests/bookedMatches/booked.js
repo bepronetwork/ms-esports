@@ -3,7 +3,12 @@ import {
     getSeriesMatchesLayout,
     getSpecificMatchLayout,
     getTeamLayout,
-    getPlayerLayout
+    getPlayerLayout,
+    registerAdmin,
+    loginAdmin,
+    registerApp,
+    registerUser,
+    loginUser
 } from '../../methods';
 
 import chai from 'chai';
@@ -12,11 +17,35 @@ import { detectValidationErrors, mochaAsync } from '../../utils';
 const expect = chai.expect;
 
 context('Booked Matches', async () => {
-    var user, app
+    var admin, user, app
 
     before( async () =>  {
-        user = {id: "5e5bfd189517230021a8c99a", bearerToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU1YmZkMTg5NTE3MjMwMDIxYThjOTlhIiwidGltZSI6MTU5NjA2MzMyODY2NSwiaWF0IjoxNTkzNDcxMzI4fQ.bjiczYiMZK4DW51Uvo3BIsjKLGvLwXv9BHqNzvt73mx5c_mIAmhVxzZCeWtG157i8fJGYIy9YkVuub7TrwiZXA"},
-        app = {id: "5e48d6a928c1af0021c366d6"}
+        var postDataAdmin = {
+            username : "admin1" + parseInt(Math.random()*30000+ "bxdwj"),
+            name : "test",
+            email : `testt${parseInt(Math.random()*30000)}bah@gmail.com`,
+            password : 'test123'
+        }
+        admin = await registerAdmin(postDataAdmin);
+        admin = (await loginAdmin(postDataAdmin)).data.message;
+        var postData = {
+            name : "companuy" + parseInt(Math.random()*10000),
+            description : "sresy4",
+            metadataJSON : JSON.stringify({}),
+            admin_id : admin.id,
+            marketType : 0
+        }
+        app = (await registerApp(postData)).data.message;
+        var postDataUser = {
+            username : "sdfg" + parseInt(Math.random()*10000),
+            name : "test",
+            email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
+            password : 'test123',
+            address : '90x',
+            app : app.id
+        }
+        user = await registerUser(postDataUser);
+        user = (await loginUser(postDataUser)).data.message;
     });
 
     it('should get All Matches Layout', mochaAsync(async () => {

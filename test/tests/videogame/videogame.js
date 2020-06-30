@@ -1,5 +1,13 @@
 import {
-    getVideogames, registerAdmin, loginAdmin, getTeam, getPlayer, getVideogamesLayout
+    getVideogames, 
+    registerAdmin, 
+    loginAdmin, 
+    getTeam, 
+    getPlayer, 
+    getVideogamesLayout, 
+    registerApp, 
+    registerUser, 
+    loginUser
 } from '../../methods';
 
 import chai from 'chai';
@@ -19,8 +27,24 @@ context('Videogame', async () => {
         }
         admin = await registerAdmin(postDataAdmin);
         admin = (await loginAdmin(postDataAdmin)).data.message;
-        user = {id: "5e5bfd189517230021a8c99a", bearerToken: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWU1YmZkMTg5NTE3MjMwMDIxYThjOTlhIiwidGltZSI6MTU5NjA2MzMyODY2NSwiaWF0IjoxNTkzNDcxMzI4fQ.bjiczYiMZK4DW51Uvo3BIsjKLGvLwXv9BHqNzvt73mx5c_mIAmhVxzZCeWtG157i8fJGYIy9YkVuub7TrwiZXA"},
-        app = {id: "5e48d6a928c1af0021c366d6"}
+        var postData = {
+            name : "companuy" + parseInt(Math.random()*10000),
+            description : "sresy4",
+            metadataJSON : JSON.stringify({}),
+            admin_id : admin.id,
+            marketType : 0
+        }
+        app = (await registerApp(postData)).data.message;
+        var postDataUser = {
+            username : "sdfg" + parseInt(Math.random()*10000),
+            name : "test",
+            email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
+            password : 'test123',
+            address : '90x',
+            app : app.id
+        }
+        user = await registerUser(postDataUser);
+        user = (await loginUser(postDataUser)).data.message;
     });
 
     it('should get All Videogames', mochaAsync(async () => {
