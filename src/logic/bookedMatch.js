@@ -65,10 +65,23 @@ const processActions = {
                 size: params.size,
             });
             let matchesId = []
-            for(let matchResult of matches){
+            for (let matchResult of matches) {
                 matchesId.push(matchResult.match.external_id)
             }
             let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getSpecificMatchLayout: async (params) => {
+        try {
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const app = await AppRepository.prototype.findAppById(user.app_id);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let pandaScore = await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
             return pandaScore.data;
         } catch (err) {
             throw err;
@@ -104,6 +117,14 @@ const progressActions = {
     },
 
     __getSeriesMatchesLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getSpecificMatchLayout: async (params) => {
         try {
             return params;
         } catch (err) {
@@ -169,6 +190,9 @@ class BookedMatchLogic extends LogicComponent {
                 case 'GetSeriesMatchesLayout': {
                     return library.process.__getSeriesMatchesLayout(params); break;
                 };
+                case 'GetSpecificMatchLayout': {
+                    return library.process.__getSpecificMatchLayout(params); break;
+                };
             }
         } catch (err) {
             throw err;
@@ -202,6 +226,9 @@ class BookedMatchLogic extends LogicComponent {
                 };
                 case 'GetSeriesMatchesLayout': {
                     return library.progress.__getSeriesMatchesLayout(params); break;
+                };
+                case 'GetSpecificMatchLayout': {
+                    return library.progress.__getSpecificMatchLayout(params); break;
                 };
             }
         } catch (err) {

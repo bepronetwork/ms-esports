@@ -160,6 +160,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /get/match/specific/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Specifc Matches from Panda Score and DB for Layout
+      operationId: getSpecificMatchLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Matches Specifc for Layout
+          description: Get Specifc Matches from Panda Score and DB for Layout
+          schema:
+            $ref: '#/definitions/GetSpecificMatchLayoutRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/matches/series :
     x-swagger-router-controller: pandaScore
     post:
@@ -321,6 +349,26 @@ definitions:
         type : string
         description: |
           Admin ID
+  GetSpecificMatchLayoutRequest:
+    type: object
+    required :
+      - match_id
+      - user
+      - app
+    properties:
+      match_id:
+        type : number
+        example: "24234g234g23g"
+        description: |
+          Match ID
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
   GetTeamRequest:
     type: object
     required :
