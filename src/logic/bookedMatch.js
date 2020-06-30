@@ -35,6 +35,7 @@ const processActions = {
                 app            : params.app,
                 match          : match._id,
                 external_serie : match.serie_id,
+                external_match : match.external_id,
                 isRegister     : (bookedMatch == null)
 
             };
