@@ -27,6 +27,17 @@ class BookedMatchRepository extends MongoComponent {
     setModel = (BookedMatch) => {
         return BookedMatchRepository.prototype.schema.model(BookedMatch)
     }
+
+    findAll() {
+        return new Promise((resolve, reject)=>{
+            BookedMatchRepository.prototype.schema.model.find()
+            .exec((err, item) => {
+                if(err) reject(err);
+                resolve(item);
+            });
+        });
+    }
+
     findByMatchId(match) {
         return new Promise((resolve, reject)=>{
             BookedMatchRepository.prototype.schema.model.findOne({match})
