@@ -106,6 +106,15 @@ module.exports = {
     async loginAdmin(params) {
         return (await axios.post(`${MS_MASTER_URL}/api/admins/login`, params)).data;
     },
+    async registerApp(params) {
+        return (await axios.post(`${MS_MASTER_URL}/api/app/create`, params)).data;
+    },
+    async registerUser(params) {
+        return (await axios.post(`${MS_MASTER_URL}/api/users/register`, params)).data
+    },
+    async loginUser(params) {
+        return (await axios.post(`${MS_MASTER_URL}/api/users/login`, params)).data;
+    },
     async pingPost(params, bearerToken, payload) {
         return request(global.server)
             .post('/api/status/post')
