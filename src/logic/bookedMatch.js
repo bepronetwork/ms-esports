@@ -1,7 +1,7 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { BookedMatchRepository, UsersRepository, AppRepository } from '../db/repos';
+import { BookedMatchRepository, UsersRepository, AppRepository, VideogameRepository } from '../db/repos';
 import { PANDA_SCORE_TOKEN } from '../config';
 let error = new ErrorManager();
 const axios = require('axios');
@@ -65,10 +65,51 @@ const processActions = {
                 size: params.size,
             });
             let matchesId = []
-            for(let matchResult of matches){
+            for (let matchResult of matches) {
                 matchesId.push(matchResult.match.external_id)
             }
             let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getSpecificMatchLayout: async (params) => {
+        try {
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const app = await AppRepository.prototype.findAppById(user.app_id);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let pandaScore = await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getTeamLayout: async (params) => {
+        try {
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const app = await AppRepository.prototype.findAppById(user.app_id);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
+            let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/teams/${params.team_id}/stats?token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getPlayerLayout: async (params) => {
+        try {
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const app = await AppRepository.prototype.findAppById(user.app_id);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
+            let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/players/${params.player_id}/stats?token=${PANDA_SCORE_TOKEN}`);
             return pandaScore.data;
         } catch (err) {
             throw err;
@@ -109,7 +150,31 @@ const progressActions = {
         } catch (err) {
             throw err;
         }
-    }
+    },
+
+    __getSpecificMatchLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getTeamLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getPlayerLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
 }
 
 /**
@@ -169,6 +234,15 @@ class BookedMatchLogic extends LogicComponent {
                 case 'GetSeriesMatchesLayout': {
                     return library.process.__getSeriesMatchesLayout(params); break;
                 };
+                case 'GetSpecificMatchLayout': {
+                    return library.process.__getSpecificMatchLayout(params); break;
+                };
+                case 'GetTeamLayout': {
+                    return library.process.__getTeamLayout(params); break;
+                };
+                case 'GetPlayerLayout': {
+                    return library.process.__getPlayerLayout(params); break;
+                };
             }
         } catch (err) {
             throw err;
@@ -202,6 +276,15 @@ class BookedMatchLogic extends LogicComponent {
                 };
                 case 'GetSeriesMatchesLayout': {
                     return library.progress.__getSeriesMatchesLayout(params); break;
+                };
+                case 'GetSpecificMatchLayout': {
+                    return library.progress.__getSpecificMatchLayout(params); break;
+                };
+                case 'GetTeamLayout': {
+                    return library.progress.__getTeamLayout(params); break;
+                };
+                case 'GetPlayerLayout': {
+                    return library.progress.__getPlayerLayout(params); break;
                 };
             }
         } catch (err) {
