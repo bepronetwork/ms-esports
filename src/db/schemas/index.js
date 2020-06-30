@@ -4,6 +4,8 @@ import { MatchSchema } from "./match";
 import { LogSchema }  from './log';
 import { AdminSchema } from "./admin";
 import { BookedMatchSchema } from "./bookedMatch";
+import { AppSchema } from "./app";
+import { UserSchema } from "./user";
 
 export {
     VideogameSchema,
@@ -11,5 +13,7 @@ export {
     MatchSchema,
     LogSchema,
     AdminSchema,
-    BookedMatchSchema
+    BookedMatchSchema,
+    AppSchema,
+    UserSchema
 }

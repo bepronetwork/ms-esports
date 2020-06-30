@@ -56,6 +56,21 @@ class VideogameRepository extends MongoComponent{
             throw (err)
         }
     }
+
+    async findVideogameBySlug(slug_id) {
+        try {
+            return new Promise((resolve, reject) => {
+                VideogameRepository.prototype.schema.model.findOne({slug: slug_id})
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
 }
 
 VideogameRepository.prototype.schema = new VideogameSchema();

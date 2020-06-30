@@ -12,6 +12,30 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async getVideogamesLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/videogames/layout')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getTeam(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/videogame/team')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getPlayer(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/videogame/player')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
     async getSeriesMatches(params, bearerToken, payload) {
         return request(global.server)
             .post('/api/get/matches/series')
@@ -31,6 +55,46 @@ module.exports = {
     async getMatchAll(params, bearerToken, payload) {
         return request(global.server)
             .post('/api/get/matches/all')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getMatchLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/matches/all/layout')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getSeriesMatchesLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/matches/series/layout')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getSpecificMatchLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/match/specific/layout')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getTeamLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/videogame/team/layout')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getPlayerLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/videogame/player/layout')
             .set("authorization", "Bearer " + bearerToken)
             .set("payload", getPayloadString(payload))
             .send(params)

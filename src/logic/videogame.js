@@ -1,9 +1,10 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { VideogameRepository, SerieRepository } from '../db/repos';
+import { VideogameRepository, SerieRepository, UsersRepository, AppRepository } from '../db/repos';
 import { PANDA_SCORE_TOKEN } from '../config';
 import { PandaScoreSingleton } from '../helpers/matchVideogameSeries';
+import { throwError } from '../controllers/Errors/ErrorManager';
 let error = new ErrorManager();
 const axios = require('axios');
 
@@ -29,11 +30,37 @@ const processActions = {
 	__getVideoGamesAll: async (params) => {
 		let games = await VideogameRepository.prototype.findAllVideogame();
 		for (let game of games) {
-			let series = await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id : game.external_id });
+			let series = await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id: game.external_id });
 			let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/series?token=${PANDA_SCORE_TOKEN}`);
-			game["series"] = await PandaScoreSingleton.matchPandaScoreAndDatabase({database: series, pandaScore: pandaScore.data});
+			game["series"] = await PandaScoreSingleton.matchPandaScoreAndDatabase({ database: series, pandaScore: pandaScore.data });
 		}
 		return games;
+	},
+
+	__getVideoGamesLayout: async (params) => {
+		let user = await UsersRepository.prototype.findUserById(params.user);
+		if (!user) { throwError('USER_NOT_EXISTENT') }
+		const app = await AppRepository.prototype.findAppById(user.app_id);
+		if (!app) { throwError("APP_NOT_EXISTENT") }
+		let games = await VideogameRepository.prototype.findAllVideogame();
+		for (let game of games) {
+			let series = await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id: game.external_id });
+			let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/series?token=${PANDA_SCORE_TOKEN}`);
+			game["series"] = await PandaScoreSingleton.matchPandaScoreAndDatabase({ database: series, pandaScore: pandaScore.data });
+		}
+		return games;
+	},
+
+	__getTeam: async (params) => {
+		let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
+		let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/teams/${params.team_id}/stats?token=${PANDA_SCORE_TOKEN}`);
+		return pandaScore.data;
+	},
+
+	__getPlayer: async (params) => {
+		let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
+		let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/players/${params.player_id}/stats?token=${PANDA_SCORE_TOKEN}`);
+		return pandaScore.data;
 	}
 }
 
@@ -48,6 +75,28 @@ const processActions = {
 
 const progressActions = {
 	__getVideoGamesAll: async (params) => {
+		try {
+			return params;
+		} catch (err) {
+			throw err;
+		}
+	},
+	__getVideoGamesLayout: async (params) => {
+		try {
+			return params;
+		} catch (err) {
+			throw err;
+		}
+	},
+	__getTeam: async (params) => {
+		try {
+			return params;
+		} catch (err) {
+			throw err;
+		}
+	},
+
+	__getPlayer: async (params) => {
 		try {
 			return params;
 		} catch (err) {
@@ -107,6 +156,15 @@ class VideogameLogic extends LogicComponent {
 				case 'GetVideoGamesAll': {
 					return library.process.__getVideoGamesAll(params); break;
 				};
+				case 'GetVideoGamesLayout': {
+					return library.process.__getVideoGamesLayout(params); break;
+				};
+				case 'GetTeam': {
+					return library.process.__getTeam(params); break;
+				};
+				case 'GetPlayer': {
+					return library.process.__getPlayer(params); break;
+				};
 			}
 		} catch (err) {
 			throw err;
@@ -137,6 +195,15 @@ class VideogameLogic extends LogicComponent {
 				case 'GetVideoGamesAll': {
 					return await library.progress.__getVideoGamesAll(params);
 				}
+				case 'GetVideoGamesLayout': {
+					return library.progress.__getVideoGamesLayout(params); break;
+				}
+				case 'GetTeam': {
+					return library.progress.__getTeam(params); break;
+				};
+				case 'GetPlayer': {
+					return library.progress.__getPlayer(params); break;
+				};
 			}
 		} catch (err) {
 			throw err;

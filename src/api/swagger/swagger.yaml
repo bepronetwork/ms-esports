@@ -48,6 +48,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /get/videogames/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get All Videogames from Panda Score and DB to Layout
+      operationId: getVideoGamesLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get VideoGames All to Layout
+          description: Get All Videogames from Panda Score and DB to Layout
+          schema:
+            $ref: '#/definitions/VideogamesLayoutRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/matches/all :
     x-swagger-router-controller: pandaScore
     post:
@@ -93,6 +121,34 @@ paths:
           description: Set Matches Booked from Panda Score and DB
           schema:
             $ref: '#/definitions/SetMatchesBookedRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/matches/all/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get All Matches from Panda Score and DB for Layout
+      operationId: getMatchesLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get VideoGames All Layout
+          description: Get All Matches from Panda Score and DB for Layout
+          schema:
+            $ref: '#/definitions/GetMatchesLayoutRequest'
       responses:
         "200":
           description: Success
@@ -160,6 +216,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /get/match/specific/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Specifc Matches from Panda Score and DB for Layout
+      operationId: getSpecificMatchLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Matches Specifc for Layout
+          description: Get Specifc Matches from Panda Score and DB for Layout
+          schema:
+            $ref: '#/definitions/GetSpecificMatchLayoutRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/matches/series :
     x-swagger-router-controller: pandaScore
     post:
@@ -177,6 +261,146 @@ paths:
           description: Get Series Matches from Panda Score and DB
           schema:
             $ref: '#/definitions/GetSeriesMatchesRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/matches/series/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Series Matches from Panda Score and DB for Layout
+      operationId: getSeriesMatchesLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Series Game for Layout
+          description: Get Series Matches from Panda Score and DB for Layout
+          schema:
+            $ref: '#/definitions/GetSeriesMatchesLayoutRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/videogame/team :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Team from Panda Score and DB
+      operationId: getTeam
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Team
+          description: Get Team from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetTeamRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/videogame/team/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Team from Panda Score and DB for Layout
+      operationId: getTeamLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Team Layout
+          description: Get Team from Panda Score and DB for Layout
+          schema:
+            $ref: '#/definitions/GetTeamLayoutRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/videogame/player :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Player from Panda Score and DB
+      operationId: getPlayer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Player
+          description: Get Player from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetPlayerRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/videogame/player/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Player from Panda Score and DB for Layout
+      operationId: getPlayerLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Player Layout
+          description: Get Player from Panda Score and DB for Layout
+          schema:
+            $ref: '#/definitions/GetPlayerLayoutRequest'
       responses:
         "200":
           description: Success
@@ -237,6 +461,120 @@ definitions:
         type : string
         description: |
           Admin ID
+  GetSpecificMatchLayoutRequest:
+    type: object
+    required :
+      - match_id
+      - user
+      - app
+    properties:
+      match_id:
+        type : number
+        example: "24234g234g23g"
+        description: |
+          Match ID
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
+  GetTeamRequest:
+    type: object
+    required :
+      - team_id
+      - slug
+      - admin
+    properties:
+      team_id:
+        type : number
+        example: 2423
+        description: |
+          Team ID
+      slug:
+        type : string
+        example: "cs-go"
+        description: |
+          Slug of Videogame
+      admin:
+        type : string
+        description: |
+          Admin ID
+  GetTeamLayoutRequest:
+    type: object
+    required :
+      - team_id
+      - slug
+      - user
+      - app
+    properties:
+      team_id:
+        type : number
+        example: 2423
+        description: |
+          Team ID
+      slug:
+        type : string
+        example: "cs-go"
+        description: |
+          Slug of Videogame
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
+  GetPlayerRequest:
+    type: object
+    required :
+      - player_id
+      - slug
+      - admin
+    properties:
+      player_id:
+        type : number
+        example: 2423
+        description: |
+          Player ID
+      slug:
+        type : string
+        example: "cs-go"
+        description: |
+          Slug of Videogame
+      admin:
+        type : string
+        description: |
+          Admin ID
+  GetPlayerLayoutRequest:
+    type: object
+    required :
+      - player_id
+      - slug
+      - user
+      - app
+    properties:
+      player_id:
+        type : number
+        example: 2423
+        description: |
+          Player ID
+      slug:
+        type : string
+        example: "cs-go"
+        description: |
+          Slug of Videogame
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
   RemoveMatchesBookedRequest:
     type: object
     required :
@@ -290,6 +628,30 @@ definitions:
         example: 15
         description: |
           Offset of document
+  GetMatchesLayoutRequest:
+    type: object
+    required :
+      - user
+      - app
+    properties:
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of Document
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of document
   GetSeriesMatchesRequest:
     type: object
     required:
@@ -317,6 +679,38 @@ definitions:
         type : string
         description: |
           Admin ID
+  GetSeriesMatchesLayoutRequest:
+    type: object
+    required:
+      - serie_id
+      - user
+      - app
+    properties:
+      serie_id:
+        type : array
+        items:
+          type : number
+          example: 15
+          description: |
+            Series_ids
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of Document
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of document
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
   VideogamesAllRequest:
     type: object
     required:
@@ -326,6 +720,20 @@ definitions:
         type : string
         description: |
           Admin ID
+  VideogamesLayoutRequest:
+    type: object
+    required:
+      - user
+      - app
+    properties:
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
   GeneralResponse : 
     type: object
     required:

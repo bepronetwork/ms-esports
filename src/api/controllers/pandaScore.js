@@ -31,6 +31,48 @@ async function getVideoGamesAll(req, res) {
     }
 }
 
+async function getVideoGamesLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new Videogame(params);
+        let data = await videogame.getVideoGamesLayout();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getTeam(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
+        let params = req.body;
+        let videogame = new Videogame(params);
+        let data = await videogame.getTeam();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getPlayer(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
+        let params = req.body;
+        let videogame = new Videogame(params);
+        let data = await videogame.getPlayer();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 async function getSeriesMatches(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
@@ -51,6 +93,76 @@ async function getMatchesAll(req, res) {
         let params = req.body;
         let match = new Match(params);
         let data = await match.getMatchesAll();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getMatchesLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getMatchesLayout();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getSeriesMatchesLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getSeriesMatchesLayout();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getSpecificMatchLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getSpecificMatchLayout();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getTeamLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getTeamLayout();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getPlayerLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getPlayerLayout();
         MiddlewareSingleton.log({ type: "global", req, code: 200 });
         MiddlewareSingleton.respond(res, req, data);
     } catch (err) {
@@ -107,5 +219,13 @@ export {
     getSpecificMatch,
     getMatchesAll,
     setBookedMatch,
-    removeBookedMatch
+    removeBookedMatch,
+    getVideoGamesLayout,
+    getTeam,
+    getPlayer,
+    getMatchesLayout,
+    getSeriesMatchesLayout,
+    getSpecificMatchLayout,
+    getTeamLayout,
+    getPlayerLayout,
 }
