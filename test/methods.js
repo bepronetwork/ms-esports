@@ -92,6 +92,14 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async getPlayerLayout(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/videogame/player/layout')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
     async registerAdmin(params) {
         return (await axios.post(`${MS_MASTER_URL}/api/admins/register`, params)).data;
     },

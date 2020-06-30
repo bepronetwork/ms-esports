@@ -2,7 +2,8 @@ import {
     getMatchLayout,
     getSeriesMatchesLayout,
     getSpecificMatchLayout,
-    getTeamLayout
+    getTeamLayout,
+    getPlayerLayout
 } from '../../methods';
 
 import chai from 'chai';
@@ -50,6 +51,17 @@ context('Booked Matches', async () => {
     it('should get Team By Id Layout', mochaAsync(async () => {
         var res = await getTeamLayout({
             team_id: 318,
+            slug: "league-of-legends",
+            user : user.id,
+            app : app.id,
+        }, user.bearerToken , {id : user.id});
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should get Player By Id Layout', mochaAsync(async () => {
+        var res = await getPlayerLayout({
+            player_id: 1027,
             slug: "league-of-legends",
             user : user.id,
             app : app.id,

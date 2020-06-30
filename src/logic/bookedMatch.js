@@ -100,6 +100,20 @@ const processActions = {
         } catch (err) {
             throw err;
         }
+    },
+
+    __getPlayerLayout: async (params) => {
+        try {
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const app = await AppRepository.prototype.findAppById(user.app_id);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
+            let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/players/${params.player_id}/stats?token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
     }
 }
 
@@ -147,6 +161,14 @@ const progressActions = {
     },
 
     __getTeamLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getPlayerLayout: async (params) => {
         try {
             return params;
         } catch (err) {
@@ -218,6 +240,9 @@ class BookedMatchLogic extends LogicComponent {
                 case 'GetTeamLayout': {
                     return library.process.__getTeamLayout(params); break;
                 };
+                case 'GetPlayerLayout': {
+                    return library.process.__getPlayerLayout(params); break;
+                };
             }
         } catch (err) {
             throw err;
@@ -257,6 +282,9 @@ class BookedMatchLogic extends LogicComponent {
                 };
                 case 'GetTeamLayout': {
                     return library.progress.__getTeamLayout(params); break;
+                };
+                case 'GetPlayerLayout': {
+                    return library.progress.__getPlayerLayout(params); break;
                 };
             }
         } catch (err) {
