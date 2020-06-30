@@ -188,6 +188,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /get/matches/series/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Series Matches from Panda Score and DB for Layout
+      operationId: getSeriesMatchesLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Series Game for Layout
+          description: Get Series Matches from Panda Score and DB for Layout
+          schema:
+            $ref: '#/definitions/GetSeriesMatchesLayoutRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/videogame/team :
     x-swagger-router-controller: pandaScore
     post:
@@ -405,6 +433,38 @@ definitions:
         type : string
         description: |
           Admin ID
+  GetSeriesMatchesLayoutRequest:
+    type: object
+    required:
+      - serie_id
+      - user
+      - app
+    properties:
+      serie_id:
+        type : array
+        items:
+          type : number
+          example: 15
+          description: |
+            Series_ids
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of Document
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of document
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
   VideogamesAllRequest:
     type: object
     required:

@@ -7,8 +7,9 @@ class BookedMatchSchema{};
 BookedMatchSchema.prototype.name = 'BookedMatch';
 
 BookedMatchSchema.prototype.schema = {
-    match : { type: mongoose.Schema.Types.ObjectId, ref: 'Match'},
-    app   : { type: mongoose.Schema.Types.ObjectId, ref: 'App'},
+    match          : { type: mongoose.Schema.Types.ObjectId, ref: 'Match'},
+    app            : { type: mongoose.Schema.Types.ObjectId, ref: 'App'},
+    external_serie : { type: Number, required: true}
 }
 
 BookedMatchSchema.prototype.model = db.model(BookedMatchSchema.prototype.name, new db.Schema(BookedMatchSchema.prototype.schema));

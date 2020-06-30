@@ -51,6 +51,28 @@ const processActions = {
         } catch (err) {
             throw err;
         }
+    },
+
+    __getSeriesMatchesLayout: async (params) => {
+        try {
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const app = await AppRepository.prototype.findAppById(user.app_id);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let matches = await BookedMatchRepository.prototype.findMatchBySerieId({
+                external_serie: params.serie_id,
+                offset: params.offset,
+                size: params.size,
+            });
+            let matchesId = []
+            for(let matchResult of matches){
+                matchesId.push(matchResult.match.external_id)
+            }
+            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
     }
 }
 
@@ -74,6 +96,14 @@ const progressActions = {
     },
 
     __getMatchesLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    __getSeriesMatchesLayout: async (params) => {
         try {
             return params;
         } catch (err) {
@@ -136,6 +166,9 @@ class BookedMatchLogic extends LogicComponent {
                 case 'GetMatchesLayout': {
                     return library.process.__getMatchesLayout(params); break;
                 };
+                case 'GetSeriesMatchesLayout': {
+                    return library.process.__getSeriesMatchesLayout(params); break;
+                };
             }
         } catch (err) {
             throw err;
@@ -166,6 +199,9 @@ class BookedMatchLogic extends LogicComponent {
                 }
                 case 'GetMatchesLayout': {
                     return library.progress.__getMatchesLayout(params); break;
+                };
+                case 'GetSeriesMatchesLayout': {
+                    return library.progress.__getSeriesMatchesLayout(params); break;
                 };
             }
         } catch (err) {

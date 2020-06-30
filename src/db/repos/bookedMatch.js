@@ -60,6 +60,24 @@ class BookedMatchRepository extends MongoComponent {
             throw (err)
         }
     }
+
+    async findMatchBySerieId({external_serie, offset, size}) {
+        try {
+            return new Promise((resolve, reject) => {
+                BookedMatchRepository.prototype.schema.model.find({external_serie: {$in: external_serie}})
+                    .populate(populate_match)
+                    .skip(offset == undefined ? 0 : offset)
+                    .limit((size > 10 || !size || size <= 0) ? 10 : size)
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
 }
 
 BookedMatchRepository.prototype.schema = new BookedMatchSchema();

@@ -34,6 +34,14 @@ class BookedMatch extends ModelComponent {
             throw err;
         }
     }
+
+    async getSeriesMatchesLayout() {
+        try {
+            return await this.process('GetSeriesMatchesLayout');
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 
