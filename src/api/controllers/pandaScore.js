@@ -87,10 +87,25 @@ async function setBookedMatch(req, res) {
     }
 }
 
+async function removeBookedMatch(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
+        let params = req.body;
+        let bookedMatch = new BookedMatch(params);
+        let data = await bookedMatch.remove();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 export {
     getVideoGamesAll,
     getSeriesMatches,
     getSpecificMatch,
     getMatchesAll,
-    setBookedMatch
+    setBookedMatch,
+    removeBookedMatch
 }

@@ -104,6 +104,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /remove/matches/booked :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Remove Matches Booked from Panda Score and DB
+      operationId: removeBookedMatch
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Remove Match Booked
+          description: Remove Matches Booked from Panda Score and DB
+          schema:
+            $ref: '#/definitions/RemoveMatchesBookedRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/match/specific :
     x-swagger-router-controller: pandaScore
     post:
@@ -209,6 +237,23 @@ definitions:
         type : string
         description: |
           Admin ID
+  RemoveMatchesBookedRequest:
+    type: object
+    required :
+      - admin
+    properties:
+      admin:
+        type : string
+        description: |
+          Admin ID
+      match_external_id:
+        type : number
+        description: |
+          Match External ID
+      app:
+        type : string
+        description: |
+          App ID
   SetMatchesBookedRequest:
     type: object
     required :

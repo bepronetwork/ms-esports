@@ -35,6 +35,15 @@ class BookedMatchRepository extends MongoComponent{
             });
         });
     }
+    removeByMatchId({_id, app}) {
+        return new Promise((resolve, reject)=>{
+            BookedMatchRepository.prototype.schema.model.deleteOne({_id, app})
+            .exec((err, item) => {
+                if(err) reject(err);
+                resolve(item);
+            });
+        });
+    }
 }
 
 BookedMatchRepository.prototype.schema = new BookedMatchSchema();

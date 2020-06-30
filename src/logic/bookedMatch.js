@@ -3,6 +3,7 @@ import LogicComponent from './logicComponent';
 import _ from 'lodash';
 import { BookedMatchRepository, MatchRepository } from '../db/repos';
 import { PANDA_SCORE_TOKEN } from '../config';
+import { throwError } from '../controllers/Errors/ErrorManager';
 let error = new ErrorManager();
 const axios = require('axios');
 
@@ -30,10 +31,24 @@ const processActions = {
             let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
 
             return {
-                app        : params.app,
-                match      : match._id,
-                isRegister : (bookedMatch == null)
+                app            : params.app,
+                match          : match._id,
+                external_serie : match.serie_id,
+                isRegister     : (bookedMatch == null)
 
+            };
+		} catch(err) {
+			throw err;
+		}
+    },
+    __remove : async (params) => {
+		try {
+            let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
+            let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
+            if(!bookedMatch) {throwError("MATCH_NOT_EXISTENT")}
+            return {
+                app         : params.app,
+                matchBooked : bookedMatch._id,
             };
 		} catch(err) {
 			throw err;
@@ -56,6 +71,14 @@ const progressActions = {
             if(params.isRegister){
                 await self.save(params);
             }
+			return {status: true};
+		} catch(err) {
+			throw err;
+		}
+    },
+    __remove : async (params) => {
+		try {
+            await BookedMatchRepository.prototype.removeByMatchId({_id: params.matchBooked, app: params.app})
 			return {status: true};
 		} catch(err) {
 			throw err;
@@ -113,6 +136,9 @@ class BookedMatchLogic extends LogicComponent {
             switch (processAction) {
                 case 'Register' : {
 					return library.process.__register(params); break;
+                };
+                case 'Remove' : {
+					return library.process.__remove(params); break;
 				};
             }
         } catch (err) {
@@ -141,6 +167,9 @@ class BookedMatchLogic extends LogicComponent {
             switch (progressAction) {
                 case 'Register' : {
 					return await library.progress.__register(params);
+                }
+                case 'Remove' : {
+					return await library.progress.__remove(params);
 				}
             }
         } catch (err) {
