@@ -1,7 +1,7 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { BookedMatchRepository, UsersRepository, AppRepository } from '../db/repos';
+import { BookedMatchRepository, UsersRepository, AppRepository, VideogameRepository } from '../db/repos';
 import { PANDA_SCORE_TOKEN } from '../config';
 let error = new ErrorManager();
 const axios = require('axios');
@@ -86,6 +86,20 @@ const processActions = {
         } catch (err) {
             throw err;
         }
+    },
+
+    __getTeamLayout: async (params) => {
+        try {
+            let user = await UsersRepository.prototype.findUserById(params.user);
+            if (!user) { throwError('USER_NOT_EXISTENT') }
+            const app = await AppRepository.prototype.findAppById(user.app_id);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
+            let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/teams/${params.team_id}/stats?token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
     }
 }
 
@@ -130,7 +144,15 @@ const progressActions = {
         } catch (err) {
             throw err;
         }
-    }
+    },
+
+    __getTeamLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
 }
 
 /**
@@ -193,6 +215,9 @@ class BookedMatchLogic extends LogicComponent {
                 case 'GetSpecificMatchLayout': {
                     return library.process.__getSpecificMatchLayout(params); break;
                 };
+                case 'GetTeamLayout': {
+                    return library.process.__getTeamLayout(params); break;
+                };
             }
         } catch (err) {
             throw err;
@@ -229,6 +254,9 @@ class BookedMatchLogic extends LogicComponent {
                 };
                 case 'GetSpecificMatchLayout': {
                     return library.progress.__getSpecificMatchLayout(params); break;
+                };
+                case 'GetTeamLayout': {
+                    return library.progress.__getTeamLayout(params); break;
                 };
             }
         } catch (err) {

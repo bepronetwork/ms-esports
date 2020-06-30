@@ -272,6 +272,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /get/videogame/team/layout :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Team from Panda Score and DB for Layout
+      operationId: getTeamLayout
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Team Layout
+          description: Get Team from Panda Score and DB for Layout
+          schema:
+            $ref: '#/definitions/GetTeamLayoutRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/videogame/player :
     x-swagger-router-controller: pandaScore
     post:
@@ -390,6 +418,32 @@ definitions:
         type : string
         description: |
           Admin ID
+  GetTeamLayoutRequest:
+    type: object
+    required :
+      - team_id
+      - slug
+      - user
+      - app
+    properties:
+      team_id:
+        type : number
+        example: 2423
+        description: |
+          Team ID
+      slug:
+        type : string
+        example: "cs-go"
+        description: |
+          Slug of Videogame
+      user:
+        type : string
+        description: |
+          User ID
+      app:
+        type : string
+        description: |
+          App ID
   GetPlayerRequest:
     type: object
     required :

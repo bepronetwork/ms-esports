@@ -143,6 +143,20 @@ async function getSpecificMatchLayout(req, res) {
     }
 }
 
+async function getTeamLayout(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'user', req });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getTeamLayout();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 async function getSpecificMatch(req, res) {
     try {
         await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
@@ -182,5 +196,6 @@ export {
     getPlayer,
     getMatchesLayout,
     getSeriesMatchesLayout,
-    getSpecificMatchLayout
+    getSpecificMatchLayout,
+    getTeamLayout
 }

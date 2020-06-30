@@ -50,6 +50,14 @@ class BookedMatch extends ModelComponent {
             throw err;
         }
     }
+
+    async getTeamLayout() {
+        try {
+            return await this.process('GetTeamLayout');
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 
