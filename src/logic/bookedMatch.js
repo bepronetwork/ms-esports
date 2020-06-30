@@ -1,7 +1,7 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { BookedMatchRepository } from '../db/repos';
+import { BookedMatchRepository, MatchRepository } from '../db/repos';
 import { PANDA_SCORE_TOKEN } from '../config';
 let error = new ErrorManager();
 const axios = require('axios');
@@ -26,7 +26,15 @@ let __private = {};
 const processActions = {
     __register : async (params) => {
 		try {
-            return ;
+            let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
+            let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
+
+            return {
+                app        : params.app,
+                match      : match._id,
+                isRegister : (bookedMatch == null)
+
+            };
 		} catch(err) {
 			throw err;
 		}
@@ -45,7 +53,9 @@ const processActions = {
 const progressActions = {
     __register : async (params) => {
 		try {
-            let bookedMatch = await self.save(params);
+            if(params.isRegister){
+                await self.save(params);
+            }
 			return {status: true};
 		} catch(err) {
 			throw err;

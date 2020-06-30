@@ -76,6 +76,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /set/matches/booked :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Set Matches Booked from Panda Score and DB
+      operationId: setBookedMatch
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Set Match Booked
+          description: Set Matches Booked from Panda Score and DB
+          schema:
+            $ref: '#/definitions/SetMatchesBookedRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/match/specific :
     x-swagger-router-controller: pandaScore
     post:
@@ -181,6 +209,23 @@ definitions:
         type : string
         description: |
           Admin ID
+  SetMatchesBookedRequest:
+    type: object
+    required :
+      - admin
+    properties:
+      admin:
+        type : string
+        description: |
+          Admin ID
+      match_external_id:
+        type : number
+        description: |
+          Match External ID
+      app:
+        type : string
+        description: |
+          App ID
   GetMatchesAllRequest:
     type: object
     required :

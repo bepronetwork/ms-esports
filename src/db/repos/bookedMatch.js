@@ -26,20 +26,14 @@ class BookedMatchRepository extends MongoComponent{
     setModel = (BookedMatch) => {
         return BookedMatchRepository.prototype.schema.model(BookedMatch)
     }
-
-    async findBookedMatchByExternalId(external_id) {
-        try {
-            return new Promise((resolve, reject) => {
-                BookedMatchRepository.prototype.schema.model.find(external_id)
-                    .lean()
-                    .exec((err, user) => {
-                        if (err) { reject(err) }
-                        resolve(user);
-                    });
+    findByMatchId(match) {
+        return new Promise((resolve, reject)=>{
+            BookedMatchRepository.prototype.schema.model.findOne({match})
+            .exec((err, item) => {
+                if(err) reject(err);
+                resolve(item);
             });
-        } catch (err) {
-            throw (err)
-        }
+        });
     }
 }
 
