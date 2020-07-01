@@ -26,36 +26,36 @@ let __private = {};
 
 
 const processActions = {
-    __register : async (params) => {
-		try {
+    __register: async (params) => {
+        try {
             let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
             let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
 
             return {
-                app            : params.app,
-                match          : match._id,
-                external_serie : match.serie_id,
-                external_match : match.external_id,
-                isRegister     : (bookedMatch == null)
+                app: params.app,
+                match: match._id,
+                external_serie: match.serie_id,
+                external_match: match.external_id,
+                isRegister: (bookedMatch == null)
 
             };
-		} catch(err) {
-			throw err;
-		}
+        } catch (err) {
+            throw err;
+        }
     },
-    __remove : async (params) => {
-		try {
+    __remove: async (params) => {
+        try {
             let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
             let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
-            if(!bookedMatch) {throwError("MATCH_NOT_EXISTENT")}
+            if (!bookedMatch) { throwError("MATCH_NOT_EXISTENT") }
             return {
-                app         : params.app,
-                matchBooked : bookedMatch._id,
+                app: params.app,
+                matchBooked: bookedMatch._id,
             };
-		} catch(err) {
-			throw err;
-		}
-	},
+        } catch (err) {
+            throw err;
+        }
+    },
     __getMatchesLayout: async (params) => {
         try {
             // let user = await UsersRepository.prototype.findUserById(params.user);
@@ -87,12 +87,16 @@ const processActions = {
                 offset: params.offset,
                 size: params.size,
             });
-            let matchesId = []
-            for (let matchResult of matches) {
-                matchesId.push(matchResult.match.external_id)
+            if (matches.length == 0) {
+                return matches
+            } else {
+                let matchesId = []
+                for (let matchResult of matches) {
+                    matchesId.push(matchResult.match.external_id)
+                }
+                let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+                return pandaScore.data;
             }
-            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
-            return pandaScore.data;
         } catch (err) {
             throw err;
         }
@@ -147,24 +151,24 @@ const processActions = {
 
 
 const progressActions = {
-    __register : async (params) => {
-		try {
-            if(params.isRegister){
+    __register: async (params) => {
+        try {
+            if (params.isRegister) {
                 await self.save(params);
             }
-			return {status: true};
-		} catch(err) {
-			throw err;
-		}
+            return { status: true };
+        } catch (err) {
+            throw err;
+        }
     },
-    __remove : async (params) => {
-		try {
-            await BookedMatchRepository.prototype.removeByMatchId({_id: params.matchBooked, app: params.app})
-			return {status: true};
-		} catch(err) {
-			throw err;
-		}
-	},
+    __remove: async (params) => {
+        try {
+            await BookedMatchRepository.prototype.removeByMatchId({ _id: params.matchBooked, app: params.app })
+            return { status: true };
+        } catch (err) {
+            throw err;
+        }
+    },
     __getMatchesLayout: async (params) => {
         try {
             return params;
@@ -250,12 +254,12 @@ class BookedMatchLogic extends LogicComponent {
     async objectNormalize(params, processAction) {
         try {
             switch (processAction) {
-                case 'Register' : {
-					return library.process.__register(params); break;
+                case 'Register': {
+                    return library.process.__register(params); break;
                 };
-                case 'Remove' : {
-					return library.process.__remove(params); break;
-				};
+                case 'Remove': {
+                    return library.process.__remove(params); break;
+                };
                 case 'GetMatchesLayout': {
                     return library.process.__getMatchesLayout(params); break;
                 };
@@ -296,12 +300,12 @@ class BookedMatchLogic extends LogicComponent {
     async progress(params, progressAction) {
         try {
             switch (progressAction) {
-                case 'Register' : {
-					return await library.progress.__register(params);
+                case 'Register': {
+                    return await library.progress.__register(params);
                 }
-                case 'Remove' : {
-					return await library.progress.__remove(params);
-				}
+                case 'Remove': {
+                    return await library.progress.__remove(params);
+                }
                 case 'GetMatchesLayout': {
                     return library.progress.__getMatchesLayout(params); break;
                 };
