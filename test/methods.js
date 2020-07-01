@@ -12,11 +12,9 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
-    async getVideogamesLayout(params, bearerToken, payload) {
+    async getVideogamesLayout(params) {
         return request(global.server)
             .post('/api/get/videogames/layout')
-            .set("authorization", "Bearer " + bearerToken)
-            .set("payload", getPayloadString(payload))
             .send(params)
             .then(res => detectServerError(res))
     },
@@ -60,43 +58,33 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
-    async getMatchLayout(params, bearerToken, payload) {
+    async getMatchLayout(params) {
         return request(global.server)
             .post('/api/get/matches/all/layout')
-            .set("authorization", "Bearer " + bearerToken)
-            .set("payload", getPayloadString(payload))
             .send(params)
             .then(res => detectServerError(res))
     },
-    async getSeriesMatchesLayout(params, bearerToken, payload) {
+    async getSeriesMatchesLayout(params) {
         return request(global.server)
             .post('/api/get/matches/series/layout')
-            .set("authorization", "Bearer " + bearerToken)
-            .set("payload", getPayloadString(payload))
             .send(params)
             .then(res => detectServerError(res))
     },
-    async getSpecificMatchLayout(params, bearerToken, payload) {
+    async getSpecificMatchLayout(params) {
         return request(global.server)
             .post('/api/get/match/specific/layout')
-            .set("authorization", "Bearer " + bearerToken)
-            .set("payload", getPayloadString(payload))
             .send(params)
             .then(res => detectServerError(res))
     },
-    async getTeamLayout(params, bearerToken, payload) {
+    async getTeamLayout(params) {
         return request(global.server)
             .post('/api/get/videogame/team/layout')
-            .set("authorization", "Bearer " + bearerToken)
-            .set("payload", getPayloadString(payload))
             .send(params)
             .then(res => detectServerError(res))
     },
-    async getPlayerLayout(params, bearerToken, payload) {
+    async getPlayerLayout(params) {
         return request(global.server)
             .post('/api/get/videogame/player/layout')
-            .set("authorization", "Bearer " + bearerToken)
-            .set("payload", getPayloadString(payload))
             .send(params)
             .then(res => detectServerError(res))
     },

@@ -33,7 +33,7 @@ async function getVideoGamesAll(req, res) {
 
 async function getVideoGamesLayout(req, res) {
     try {
-        await SecuritySingleton.verify({ type: 'user', req });
+        // await SecuritySingleton.verify({ type: 'user', req });
         let params = req.body;
         let videogame = new Videogame(params);
         let data = await videogame.getVideoGamesLayout();
@@ -103,7 +103,7 @@ async function getMatchesAll(req, res) {
 
 async function getMatchesLayout(req, res) {
     try {
-        await SecuritySingleton.verify({ type: 'user', req });
+        // await SecuritySingleton.verify({ type: 'user', req });
         let params = req.body;
         let videogame = new BookedMatch(params);
         let data = await videogame.getMatchesLayout();
@@ -117,7 +117,7 @@ async function getMatchesLayout(req, res) {
 
 async function getSeriesMatchesLayout(req, res) {
     try {
-        await SecuritySingleton.verify({ type: 'user', req });
+        // await SecuritySingleton.verify({ type: 'user', req });
         let params = req.body;
         let videogame = new BookedMatch(params);
         let data = await videogame.getSeriesMatchesLayout();
@@ -131,7 +131,7 @@ async function getSeriesMatchesLayout(req, res) {
 
 async function getSpecificMatchLayout(req, res) {
     try {
-        await SecuritySingleton.verify({ type: 'user', req });
+        // await SecuritySingleton.verify({ type: 'user', req });
         let params = req.body;
         let videogame = new BookedMatch(params);
         let data = await videogame.getSpecificMatchLayout();
@@ -145,7 +145,7 @@ async function getSpecificMatchLayout(req, res) {
 
 async function getTeamLayout(req, res) {
     try {
-        await SecuritySingleton.verify({ type: 'user', req });
+        // await SecuritySingleton.verify({ type: 'user', req });
         let params = req.body;
         let videogame = new BookedMatch(params);
         let data = await videogame.getTeamLayout();
@@ -159,7 +159,7 @@ async function getTeamLayout(req, res) {
 
 async function getPlayerLayout(req, res) {
     try {
-        await SecuritySingleton.verify({ type: 'user', req });
+        // await SecuritySingleton.verify({ type: 'user', req });
         let params = req.body;
         let videogame = new BookedMatch(params);
         let data = await videogame.getPlayerLayout();

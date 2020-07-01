@@ -58,10 +58,10 @@ const processActions = {
 	},
     __getMatchesLayout: async (params) => {
         try {
-            let user = await UsersRepository.prototype.findUserById(params.user);
-            if (!user) { throwError('USER_NOT_EXISTENT') }
-            const app = await AppRepository.prototype.findAppById(user.app_id);
-            if (!app) { throwError("APP_NOT_EXISTENT") }
+            // let user = await UsersRepository.prototype.findUserById(params.user);
+            // if (!user) { throwError('USER_NOT_EXISTENT') }
+            // const app = await AppRepository.prototype.findAppById(user.app_id);
+            // if (!app) { throwError("APP_NOT_EXISTENT") }
             let matches = await BookedMatchRepository.prototype.findMatchAll({
                 offset: params.offset,
                 size: params.size,
@@ -78,10 +78,10 @@ const processActions = {
     },
     __getSeriesMatchesLayout: async (params) => {
         try {
-            let user = await UsersRepository.prototype.findUserById(params.user);
-            if (!user) { throwError('USER_NOT_EXISTENT') }
-            const app = await AppRepository.prototype.findAppById(user.app_id);
-            if (!app) { throwError("APP_NOT_EXISTENT") }
+            // let user = await UsersRepository.prototype.findUserById(params.user);
+            // if (!user) { throwError('USER_NOT_EXISTENT') }
+            // const app = await AppRepository.prototype.findAppById(user.app_id);
+            // if (!app) { throwError("APP_NOT_EXISTENT") }
             let matches = await BookedMatchRepository.prototype.findMatchBySerieId({
                 external_serie: params.serie_id,
                 offset: params.offset,
@@ -99,10 +99,10 @@ const processActions = {
     },
     __getSpecificMatchLayout: async (params) => {
         try {
-            let user = await UsersRepository.prototype.findUserById(params.user);
-            if (!user) { throwError('USER_NOT_EXISTENT') }
-            const app = await AppRepository.prototype.findAppById(user.app_id);
-            if (!app) { throwError("APP_NOT_EXISTENT") }
+            // let user = await UsersRepository.prototype.findUserById(params.user);
+            // if (!user) { throwError('USER_NOT_EXISTENT') }
+            // const app = await AppRepository.prototype.findAppById(user.app_id);
+            // if (!app) { throwError("APP_NOT_EXISTENT") }
             let pandaScore = await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
             return pandaScore.data;
         } catch (err) {
@@ -111,10 +111,10 @@ const processActions = {
     },
     __getTeamLayout: async (params) => {
         try {
-            let user = await UsersRepository.prototype.findUserById(params.user);
-            if (!user) { throwError('USER_NOT_EXISTENT') }
-            const app = await AppRepository.prototype.findAppById(user.app_id);
-            if (!app) { throwError("APP_NOT_EXISTENT") }
+            // let user = await UsersRepository.prototype.findUserById(params.user);
+            // if (!user) { throwError('USER_NOT_EXISTENT') }
+            // const app = await AppRepository.prototype.findAppById(user.app_id);
+            // if (!app) { throwError("APP_NOT_EXISTENT") }
             let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
             let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/teams/${params.team_id}/stats?token=${PANDA_SCORE_TOKEN}`);
             return pandaScore.data;
@@ -124,10 +124,10 @@ const processActions = {
     },
     __getPlayerLayout: async (params) => {
         try {
-            let user = await UsersRepository.prototype.findUserById(params.user);
-            if (!user) { throwError('USER_NOT_EXISTENT') }
-            const app = await AppRepository.prototype.findAppById(user.app_id);
-            if (!app) { throwError("APP_NOT_EXISTENT") }
+            // let user = await UsersRepository.prototype.findUserById(params.user);
+            // if (!user) { throwError('USER_NOT_EXISTENT') }
+            // const app = await AppRepository.prototype.findAppById(user.app_id);
+            // if (!app) { throwError("APP_NOT_EXISTENT") }
             let game = await VideogameRepository.prototype.findVideogameBySlug(params.slug);
             let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/players/${params.player_id}/stats?token=${PANDA_SCORE_TOKEN}`);
             return pandaScore.data;
