@@ -56,10 +56,7 @@ context('Videogame', async () => {
     }));
 
     it('should get All Videogames Layout', mochaAsync(async () => {
-        var res = await getVideogamesLayout({
-            user : user.id,
-            app : app.id,
-        }, user.bearerToken , {id : user.id});
+        var res = await getVideogamesLayout({});
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
     }));

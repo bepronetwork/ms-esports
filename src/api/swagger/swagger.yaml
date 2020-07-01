@@ -465,22 +465,12 @@ definitions:
     type: object
     required :
       - match_id
-      - user
-      - app
     properties:
       match_id:
         type : number
         example: "24234g234g23g"
         description: |
           Match ID
-      user:
-        type : string
-        description: |
-          User ID
-      app:
-        type : string
-        description: |
-          App ID
   GetTeamRequest:
     type: object
     required :
@@ -507,8 +497,6 @@ definitions:
     required :
       - team_id
       - slug
-      - user
-      - app
     properties:
       team_id:
         type : number
@@ -520,14 +508,6 @@ definitions:
         example: "cs-go"
         description: |
           Slug of Videogame
-      user:
-        type : string
-        description: |
-          User ID
-      app:
-        type : string
-        description: |
-          App ID
   GetPlayerRequest:
     type: object
     required :
@@ -554,8 +534,6 @@ definitions:
     required :
       - player_id
       - slug
-      - user
-      - app
     properties:
       player_id:
         type : number
@@ -567,14 +545,6 @@ definitions:
         example: "cs-go"
         description: |
           Slug of Videogame
-      user:
-        type : string
-        description: |
-          User ID
-      app:
-        type : string
-        description: |
-          App ID
   RemoveMatchesBookedRequest:
     type: object
     required :
@@ -630,18 +600,7 @@ definitions:
           Offset of document
   GetMatchesLayoutRequest:
     type: object
-    required :
-      - user
-      - app
     properties:
-      user:
-        type : string
-        description: |
-          User ID
-      app:
-        type : string
-        description: |
-          App ID
       size:
         type : number
         example: 15
@@ -683,8 +642,6 @@ definitions:
     type: object
     required:
       - serie_id
-      - user
-      - app
     properties:
       serie_id:
         type : array
@@ -703,14 +660,6 @@ definitions:
         example: 15
         description: |
           Offset of document
-      user:
-        type : string
-        description: |
-          User ID
-      app:
-        type : string
-        description: |
-          App ID
   VideogamesAllRequest:
     type: object
     required:
@@ -722,14 +671,7 @@ definitions:
           Admin ID
   VideogamesLayoutRequest:
     type: object
-    required:
-      - user
-      - app
     properties:
-      user:
-        type : string
-        description: |
-          User ID
       app:
         type : string
         description: |

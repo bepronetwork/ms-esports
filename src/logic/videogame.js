@@ -38,10 +38,10 @@ const processActions = {
 	},
 
 	__getVideoGamesLayout: async (params) => {
-		let user = await UsersRepository.prototype.findUserById(params.user);
-		if (!user) { throwError('USER_NOT_EXISTENT') }
-		const app = await AppRepository.prototype.findAppById(user.app_id);
-		if (!app) { throwError("APP_NOT_EXISTENT") }
+		// let user = await UsersRepository.prototype.findUserById(params.user);
+		// if (!user) { throwError('USER_NOT_EXISTENT') }
+		// const app = await AppRepository.prototype.findAppById(user.app_id);
+		// if (!app) { throwError("APP_NOT_EXISTENT") }
 		let games = await VideogameRepository.prototype.findAllVideogame();
 		for (let game of games) {
 			let series = await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id: game.external_id });
