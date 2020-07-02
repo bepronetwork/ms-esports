@@ -6,6 +6,8 @@ import {
     getPlayerLayout,
     registerAdmin,
     loginAdmin,
+    getBookedMatches,
+    getBookedSeriesMatches,
     registerApp,
     registerUser,
     loginUser
@@ -28,25 +30,42 @@ context('Booked Matches', async () => {
         }
         admin = await registerAdmin(postDataAdmin);
         admin = (await loginAdmin(postDataAdmin)).data.message;
-        var postData = {
-            name : "companuy" + parseInt(Math.random()*10000),
-            description : "sresy4",
-            metadataJSON : JSON.stringify({}),
-            admin_id : admin.id,
-            marketType : 0
-        }
-        app = (await registerApp(postData)).data.message;
-        var postDataUser = {
-            username : "sdfg" + parseInt(Math.random()*10000),
-            name : "test",
-            email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
-            password : 'test123',
-            address : '90x',
-            app : app.id
-        }
-        user = await registerUser(postDataUser);
-        user = (await loginUser(postDataUser)).data.message;
+        // var postData = {
+        //     name : "companuy" + parseInt(Math.random()*10000),
+        //     description : "sresy4",
+        //     metadataJSON : JSON.stringify({}),
+        //     admin_id : admin.id,
+        //     marketType : 0
+        // }
+        // app = (await registerApp(postData)).data.message;
+        // var postDataUser = {
+        //     username : "sdfg" + parseInt(Math.random()*10000),
+        //     name : "test",
+        //     email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
+        //     password : 'test123',
+        //     address : '90x',
+        //     app : app.id
+        // }
+        // user = await registerUser(postDataUser);
+        // user = (await loginUser(postDataUser)).data.message;
     });
+
+    it('should get All Booked Matches - BackOffice', mochaAsync(async () => {
+        var res = await getBookedMatches({
+            admin : admin.id
+        }, admin.bearerToken , {id : admin.id});
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should get Booked Matches By Serie - BackOffice', mochaAsync(async () => {
+        var res = await getBookedSeriesMatches({
+            serie_id:[2738],
+            admin : admin.id
+        }, admin.bearerToken , {id : admin.id});
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
 
     it('should get All Matches Layout', mochaAsync(async () => {
         var res = await getMatchLayout({});

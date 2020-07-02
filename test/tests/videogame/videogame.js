@@ -27,24 +27,24 @@ context('Videogame', async () => {
         }
         admin = await registerAdmin(postDataAdmin);
         admin = (await loginAdmin(postDataAdmin)).data.message;
-        var postData = {
-            name : "companuy" + parseInt(Math.random()*10000),
-            description : "sresy4",
-            metadataJSON : JSON.stringify({}),
-            admin_id : admin.id,
-            marketType : 0
-        }
-        app = (await registerApp(postData)).data.message;
-        var postDataUser = {
-            username : "sdfg" + parseInt(Math.random()*10000),
-            name : "test",
-            email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
-            password : 'test123',
-            address : '90x',
-            app : app.id
-        }
-        user = await registerUser(postDataUser);
-        user = (await loginUser(postDataUser)).data.message;
+        // var postData = {
+        //     name : "companuy" + parseInt(Math.random()*10000),
+        //     description : "sresy4",
+        //     metadataJSON : JSON.stringify({}),
+        //     admin_id : admin.id,
+        //     marketType : 0
+        // }
+        // app = (await registerApp(postData)).data.message;
+        // var postDataUser = {
+        //     username : "sdfg" + parseInt(Math.random()*10000),
+        //     name : "test",
+        //     email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
+        //     password : 'test123',
+        //     address : '90x',
+        //     app : app.id
+        // }
+        // user = await registerUser(postDataUser);
+        // user = (await loginUser(postDataUser)).data.message;
     });
 
     it('should get All Videogames', mochaAsync(async () => {

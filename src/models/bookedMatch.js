@@ -73,6 +73,22 @@ class BookedMatch extends ModelComponent {
             throw err;
         }
     }
+
+    async getBookedMatches() {
+        try {
+            return await this.process('GetBookedMatches');
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getBookedSeriesMatches() {
+        try {
+            return await this.process('GetBookedSeriesMatches');
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 

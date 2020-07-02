@@ -138,7 +138,44 @@ const processActions = {
         } catch (err) {
             throw err;
         }
-    }
+    },
+    __getBookedMatches: async (params) => {
+        try {
+            let matches = await BookedMatchRepository.prototype.findMatchAll({
+                offset: params.offset,
+                size: params.size,
+            });
+            let matchesId = []
+            for (let matchResult of matches) {
+                matchesId.push(matchResult.match.external_id)
+            }
+            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            return pandaScore.data;
+        } catch (err) {
+            throw err;
+        }
+    },
+    __getBookedSeriesMatches: async (params) => {
+        try {
+            let matches = await BookedMatchRepository.prototype.findMatchBySerieId({
+                external_serie: params.serie_id,
+                offset: params.offset,
+                size: params.size,
+            });
+            if (matches.length == 0) {
+                return matches
+            } else {
+                let matchesId = []
+                for (let matchResult of matches) {
+                    matchesId.push(matchResult.match.external_id)
+                }
+                let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+                return pandaScore.data;
+            }
+        } catch (err) {
+            throw err;
+        }
+    },
 }
 
 /**
@@ -198,6 +235,20 @@ const progressActions = {
         }
     },
     __getPlayerLayout: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+    __getBookedMatches: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+    __getBookedSeriesMatches: async (params) => {
         try {
             return params;
         } catch (err) {
@@ -275,6 +326,12 @@ class BookedMatchLogic extends LogicComponent {
                 case 'GetPlayerLayout': {
                     return library.process.__getPlayerLayout(params); break;
                 };
+                case 'GetBookedMatches': {
+                    return library.process.__getBookedMatches(params); break;
+                };
+                case 'GetBookedSeriesMatches': {
+                    return library.process.__getBookedSeriesMatches(params); break;
+                };
             }
         } catch (err) {
             throw err;
@@ -320,6 +377,12 @@ class BookedMatchLogic extends LogicComponent {
                 };
                 case 'GetPlayerLayout': {
                     return library.progress.__getPlayerLayout(params); break;
+                };
+                case 'GetBookedMatches': {
+                    return library.progress.__getBookedMatches(params); break;
+                };
+                case 'GetBookedSeriesMatches': {
+                    return library.progress.__getBookedSeriesMatches(params); break;
                 };
             }
         } catch (err) {

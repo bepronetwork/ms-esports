@@ -88,6 +88,22 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async getBookedMatches(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/booked/matches/all')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async getBookedSeriesMatches(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/get/booked/matches/series')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
     async registerAdmin(params) {
         return (await axios.post(`${MS_MASTER_URL}/api/admins/register`, params)).data;
     },

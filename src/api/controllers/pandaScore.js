@@ -101,6 +101,34 @@ async function getMatchesAll(req, res) {
     }
 }
 
+async function getBookedMatches(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getBookedMatches();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
+async function getBookedSeriesMatches(req, res) {
+    try {
+        await SecuritySingleton.verify({ type: 'admin', req, permissions: ["all"] });
+        let params = req.body;
+        let videogame = new BookedMatch(params);
+        let data = await videogame.getBookedSeriesMatches();
+        MiddlewareSingleton.log({ type: "global", req, code: 200 });
+        MiddlewareSingleton.respond(res, req, data);
+    } catch (err) {
+        MiddlewareSingleton.log({ type: "global", req, code: err.code });
+        MiddlewareSingleton.respondError(res, err);
+    }
+}
+
 async function getMatchesLayout(req, res) {
     try {
         // await SecuritySingleton.verify({ type: 'user', req });
@@ -228,4 +256,6 @@ export {
     getSpecificMatchLayout,
     getTeamLayout,
     getPlayerLayout,
+    getBookedMatches,
+    getBookedSeriesMatches
 }
