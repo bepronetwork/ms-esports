@@ -30,14 +30,17 @@ const processActions = {
         try {
             let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
             let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
-
+            let oddWinnerTwoWay = match.market.find((m)=>m.template=="winner-2-way");
             return {
-                app: params.app,
-                match: match._id,
-                external_serie: match.serie_id,
-                external_match: match.external_id,
-                isRegister: (bookedMatch == null)
-
+                app             : params.app,
+                match           : match._id,
+                external_serie  : match.serie_id,
+                external_match  : match.external_id,
+                isRegister      : (bookedMatch == null),
+                game_date       : match.game_date,
+                odds            : {
+                    winnerTwoWay: oddWinnerTwoWay.selections
+                }
             };
         } catch (err) {
             throw err;

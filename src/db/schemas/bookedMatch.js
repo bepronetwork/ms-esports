@@ -11,7 +11,7 @@ BookedMatchSchema.prototype.schema = {
     app            : { type: mongoose.Schema.Types.ObjectId, ref: 'App'},
     external_serie : { type: Number, required: true},
     external_match : { type: Number, required: true},
-    game_date      : {  type: Date, required : true},
+    game_date      : { type: Date, required : true},
     odds           : new db.Schema({
         winnerTwoWay: {type : Array}
     })
