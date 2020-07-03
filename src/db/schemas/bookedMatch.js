@@ -10,7 +10,11 @@ BookedMatchSchema.prototype.schema = {
     match          : { type: mongoose.Schema.Types.ObjectId, ref: 'Match'},
     app            : { type: mongoose.Schema.Types.ObjectId, ref: 'App'},
     external_serie : { type: Number, required: true},
-    external_match : { type: Number, required: true}
+    external_match : { type: Number, required: true},
+    game_date      : { type: Date, required : true},
+    odds           : new db.Schema({
+        winnerTwoWay: {type : Array}
+    })
 }
 
 BookedMatchSchema.prototype.model = db.model(BookedMatchSchema.prototype.name, new db.Schema(BookedMatchSchema.prototype.schema));
