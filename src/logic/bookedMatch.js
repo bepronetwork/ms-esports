@@ -63,18 +63,38 @@ const processActions = {
         try {
             // let user = await UsersRepository.prototype.findUserById(params.user);
             // if (!user) { throwError('USER_NOT_EXISTENT') }
-            // const app = await AppRepository.prototype.findAppById(user.app_id);
-            // if (!app) { throwError("APP_NOT_EXISTENT") }
-            let matches = await BookedMatchRepository.prototype.findMatchAll({
-                offset: params.offset,
-                size: params.size,
-            });
-            let matchesId = []
-            for (let matchResult of matches) {
-                matchesId.push(matchResult.match.external_id)
+            const app = await AppRepository.prototype.findAppById(params.app);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            var matches = "";
+            if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
+                matches = await BookedMatchRepository.prototype.findMatchAll({
+                    app: {app: params.app},
+                    offset: params.offset,
+                    size: params.size,
+                });
+            } else {
+                matches = await BookedMatchRepository.prototype.findMatchAllByDate({
+                    app: {app: params.app},
+                    begin_at: params.begin_at,
+                    end_at: params.end_at,
+                    offset: params.offset,
+                    size: params.size,
+                });
             }
-            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
-            return pandaScore.data;
+            if (matches.length == 0) {
+                return matches
+            } else {
+                let matchesId = []
+                for (let matchResult of matches) {
+                    matchesId.push(matchResult.match.external_id)
+                }
+                let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+                pandaScore.data = pandaScore.data.map((match) => {
+                    let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
+                    return { ...match, odds: oddsResult.odds };
+                })
+                return pandaScore.data;
+            }
         } catch (err) {
             throw err;
         }
@@ -83,13 +103,26 @@ const processActions = {
         try {
             // let user = await UsersRepository.prototype.findUserById(params.user);
             // if (!user) { throwError('USER_NOT_EXISTENT') }
-            // const app = await AppRepository.prototype.findAppById(user.app_id);
-            // if (!app) { throwError("APP_NOT_EXISTENT") }
-            let matches = await BookedMatchRepository.prototype.findMatchBySerieId({
-                external_serie: params.serie_id,
-                offset: params.offset,
-                size: params.size,
-            });
+            const app = await AppRepository.prototype.findAppById(params.app);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            var matches = "";
+            if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
+                matches = await BookedMatchRepository.prototype.findMatchBySerieId({
+                    external_serie: params.serie_id,
+                    app: {app: params.app},
+                    offset: params.offset,
+                    size: params.size,
+                });
+            } else {
+                matches = await BookedMatchRepository.prototype.findMatchBySerieIdByDate({
+                    external_serie: params.serie_id,
+                    app: {app: params.app},
+                    begin_at: params.begin_at,
+                    end_at: params.end_at,
+                    offset: params.offset,
+                    size: params.size,
+                });
+            } 
             if (matches.length == 0) {
                 return matches
             } else {
@@ -98,6 +131,10 @@ const processActions = {
                     matchesId.push(matchResult.match.external_id)
                 }
                 let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+                pandaScore.data = pandaScore.data.map((match) => {
+                    let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
+                    return { ...match, odds: oddsResult.odds };
+                })
                 return pandaScore.data;
             }
         } catch (err) {
@@ -141,7 +178,77 @@ const processActions = {
         } catch (err) {
             throw err;
         }
-    }
+    },
+    __getBookedMatches: async (params) => {
+        try {
+            var matches = "";
+            if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
+                matches = await BookedMatchRepository.prototype.findMatchAll({
+                    offset: params.offset,
+                    size: params.size,
+                });
+            } else {
+                matches = await BookedMatchRepository.prototype.findMatchAllByDate({
+                    begin_at: params.begin_at,
+                    end_at: params.end_at,
+                    offset: params.offset,
+                    size: params.size,
+                });
+            }
+            if (matches.length == 0) {
+                return matches
+            } else {
+                let matchesId = []
+                for (let matchResult of matches) {
+                    matchesId.push(matchResult.match.external_id)
+                }
+                let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+                pandaScore.data = pandaScore.data.map((match) => {
+                    let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
+                    return { ...match, odds: oddsResult.odds };
+                })
+                return pandaScore.data;
+            }
+        } catch (err) {
+            throw err;
+        }
+    },
+    __getBookedSeriesMatches: async (params) => {
+        try {
+            var matches = "";
+            if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
+                matches = await BookedMatchRepository.prototype.findMatchBySerieId({
+                    external_serie: params.serie_id,
+                    offset: params.offset,
+                    size: params.size,
+                });
+            } else {
+                matches = await BookedMatchRepository.prototype.findMatchBySerieIdByDate({
+                    external_serie: params.serie_id,
+                    begin_at: params.begin_at,
+                    end_at: params.end_at,
+                    offset: params.offset,
+                    size: params.size,
+                });
+            } 
+            if (matches.length == 0) {
+                return matches
+            } else {
+                let matchesId = []
+                for (let matchResult of matches) {
+                    matchesId.push(matchResult.match.external_id)
+                }
+                let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+                pandaScore.data = pandaScore.data.map((match) => {
+                    let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
+                    return { ...match, odds: oddsResult.odds };
+                })
+                return pandaScore.data;
+            }
+        } catch (err) {
+            throw err;
+        }
+    },
 }
 
 /**
@@ -207,6 +314,20 @@ const progressActions = {
             throw err;
         }
     },
+    __getBookedMatches: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
+    __getBookedSeriesMatches: async (params) => {
+        try {
+            return params;
+        } catch (err) {
+            throw err;
+        }
+    },
 }
 
 /**
@@ -248,12 +369,12 @@ class BookedMatchLogic extends LogicComponent {
 
 
     /**
-	 * Validates BookedMatch schema.
-	 *
-	 * @param {BookedMatch} BookedMatch
-	 * @returns {BookedMatch} BookedMatch
-	 * @throws {string} On schema.validate failure
-	 */
+     * Validates BookedMatch schema.
+     *
+     * @param {BookedMatch} BookedMatch
+     * @returns {BookedMatch} BookedMatch
+     * @throws {string} On schema.validate failure
+     */
     async objectNormalize(params, processAction) {
         try {
             switch (processAction) {
@@ -278,19 +399,25 @@ class BookedMatchLogic extends LogicComponent {
                 case 'GetPlayerLayout': {
                     return library.process.__getPlayerLayout(params); break;
                 };
+                case 'GetBookedMatches': {
+                    return library.process.__getBookedMatches(params); break;
+                };
+                case 'GetBookedSeriesMatches': {
+                    return library.process.__getBookedSeriesMatches(params); break;
+                };
             }
         } catch (err) {
             throw err;
         }
     }
 
-	/**
-	* Tests BookedMatch schema.
-	*
-	* @param {BookedMatch} BookedMatch
-	* @returns {BookedMatch} BookedMatch
-	* @throws {string} On schema.validate failure
-	*/
+    /**
+    * Tests BookedMatch schema.
+    *
+    * @param {BookedMatch} BookedMatch
+    * @returns {BookedMatch} BookedMatch
+    * @throws {string} On schema.validate failure
+    */
 
     testParams(params, action) {
         try {
@@ -323,6 +450,12 @@ class BookedMatchLogic extends LogicComponent {
                 };
                 case 'GetPlayerLayout': {
                     return library.progress.__getPlayerLayout(params); break;
+                };
+                case 'GetBookedMatches': {
+                    return library.progress.__getBookedMatches(params); break;
+                };
+                case 'GetBookedSeriesMatches': {
+                    return library.progress.__getBookedSeriesMatches(params); break;
                 };
             }
         } catch (err) {

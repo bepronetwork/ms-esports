@@ -300,6 +300,62 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /get/booked/matches/all :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get All Booked Matches from Panda Score and DB
+      operationId: getBookedMatches
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Booked Matches All
+          description: Get All Booked Matches from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetBookedMatchesRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /get/booked/matches/series :
+    x-swagger-router-controller: pandaScore
+    post:
+      tags:
+      - pandaScore
+      summary: Get Series Matches from Panda Score and DB
+      operationId: getBookedSeriesMatches
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: Get Booked Series Game
+          description: Get Booked Series Matches from Panda Score and DB
+          schema:
+            $ref: '#/definitions/GetBookedSeriesMatchesRequest'
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GeneralResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /get/videogame/team :
     x-swagger-router-controller: pandaScore
     post:
@@ -471,6 +527,72 @@ definitions:
         example: "24234g234g23g"
         description: |
           Match ID
+  GetBookedMatchesRequest:
+    type: object
+    required :
+      - admin
+    properties:
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of Document
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of document
+      admin:
+        type : string
+        description: |
+          Admin ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+  GetBookedSeriesMatchesRequest:
+    type: object
+    required :
+      - admin
+      - serie_id
+    properties:
+      serie_id:
+        type : array
+        items:
+          type : number
+          example: 15
+          description: |
+            Series_ids
+      size:
+        type : number
+        example: 15
+        description: |
+          Size of Document
+      offset :
+        type : number
+        example: 15
+        description: |
+          Offset of document
+      admin:
+        type : string
+        description: |
+          Admin ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
   GetTeamRequest:
     type: object
     required :
@@ -598,8 +720,25 @@ definitions:
         example: 15
         description: |
           Offset of document
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+      status :
+        type : string
+        example: "finished"
+        description: |
+          Status Of Match
   GetMatchesLayoutRequest:
     type: object
+    required:
+      - app
     properties:
       size:
         type : number
@@ -611,6 +750,20 @@ definitions:
         example: 15
         description: |
           Offset of document
+      app:
+        type : string
+        description: |
+          App ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
   GetSeriesMatchesRequest:
     type: object
     required:
@@ -638,10 +791,26 @@ definitions:
         type : string
         description: |
           Admin ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+      status :
+        type : string
+        example: "finished"
+        description: |
+          Status Of Match
   GetSeriesMatchesLayoutRequest:
     type: object
     required:
       - serie_id
+      - app
     properties:
       serie_id:
         type : array
@@ -660,6 +829,20 @@ definitions:
         example: 15
         description: |
           Offset of document
+      app:
+        type : string
+        description: |
+          App ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
   VideogamesAllRequest:
     type: object
     required:

@@ -1,6 +1,6 @@
 import {globals} from "../../Globals";
+import mongoose from "mongoose";
 let db = globals.main_db;
-import mongoose from 'mongoose';
 
 class MatchSchema{};
 

@@ -57,10 +57,12 @@ class BookedMatchRepository extends MongoComponent {
         });
     }
 
-    async findMatchAll({ offset, size }) {
+    async findMatchAll({ offset, size, app = {}}) {
         try {
             return new Promise((resolve, reject) => {
-                BookedMatchRepository.prototype.schema.model.find()
+                BookedMatchRepository.prototype.schema.model.find({
+                    ...app
+                })
                     .populate(populate_match)
                     .skip(offset == undefined ? 0 : offset)
                     .limit((size > 10 || !size || size <= 0) ? 10 : size)
@@ -75,10 +77,62 @@ class BookedMatchRepository extends MongoComponent {
         }
     }
 
-    async findMatchBySerieId({external_serie, offset, size}) {
+    async findMatchAllByDate({ offset, size, begin_at, end_at, app = {} }) {
         try {
             return new Promise((resolve, reject) => {
-                BookedMatchRepository.prototype.schema.model.find({external_serie: {$in: external_serie}})
+                BookedMatchRepository.prototype.schema.model.find({
+                    game_date: { 
+                        $gte: begin_at == undefined ? new Date() : begin_at, 
+                        $lte: end_at == undefined ? new Date(new Date().setDate(new Date().getDate()+100)) : end_at
+                    }, 
+                    ...app
+                })
+                    .populate(populate_match)
+                    .skip(offset == undefined ? 0 : offset)
+                    .limit((size > 10 || !size || size <= 0) ? 10 : size)
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findMatchBySerieId({external_serie, offset, size, app = {}}) {
+        try {
+            return new Promise((resolve, reject) => {
+                BookedMatchRepository.prototype.schema.model.find({
+                    external_serie: {$in: external_serie},
+                    ...app
+                })
+                    .populate(populate_match)
+                    .skip(offset == undefined ? 0 : offset)
+                    .limit((size > 10 || !size || size <= 0) ? 10 : size)
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findMatchBySerieIdByDate({external_serie, offset, size, app = {}, begin_at, end_at}) {
+        try {
+            return new Promise((resolve, reject) => {
+                BookedMatchRepository.prototype.schema.model.find({
+                    external_serie: {$in: external_serie},
+                    ...app,
+                    game_date: { 
+                        $gte: begin_at == undefined ? new Date() : begin_at, 
+                        $lte: end_at == undefined ? new Date(new Date().setDate(new Date().getDate()+100)) : end_at
+                    }
+                })
                     .populate(populate_match)
                     .skip(offset == undefined ? 0 : offset)
                     .limit((size > 10 || !size || size <= 0) ? 10 : size)

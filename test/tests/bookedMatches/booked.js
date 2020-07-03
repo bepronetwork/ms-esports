@@ -6,6 +6,8 @@ import {
     getPlayerLayout,
     registerAdmin,
     loginAdmin,
+    getBookedMatches,
+    getBookedSeriesMatches,
     registerApp,
     registerUser,
     loginUser
@@ -36,27 +38,51 @@ context('Booked Matches', async () => {
             marketType : 0
         }
         app = (await registerApp(postData)).data.message;
-        var postDataUser = {
-            username : "sdfg" + parseInt(Math.random()*10000),
-            name : "test",
-            email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
-            password : 'test123',
-            address : '90x',
-            app : app.id
-        }
-        user = await registerUser(postDataUser);
-        user = (await loginUser(postDataUser)).data.message;
+        // var postDataUser = {
+        //     username : "sdfg" + parseInt(Math.random()*10000),
+        //     name : "test",
+        //     email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
+        //     password : 'test123',
+        //     address : '90x',
+        //     app : app.id
+        // }
+        // user = await registerUser(postDataUser);
+        // user = (await loginUser(postDataUser)).data.message;
     });
 
+    it('should get All Booked Matches - BackOffice', mochaAsync(async () => {
+        var res = await getBookedMatches({
+            admin : admin.id,
+            begin_at: "2020-06-20"
+        }, admin.bearerToken , {id : admin.id});
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should get Booked Matches By Serie - BackOffice', mochaAsync(async () => {
+        var res = await getBookedSeriesMatches({
+            serie_id:[2774],
+            admin : admin.id,
+            begin_at: "2020-06-20"
+        }, admin.bearerToken , {id : admin.id});
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
+
     it('should get All Matches Layout', mochaAsync(async () => {
-        var res = await getMatchLayout({});
+        var res = await getMatchLayout({
+            app: app.id,
+            begin_at: "2020-06-20"
+        });
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
     }));
 
     it('should get Matches By Serie Layout', mochaAsync(async () => {
         var res = await getSeriesMatchesLayout({
-            serie_id:[2789]
+            serie_id:[563830],
+            app: app.id,
+            begin_at: "2020-06-20"
         });
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
