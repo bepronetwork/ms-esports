@@ -53,7 +53,7 @@ const processActions = {
             for (let match of matches) {
                 matchesId.push(match.external_id)
             }
-            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
             let resultBookedMatch = await BookedMatchRepository.prototype.findAll();
             pandaScore.data = pandaScore.data.map((match) => {
                 let booked = resultBookedMatch.find((bookedMatch) => bookedMatch.external_match == match.id) != null;
@@ -97,7 +97,7 @@ const processActions = {
             for (let match of matches) {
                 matchesId.push(match.external_id)
             }
-            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
             let resultBookedMatch = await BookedMatchRepository.prototype.findAll();
             pandaScore.data = pandaScore.data.map((match) => {
                 let booked = resultBookedMatch.find((bookedMatch) => bookedMatch.external_match == match.id) != null;
