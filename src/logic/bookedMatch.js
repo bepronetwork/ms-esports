@@ -66,12 +66,16 @@ const processActions = {
                 offset: params.offset,
                 size: params.size,
             });
-            let matchesId = []
-            for (let matchResult of matches) {
-                matchesId.push(matchResult.match.external_id)
+            if (matches.length == 0) {
+                return matches
+            } else {
+                let matchesId = []
+                for (let matchResult of matches) {
+                    matchesId.push(matchResult.match.external_id)
+                }
+                let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+                return pandaScore.data;
             }
-            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
-            return pandaScore.data;
         } catch (err) {
             throw err;
         }

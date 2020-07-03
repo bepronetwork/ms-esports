@@ -14,7 +14,7 @@ MatchSchema.prototype.schema = {
     videogame       : {  type: mongoose.Schema.Types.ObjectId, ref: 'Videogame'},
     status_external : {  type: String, required : true},
     game_date       : {  type: Date, required : true},
-    market          : [{ type: JSON, required : true}]
+    market          : {  type: Array}
 }
 
 MatchSchema.prototype.model = db.model(MatchSchema.prototype.name, new db.Schema(MatchSchema.prototype.schema));
