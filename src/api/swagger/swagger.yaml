@@ -557,10 +557,12 @@ definitions:
         description: |
           End Date
       status :
-        type : string
-        example: "finished"
-        description: |
-          Status of Match
+        type : array
+        items:
+          type : string
+          example: "finished"
+          description: |
+            Status of Match
   GetBookedSeriesMatchesRequest:
     type: object
     required :
@@ -599,10 +601,12 @@ definitions:
         description: |
           End Date
       status :
-        type : string
-        example: "finished"
-        description: |
-          Status of Match
+        type : array
+        items:
+          type : string
+          example: "finished"
+          description: |
+            Status of Match
   GetTeamRequest:
     type: object
     required :
@@ -741,10 +745,12 @@ definitions:
         description: |
           End Date
       status :
-        type : string
-        example: "finished"
-        description: |
-          Status Of Match
+        type : array
+        items:
+          type : string
+          example: "finished"
+          description: |
+            Status of Match
   GetMatchesLayoutRequest:
     type: object
     required:
@@ -775,10 +781,12 @@ definitions:
         description: |
           End Date
       status :
-        type : string
-        example: "finished"
-        description: |
-          Status of Match
+        type : array
+        items:
+          type : string
+          example: "finished"
+          description: |
+            Status of Match
   GetSeriesMatchesRequest:
     type: object
     required:
@@ -817,10 +825,12 @@ definitions:
         description: |
           End Date
       status :
-        type : string
-        example: "finished"
-        description: |
-          Status Of Match
+        type : array
+        items:
+          type : string
+          example: "finished"
+          description: |
+            Status of Match
   GetSeriesMatchesLayoutRequest:
     type: object
     required:
@@ -859,10 +869,12 @@ definitions:
         description: |
           End Date
       status :
-        type : string
-        example: "finished"
-        description: |
-          Status of Match
+        type : array
+        items:
+          type : string
+          example: "finished"
+          description: |
+            Status of Match
   VideogamesAllRequest:
     type: object
     required:
