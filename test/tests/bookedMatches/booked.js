@@ -80,7 +80,7 @@ context('Booked Matches', async () => {
 
     it('should get Matches By Serie Layout', mochaAsync(async () => {
         var res = await getSeriesMatchesLayout({
-            serie_id:[563830],
+            serie_id:[2774],
             app: app.id,
             begin_at: "2020-06-20"
         });
