@@ -59,10 +59,37 @@ class MatchRepository extends MongoComponent{
         }
     }
 
-    async findMatchBySerieId({serie_id, offset, size}) {
+    async findMatchBySerieId({serie_id, offset, size, status = {}}) {
         try {
             return new Promise((resolve, reject) => {
-                MatchRepository.prototype.schema.model.find({serie_id: {$in: serie_id}})
+                MatchRepository.prototype.schema.model.find({
+                    serie_id: {$in: serie_id},
+                    ...status
+                })
+                    .skip(offset == undefined ? 0 : offset)
+                    .limit((size > 10 || !size || size <= 0) ? 10 : size)
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findMatchBySerieIdAndDate({serie_id, offset, size, begin_at, end_at, status = {}}) {
+        try {
+            return new Promise((resolve, reject) => {
+                MatchRepository.prototype.schema.model.find({
+                    serie_id: {$in: serie_id},
+                    game_date: { 
+                        $gte: begin_at == undefined ? new Date() : begin_at, 
+                        $lte: end_at == undefined ? new Date(new Date().setDate(new Date().getDate()+100)) : end_at
+                    },
+                    ...status
+                })
                     .skip(offset == undefined ? 0 : offset)
                     .limit((size > 10 || !size || size <= 0) ? 10 : size)
                     .lean()

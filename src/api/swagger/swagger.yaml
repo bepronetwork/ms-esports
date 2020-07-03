@@ -755,6 +755,21 @@ definitions:
         type : string
         description: |
           Admin ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
+      status :
+        type : string
+        example: "finished"
+        description: |
+          Status Of Match
   GetSeriesMatchesLayoutRequest:
     type: object
     required:
