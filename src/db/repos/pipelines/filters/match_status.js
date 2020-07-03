@@ -5,7 +5,9 @@ const filter_status_match = ({ status }) => {
     return [
         {
             '$match': {
-                'match.status_external': status
+                'match.status_external': {
+                    '$in': status
+                }
             }
         }
     ];
