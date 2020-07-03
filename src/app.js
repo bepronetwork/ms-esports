@@ -1,10 +1,13 @@
 import { PORT, QUOTA_GUARD_URL } from './config';
 import { globals } from './Globals';
 import { Logger } from './helpers/logger';
+import { IOSingleton } from './logic/utils/io';
 
 /** MACROS */
 var SwaggerExpress = require('swagger-express-mw');
-var app = require('express')()
+var app = require('express')();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 const expressIp = require('express-ip');
 const cors = require('cors');
 /** CODE */
@@ -26,7 +29,14 @@ var config = {
   	appRoot: __dirname // required config
 };
 
-
+// Setting Socket
+IOSingleton.push(io);
+io.on('connection', (socket) => {
+    console.log('Socket ON');
+    socket.on("room", (data) => {
+        socket.join(data.roomId);
+    });
+});
 
 SwaggerExpress.create(config, async (err, swaggerExpress) => {
     if (err) { throw err; }
