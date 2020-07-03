@@ -1,0 +1,40 @@
+import mongoose from 'mongoose';
+import { limit } from './filters/limit';
+import { skip } from './filters/skip';
+import { filter_status_match } from './filters/match_status';
+import { filter_app } from './filters/app';
+
+
+const pipeline_matches_all = ({ app, status, offset, size, begin_at, end_at }) =>
+    [
+        {
+            '$match': {
+                'game_date': {
+                    '$gte': new Date(begin_at),
+                    '$lte': new Date(end_at)
+                },
+                ...filter_app(app.app)
+            }
+        }, {
+            '$sort': {
+                'game_date': 1
+            }
+        }, {
+            '$lookup': {
+                'from': 'matches',
+                'localField': 'match',
+                'foreignField': '_id',
+                'as': 'match'
+            }
+        }, {
+            '$unwind': {
+                'path': '$match'
+            }
+        },
+        ...filter_status_match({ status }),
+        ...limit({ size }),
+        ...skip({ offset })
+    ]
+
+
+export default pipeline_matches_all;

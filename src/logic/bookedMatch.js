@@ -30,15 +30,15 @@ const processActions = {
         try {
             let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
             let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
-            let oddWinnerTwoWay = match.market.find((m)=>m.template=="winner-2-way");
+            let oddWinnerTwoWay = match.market.find((m) => m.template == "winner-2-way");
             return {
-                app             : params.app,
-                match           : match._id,
-                external_serie  : match.serie_id,
-                external_match  : match.external_id,
-                isRegister      : (bookedMatch == null),
-                game_date       : match.game_date,
-                odds            : {
+                app: params.app,
+                match: match._id,
+                external_serie: match.serie_id,
+                external_match: match.external_id,
+                isRegister: (bookedMatch == null),
+                game_date: match.game_date,
+                odds: {
                     winnerTwoWay: oddWinnerTwoWay.selections
                 }
             };
@@ -65,22 +65,14 @@ const processActions = {
             // if (!user) { throwError('USER_NOT_EXISTENT') }
             const app = await AppRepository.prototype.findAppById(params.app);
             if (!app) { throwError("APP_NOT_EXISTENT") }
-            var matches = "";
-            if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
-                matches = await BookedMatchRepository.prototype.findMatchAll({
-                    app: {app: params.app},
-                    offset: params.offset,
-                    size: params.size,
-                });
-            } else {
-                matches = await BookedMatchRepository.prototype.findMatchAllByDate({
-                    app: {app: params.app},
-                    begin_at: params.begin_at,
-                    end_at: params.end_at,
-                    offset: params.offset,
-                    size: params.size,
-                });
-            }
+            let matches = await BookedMatchRepository.prototype.findMatchAllPipeline({
+                app: { app: params.app },
+                begin_at: params.begin_at,
+                end_at: params.end_at,
+                offset: params.offset,
+                size: params.size,
+                status: params.status
+            });
             if (matches.length == 0) {
                 return matches
             } else {
@@ -105,24 +97,15 @@ const processActions = {
             // if (!user) { throwError('USER_NOT_EXISTENT') }
             const app = await AppRepository.prototype.findAppById(params.app);
             if (!app) { throwError("APP_NOT_EXISTENT") }
-            var matches = "";
-            if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
-                matches = await BookedMatchRepository.prototype.findMatchBySerieId({
-                    external_serie: params.serie_id,
-                    app: {app: params.app},
-                    offset: params.offset,
-                    size: params.size,
-                });
-            } else {
-                matches = await BookedMatchRepository.prototype.findMatchBySerieIdByDate({
-                    external_serie: params.serie_id,
-                    app: {app: params.app},
-                    begin_at: params.begin_at,
-                    end_at: params.end_at,
-                    offset: params.offset,
-                    size: params.size,
-                });
-            } 
+            let matches = await BookedMatchRepository.prototype.findMatchBySerieIdPipeline({
+                external_serie: params.serie_id,
+                app: { app: params.app },
+                begin_at: params.begin_at,
+                end_at: params.end_at,
+                offset: params.offset,
+                size: params.size,
+                status: params.status
+            });
             if (matches.length == 0) {
                 return matches
             } else {
@@ -181,20 +164,13 @@ const processActions = {
     },
     __getBookedMatches: async (params) => {
         try {
-            var matches = "";
-            if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
-                matches = await BookedMatchRepository.prototype.findMatchAll({
-                    offset: params.offset,
-                    size: params.size,
-                });
-            } else {
-                matches = await BookedMatchRepository.prototype.findMatchAllByDate({
-                    begin_at: params.begin_at,
-                    end_at: params.end_at,
-                    offset: params.offset,
-                    size: params.size,
-                });
-            }
+            let matches = await BookedMatchRepository.prototype.findMatchAllPipeline({
+                begin_at: params.begin_at,
+                end_at: params.end_at,
+                offset: params.offset,
+                size: params.size,
+                status: params.status
+            });
             if (matches.length == 0) {
                 return matches
             } else {
@@ -215,22 +191,14 @@ const processActions = {
     },
     __getBookedSeriesMatches: async (params) => {
         try {
-            var matches = "";
-            if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
-                matches = await BookedMatchRepository.prototype.findMatchBySerieId({
-                    external_serie: params.serie_id,
-                    offset: params.offset,
-                    size: params.size,
-                });
-            } else {
-                matches = await BookedMatchRepository.prototype.findMatchBySerieIdByDate({
-                    external_serie: params.serie_id,
-                    begin_at: params.begin_at,
-                    end_at: params.end_at,
-                    offset: params.offset,
-                    size: params.size,
-                });
-            } 
+            let matches = await BookedMatchRepository.prototype.findMatchBySerieIdPipeline({
+                external_serie: params.serie_id,
+                begin_at: params.begin_at,
+                end_at: params.end_at,
+                offset: params.offset,
+                size: params.size,
+                status: params.status
+            });
             if (matches.length == 0) {
                 return matches
             } else {

@@ -1,6 +1,8 @@
 import { BookedMatchSchema } from '../schemas';
 import MongoComponent from './MongoComponent';
 import { populate_match } from './populates';
+import pipeline_matches_by_series from './pipelines/matches_series';
+import pipeline_matches_all from './pipelines/matches_all';
 
 /**
  * Accounts database interaction class.
@@ -141,6 +143,64 @@ class BookedMatchRepository extends MongoComponent {
                         if (err) { reject(err) }
                         resolve(user);
                     });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findMatchBySerieIdPipeline({external_serie, offset, size, app = {}, begin_at, end_at, status}) {
+        try {
+            switch (begin_at) {
+                case "all":
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                    break;
+                case undefined:
+                    begin_at = (new Date()).toISOString().split("T")[0];
+                    break;
+            }
+            switch (end_at) {
+                case undefined:
+                    end_at = (new Date(new Date().setDate(new Date().getDate() + 100))).toISOString().split("T")[0];
+                    break;
+            }
+            return new Promise((resolve, reject) => {
+                BookedMatchRepository.prototype.schema.model
+                .aggregate(pipeline_matches_by_series({external_serie, offset, size, app, begin_at, end_at, status}))
+                .exec((err, data) => {
+                    if (err) { reject(err) }
+                    resolve(data);
+                });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findMatchAllPipeline({offset, size, app = {}, begin_at, end_at, status}) {
+        try {
+            switch (begin_at) {
+                case "all":
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                    break;
+                case undefined:
+                    begin_at = (new Date()).toISOString().split("T")[0];
+                    break;
+            }
+            switch (end_at) {
+                case undefined:
+                    end_at = (new Date(new Date().setDate(new Date().getDate() + 100))).toISOString().split("T")[0];
+                    break;
+            }
+            return new Promise((resolve, reject) => {
+                BookedMatchRepository.prototype.schema.model
+                .aggregate(pipeline_matches_all({offset, size, app, begin_at, end_at, status}))
+                .exec((err, data) => {
+                    if (err) { reject(err) }
+                    resolve(data);
+                });
             });
         } catch (err) {
             throw (err)
