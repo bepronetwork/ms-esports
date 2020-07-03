@@ -546,6 +546,16 @@ definitions:
         type : string
         description: |
           Admin ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
   GetBookedSeriesMatchesRequest:
     type: object
     required :
@@ -573,6 +583,16 @@ definitions:
         type : string
         description: |
           Admin ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
   GetTeamRequest:
     type: object
     required :
@@ -717,6 +737,8 @@ definitions:
           Status Of Match
   GetMatchesLayoutRequest:
     type: object
+    required:
+      - app
     properties:
       size:
         type : number
@@ -728,6 +750,20 @@ definitions:
         example: 15
         description: |
           Offset of document
+      app:
+        type : string
+        description: |
+          App ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
   GetSeriesMatchesRequest:
     type: object
     required:
@@ -774,6 +810,7 @@ definitions:
     type: object
     required:
       - serie_id
+      - app
     properties:
       serie_id:
         type : array
@@ -792,6 +829,20 @@ definitions:
         example: 15
         description: |
           Offset of document
+      app:
+        type : string
+        description: |
+          App ID
+      begin_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          Start Date
+      end_at :
+        type : string
+        example: "2002-12-09"
+        description: |
+          End Date
   VideogamesAllRequest:
     type: object
     required:
