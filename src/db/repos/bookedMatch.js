@@ -164,6 +164,9 @@ class BookedMatchRepository extends MongoComponent {
                 case undefined:
                     end_at = (new Date(new Date().setDate(new Date().getDate() + 100))).toISOString().split("T")[0];
                     break;
+                case end_at:
+                    end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
+                    break;
             }
             return new Promise((resolve, reject) => {
                 BookedMatchRepository.prototype.schema.model
@@ -192,6 +195,9 @@ class BookedMatchRepository extends MongoComponent {
             switch (end_at) {
                 case undefined:
                     end_at = (new Date(new Date().setDate(new Date().getDate() + 100))).toISOString().split("T")[0];
+                    break;
+                case end_at:
+                    end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
                     break;
             }
             return new Promise((resolve, reject) => {
