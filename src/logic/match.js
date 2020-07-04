@@ -28,24 +28,14 @@ let __private = {};
 
 const processActions = {
     __getSeriesMatches: async (params) => {
-        var matches = "";
-        if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
-            matches = await MatchRepository.prototype.findMatchBySerieId({
-                serie_id: params.serie_id,
-                status: params.status == undefined ? {} : { status_external: params.status },
-                offset: params.offset,
-                size: params.size,
-            });
-        } else {
-            matches = await MatchRepository.prototype.findMatchBySerieIdAndDate({
-                serie_id: params.serie_id,
-                status: params.status == undefined ? {} : { status_external: params.status },
-                begin_at: params.begin_at,
-                end_at: params.end_at,
-                offset: params.offset,
-                size: params.size,
-            });
-        }
+        let matches = await MatchRepository.prototype.findMatchBySerieId({
+            serie_id: params.serie_id,
+            status: params.status == undefined ? {} : { status_external: { $in: params.status } },
+            begin_at: params.begin_at,
+            end_at: params.end_at,
+            offset: params.offset,
+            size: params.size,
+        });
         if (matches.length == 0) {
             return matches
         } else {
@@ -53,7 +43,7 @@ const processActions = {
             for (let match of matches) {
                 matchesId.push(match.external_id)
             }
-            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
             let resultBookedMatch = await BookedMatchRepository.prototype.findAll();
             pandaScore.data = pandaScore.data.map((match) => {
                 let booked = resultBookedMatch.find((bookedMatch) => bookedMatch.external_match == match.id) != null;
@@ -74,22 +64,13 @@ const processActions = {
     },
 
     __getMatchesAll: async (params) => {
-        var matches = "";
-        if (params.begin_at != undefined && params.begin_at.toLowerCase() == "all") {
-            matches = await MatchRepository.prototype.findMatchAll({
-                status: params.status == undefined ? {} : { status_external: params.status },
-                offset: params.offset,
-                size: params.size,
-            });
-        } else {
-            matches = await MatchRepository.prototype.findMatchAllByDate({
-                status: params.status == undefined ? {} : { status_external: params.status },
-                begin_at: params.begin_at,
-                end_at: params.end_at,
-                offset: params.offset,
-                size: params.size,
-            });
-        }
+        let matches = await MatchRepository.prototype.findMatchAll({
+            status: params.status == undefined ? {} : { status_external: { $in: params.status } },
+            begin_at: params.begin_at,
+            end_at: params.end_at,
+            offset: params.offset,
+            size: params.size,
+        });
         if (matches.length == 0) {
             return matches
         } else {
@@ -97,7 +78,7 @@ const processActions = {
             for (let match of matches) {
                 matchesId.push(match.external_id)
             }
-            let pandaScore = await axios.get(`https://api.pandascore.co/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+            let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
             let resultBookedMatch = await BookedMatchRepository.prototype.findAll();
             pandaScore.data = pandaScore.data.map((match) => {
                 let booked = resultBookedMatch.find((bookedMatch) => bookedMatch.external_match == match.id) != null;

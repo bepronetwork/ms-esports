@@ -59,43 +59,41 @@ class MatchRepository extends MongoComponent{
         }
     }
 
-    async findMatchBySerieId({serie_id, offset, size, status = {}}) {
+    async findMatchBySerieId({serie_id, offset, size, begin_at, end_at, status = {}}) {
         try {
-            return new Promise((resolve, reject) => {
-                MatchRepository.prototype.schema.model.find({
-                    serie_id: {$in: serie_id},
-                    ...status
-                })
-                    .skip(offset == undefined ? 0 : offset)
-                    .limit((size > 10 || !size || size <= 0) ? 10 : size)
-                    .lean()
-                    .exec((err, user) => {
-                        if (err) { reject(err) }
-                        resolve(user);
-                    });
-            });
-        } catch (err) {
-            throw (err)
-        }
-    }
-
-    async findMatchBySerieIdAndDate({serie_id, offset, size, begin_at, end_at, status = {}}) {
-        try {
+            switch (begin_at) {
+                case "all":
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                    break;
+                case undefined:
+                    begin_at = (new Date()).toISOString().split("T")[0];
+                    break;
+            }
+            switch (end_at) {
+                case undefined:
+                    end_at = (new Date(new Date().setDate(new Date().getDate() + 100))).toISOString().split("T")[0];
+                    break;
+                case end_at:
+                    end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
+                    break;
+            }
             return new Promise((resolve, reject) => {
                 MatchRepository.prototype.schema.model.find({
                     serie_id: {$in: serie_id},
                     game_date: { 
-                        $gte: begin_at == undefined ? new Date() : begin_at, 
-                        $lte: end_at == undefined ? new Date(new Date().setDate(new Date().getDate()+100)) : end_at
+                        $gte: new Date(begin_at), 
+                        $lte: new Date (end_at)
                     },
                     ...status
                 })
+                    .sort({game_date : 1})
                     .skip(offset == undefined ? 0 : offset)
                     .limit((size > 10 || !size || size <= 0) ? 10 : size)
                     .lean()
-                    .exec((err, user) => {
+                    .exec((err, data) => {
                         if (err) { reject(err) }
-                        resolve(user);
+                        resolve(data);
                     });
             });
         } catch (err) {
@@ -103,41 +101,40 @@ class MatchRepository extends MongoComponent{
         }
     }
 
-    async findMatchAllByDate({offset, size, begin_at, end_at, status = {}}) {
+    async findMatchAll({offset, size, begin_at, end_at, status = {}}) {
         try {
+            switch (begin_at) {
+                case "all":
+                    begin_at = new Date(new Date().setDate(new Date().getDate() - 20000));
+                    end_at = new Date(new Date().setDate(new Date().getDate() + 100));
+                    break;
+                case undefined:
+                    begin_at = (new Date()).toISOString().split("T")[0];
+                    break;
+            }
+            switch (end_at) {
+                case undefined:
+                    end_at = (new Date(new Date().setDate(new Date().getDate() + 100))).toISOString().split("T")[0];
+                    break;
+                case end_at:
+                    end_at = (new Date(new Date().setDate(new Date(end_at).getDate() + 2))).toISOString().split("T")[0];
+                    break;
+            }
             return new Promise((resolve, reject) => {
                 MatchRepository.prototype.schema.model.find({ 
                     game_date: { 
-                        $gte: begin_at == undefined ? new Date() : begin_at, 
-                        $lte: end_at == undefined ? new Date(new Date().setDate(new Date().getDate()+100)) : end_at
+                        $gte: new Date(begin_at), 
+                        $lte: new Date (end_at)
                     },
                     ...status
                 })
+                    .sort({game_date : 1})
                     .skip(offset == undefined ? 0 : offset)
                     .limit((size > 10 || !size || size <= 0) ? 10 : size)
                     .lean()
-                    .exec((err, user) => {
+                    .exec((err, data) => {
                         if (err) { reject(err) }
-                        resolve(user);
-                    });
-            });
-        } catch (err) {
-            throw (err)
-        }
-    }
-
-    async findMatchAll({offset, size, status = {}}) {
-        try {
-            return new Promise((resolve, reject) => {
-                MatchRepository.prototype.schema.model.find({
-                    ...status
-                })
-                    .skip(offset == undefined ? 0 : offset)
-                    .limit((size > 10 || !size || size <= 0) ? 10 : size)
-                    .lean()
-                    .exec((err, user) => {
-                        if (err) { reject(err) }
-                        resolve(user);
+                        resolve(data);
                     });
             });
         } catch (err) {
