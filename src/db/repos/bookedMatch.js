@@ -158,7 +158,7 @@ class BookedMatchRepository extends MongoComponent {
         }
     }
 
-    async findMatchBySerieIdPipeline({external_serie, offset, size, app = {}, begin_at, end_at, status, sort}) {
+    async findMatchBySerieIdPipeline({external_serie, offset, size, app = {}, begin_at, end_at, status, sort=1}) {
         try {
             switch (begin_at) {
                 case "all":
@@ -190,7 +190,7 @@ class BookedMatchRepository extends MongoComponent {
         }
     }
 
-    async findMatchAllPipeline({offset, size, app = {}, begin_at, end_at, status, sort}) {
+    async findMatchAllPipeline({offset, size, app = {}, begin_at, end_at, status, sort=1}) {
         try {
             switch (begin_at) {
                 case "all":
