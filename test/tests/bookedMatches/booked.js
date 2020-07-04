@@ -88,13 +88,13 @@ context('Booked Matches', async () => {
         expect(res.data.status).to.equal(200);
     }));
 
-    it('should get Match By Id Layout', mochaAsync(async () => {
-        var res = await getSpecificMatchLayout({
-            match_id: 564165
-        });
-        detectValidationErrors(res);
-        expect(res.data.status).to.equal(200);
-    }));
+    // it('should get Match By Id Layout', mochaAsync(async () => {
+    //     var res = await getSpecificMatchLayout({
+    //         match_id: 564165
+    //     });
+    //     detectValidationErrors(res);
+    //     expect(res.data.status).to.equal(200);
+    // }));
 
     it('should get Team By Id Layout', mochaAsync(async () => {
         var res = await getTeamLayout({
