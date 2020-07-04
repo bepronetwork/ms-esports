@@ -130,9 +130,9 @@ const processActions = {
             // if (!user) { throwError('USER_NOT_EXISTENT') }
             // const app = await AppRepository.prototype.findAppById(user.app_id);
             // if (!app) { throwError("APP_NOT_EXISTENT") }
-            let matches     = await BookedMatchRepository.prototype.findByExternalMatchId(params.match_id);
-            let pandaScore  = await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
-            return {...pandaScore.data, odds: matches.odds};
+            let matches = await BookedMatchRepository.prototype.findByExternalMatchId(params.match_id);
+            let pandaScore = await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
+            return { ...pandaScore.data, odds: matches == (undefined || null) ? {} : matches.odds };
         } catch (err) {
             throw err;
         }
