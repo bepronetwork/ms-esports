@@ -5,7 +5,7 @@ import { filter_status_match } from './filters/match_status';
 import { filter_app } from './filters/app';
 
 
-const pipeline_matches_all = ({ app, status, offset, size, begin_at, end_at }) =>
+const pipeline_matches_all = ({ app, status, offset, size, begin_at, end_at, sort}) =>
     [
         {
             '$match': {
@@ -17,7 +17,7 @@ const pipeline_matches_all = ({ app, status, offset, size, begin_at, end_at }) =
             }
         }, {
             '$sort': {
-                'game_date': 1
+                'game_date': sort
             }
         }, {
             '$lookup': {
