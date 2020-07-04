@@ -71,7 +71,8 @@ const processActions = {
                 end_at: params.end_at,
                 offset: params.offset,
                 size: params.size,
-                status: params.status
+                status: params.status,
+                sort: (params.sort == undefined) ? 1 : (params.sort == "DESC" ? -1 : 1)
             });
             if (matches.length == 0) {
                 return matches
@@ -95,6 +96,7 @@ const processActions = {
         try {
             // let user = await UsersRepository.prototype.findUserById(params.user);
             // if (!user) { throwError('USER_NOT_EXISTENT') }
+
             const app = await AppRepository.prototype.findAppById(params.app);
             if (!app) { throwError("APP_NOT_EXISTENT") }
             let matches = await BookedMatchRepository.prototype.findMatchBySerieIdPipeline({
@@ -104,7 +106,8 @@ const processActions = {
                 end_at: params.end_at,
                 offset: params.offset,
                 size: params.size,
-                status: params.status
+                status: params.status,
+                sort: (params.sort == undefined) ? 1 : (params.sort == "DESC" ? -1 : 1)
             });
             if (matches.length == 0) {
                 return matches
@@ -113,7 +116,7 @@ const processActions = {
                 for (let matchResult of matches) {
                     matchesId.push(matchResult.match.external_id)
                 }
-                let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
+                let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&sort=${(params.sort == "DESC" ? "-scheduled_at" : "scheduled_at")}&token=${PANDA_SCORE_TOKEN}`);
                 pandaScore.data = pandaScore.data.map((match) => {
                     let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
                     return { ...match, odds: oddsResult.odds };

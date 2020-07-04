@@ -5,7 +5,7 @@ import { filter_status_match } from './filters/match_status';
 import { filter_app } from './filters/app';
 
 
-const pipeline_matches_by_series = ({ external_serie, app, status, offset, size, begin_at, end_at }) =>
+const pipeline_matches_by_series = ({ external_serie, app, status, offset, size, begin_at, end_at, sort }) =>
     [
         {
             '$match': {
@@ -20,7 +20,7 @@ const pipeline_matches_by_series = ({ external_serie, app, status, offset, size,
             }
         }, {
             '$sort': {
-                'game_date': 1
+                'game_date': sort
             }
         }, {
             '$lookup': {

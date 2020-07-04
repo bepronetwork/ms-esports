@@ -158,7 +158,7 @@ class BookedMatchRepository extends MongoComponent {
         }
     }
 
-    async findMatchBySerieIdPipeline({external_serie, offset, size, app = {}, begin_at, end_at, status}) {
+    async findMatchBySerieIdPipeline({external_serie, offset, size, app = {}, begin_at, end_at, status, sort}) {
         try {
             switch (begin_at) {
                 case "all":
@@ -179,7 +179,7 @@ class BookedMatchRepository extends MongoComponent {
             }
             return new Promise((resolve, reject) => {
                 BookedMatchRepository.prototype.schema.model
-                .aggregate(pipeline_matches_by_series({external_serie, offset, size, app, begin_at, end_at, status}))
+                .aggregate(pipeline_matches_by_series({external_serie, offset, size, app, begin_at, end_at, status, sort}))
                 .exec((err, data) => {
                     if (err) { reject(err) }
                     resolve(data);
@@ -190,7 +190,7 @@ class BookedMatchRepository extends MongoComponent {
         }
     }
 
-    async findMatchAllPipeline({offset, size, app = {}, begin_at, end_at, status}) {
+    async findMatchAllPipeline({offset, size, app = {}, begin_at, end_at, status, sort}) {
         try {
             switch (begin_at) {
                 case "all":
@@ -211,7 +211,7 @@ class BookedMatchRepository extends MongoComponent {
             }
             return new Promise((resolve, reject) => {
                 BookedMatchRepository.prototype.schema.model
-                .aggregate(pipeline_matches_all({offset, size, app, begin_at, end_at, status}))
+                .aggregate(pipeline_matches_all({offset, size, app, begin_at, end_at, status, sort}))
                 .exec((err, data) => {
                     if (err) { reject(err) }
                     resolve(data);

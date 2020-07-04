@@ -766,6 +766,11 @@ definitions:
         example: 15
         description: |
           Offset of document
+      sort:
+        type : string
+        example: ASC || DESC
+        description: |
+          Sort Find
       app:
         type : string
         description: |
@@ -844,6 +849,11 @@ definitions:
           example: 15
           description: |
             Series_ids
+      sort:
+        type : string
+        example: ASC || DESC
+        description: |
+          Sort Find
       size:
         type : number
         example: 15
