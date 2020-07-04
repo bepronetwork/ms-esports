@@ -55,7 +55,7 @@ const processActions = {
     },
 
     __getSpecificMatch: async (params) => {
-        let pandaScore = await axios.get(`https://api.pandascore.co/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
+        let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
         let market = await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}/markets?token=${PANDA_SCORE_TOKEN}`);
         return {
             ...pandaScore.data,
