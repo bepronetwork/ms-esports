@@ -13,7 +13,8 @@ BookedMatchSchema.prototype.schema = {
     external_match : { type: Number, required: true},
     game_date      : { type: Date, required : true},
     odds           : new db.Schema({
-        winnerTwoWay: {type : Array}
+        winnerTwoWay: {type : Array},
+        winnerThreeWay: {type : Array}
     })
 }
 
