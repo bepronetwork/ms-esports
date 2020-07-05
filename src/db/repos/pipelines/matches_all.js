@@ -32,8 +32,8 @@ const pipeline_matches_all = ({ app, status, offset, size, begin_at, end_at, sor
             }
         },
         ...filter_status_match({ status }),
-        ...limit({ size }),
-        ...skip({ offset })
+        ...skip({ offset }),
+        ...limit({ size })
     ]
 
 

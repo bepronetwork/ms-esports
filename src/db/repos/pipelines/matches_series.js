@@ -35,8 +35,8 @@ const pipeline_matches_by_series = ({ external_serie, app, status, offset, size,
             }
         },
         ...filter_status_match({ status }),
-        ...limit({ size }),
-        ...skip({ offset })
+        ...skip({ offset }),
+        ...limit({ size })
     ]
 
 export default pipeline_matches_by_series;
