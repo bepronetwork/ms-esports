@@ -5,6 +5,7 @@ import { VideogameRepository, SerieRepository, UsersRepository, AppRepository } 
 import { PANDA_SCORE_TOKEN } from '../config';
 import { PandaScoreSingleton } from '../helpers/matchVideogameSeries';
 import { throwError } from '../controllers/Errors/ErrorManager';
+import { Promise } from 'bluebird';
 let error = new ErrorManager();
 const axios = require('axios');
 
@@ -29,12 +30,15 @@ let __private = {};
 const processActions = {
 	__getVideoGamesAll: async (params) => {
 		let games = await VideogameRepository.prototype.findAllVideogame();
-		for (let game of games) {
-			let series = await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id: game.external_id });
-			let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/series?token=${PANDA_SCORE_TOKEN}`);
-			game["series"] = await PandaScoreSingleton.matchPandaScoreAndDatabase({ database: series, pandaScore: pandaScore.data });
-		}
-		return games;
+		games = games.map( async (game) => {
+			let series 		= await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id: game.external_id });
+			let pandaScore 	= await axios.get(`https://api.pandascore.co/${game.meta_name}/series?token=${PANDA_SCORE_TOKEN}`);
+			let seriesResult = pandaScore.data.filter((pandaScoreItem) => {
+				return series.find((seriesItem)=> seriesItem.external_id == pandaScoreItem.id) != null;
+			});
+			return {...game, series: seriesResult};
+		});
+		return await Promise.all(games);
 	},
 
 	__getVideoGamesLayout: async (params) => {
@@ -43,12 +47,15 @@ const processActions = {
 		// const app = await AppRepository.prototype.findAppById(user.app_id);
 		// if (!app) { throwError("APP_NOT_EXISTENT") }
 		let games = await VideogameRepository.prototype.findAllVideogame();
-		for (let game of games) {
-			let series = await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id: game.external_id });
-			let pandaScore = await axios.get(`https://api.pandascore.co/${game.meta_name}/series?token=${PANDA_SCORE_TOKEN}`);
-			game["series"] = await PandaScoreSingleton.matchPandaScoreAndDatabase({ database: series, pandaScore: pandaScore.data });
-		}
-		return games;
+		games = games.map( async (game) => {
+			let series 		= await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id: game.external_id });
+			let pandaScore 	= await axios.get(`https://api.pandascore.co/${game.meta_name}/series?token=${PANDA_SCORE_TOKEN}`);
+			let seriesResult = pandaScore.data.filter((pandaScoreItem) => {
+				return series.find((seriesItem)=> seriesItem.external_id == pandaScoreItem.id) != null;
+			});
+			return {...game, series: seriesResult};
+		});
+		return await Promise.all(games);
 	},
 
 	__getTeam: async (params) => {
