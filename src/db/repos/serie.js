@@ -27,6 +27,21 @@ class SerieRepository extends MongoComponent{
         return SerieRepository.prototype.schema.model(Serie)
     }
 
+    async findAll() {
+        try {
+            return new Promise((resolve, reject) => {
+                SerieRepository.prototype.schema.model.find()
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
     async findSerieByExternalId(external_id) {
         try {
             return new Promise((resolve, reject) => {

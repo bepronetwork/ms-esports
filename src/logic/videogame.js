@@ -30,15 +30,12 @@ let __private = {};
 const processActions = {
 	__getVideoGamesAll: async (params) => {
 		let games = await VideogameRepository.prototype.findAllVideogame();
-		games = games.map( async (game) => {
-			let series 		= await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id: game.external_id });
-			let pandaScore 	= await axios.get(`https://api.pandascore.co/${game.meta_name}/series?token=${PANDA_SCORE_TOKEN}`);
-			let seriesResult = pandaScore.data.filter((pandaScoreItem) => {
-				return series.find((seriesItem)=> seriesItem.external_id == pandaScoreItem.id) != null;
-			});
-			return {...game, series: seriesResult};
+		let series = await SerieRepository.prototype.findAll();
+		games = games.map((game) => {
+			let seriesResult = series.filter((serie) => serie.videogame_id == game.external_id);
+			return { ...game, series: seriesResult };
 		});
-		return await Promise.all(games);
+		return games;
 	},
 
 	__getVideoGamesLayout: async (params) => {
@@ -47,15 +44,12 @@ const processActions = {
 		// const app = await AppRepository.prototype.findAppById(user.app_id);
 		// if (!app) { throwError("APP_NOT_EXISTENT") }
 		let games = await VideogameRepository.prototype.findAllVideogame();
-		games = games.map( async (game) => {
-			let series 		= await SerieRepository.prototype.findSerieByGameExternalId({ videogame_id: game.external_id });
-			let pandaScore 	= await axios.get(`https://api.pandascore.co/${game.meta_name}/series?token=${PANDA_SCORE_TOKEN}`);
-			let seriesResult = pandaScore.data.filter((pandaScoreItem) => {
-				return series.find((seriesItem)=> seriesItem.external_id == pandaScoreItem.id) != null;
-			});
-			return {...game, series: seriesResult};
+		let series = await SerieRepository.prototype.findAll();
+		games = games.map((game) => {
+			let seriesResult = series.filter((serie) => serie.videogame_id == game.external_id);
+			return { ...game, series: seriesResult };
 		});
-		return await Promise.all(games);
+		return games;
 	},
 
 	__getTeam: async (params) => {
