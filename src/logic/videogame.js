@@ -31,11 +31,11 @@ const processActions = {
 	__getVideoGamesAll: async (params) => {
 		let games = await VideogameRepository.prototype.findAllVideogame();
 		let series = await SerieRepository.prototype.findAll();
-		games = games.map(async (game) => {
+		games = games.map((game) => {
 			let seriesResult = series.filter((serie) => serie.videogame_id == game.external_id);
 			return { ...game, series: seriesResult };
 		});
-		return await Promise.all(games);
+		return games;
 	},
 
 	__getVideoGamesLayout: async (params) => {
@@ -45,11 +45,11 @@ const processActions = {
 		// if (!app) { throwError("APP_NOT_EXISTENT") }
 		let games = await VideogameRepository.prototype.findAllVideogame();
 		let series = await SerieRepository.prototype.findAll();
-		games = games.map(async (game) => {
+		games = games.map((game) => {
 			let seriesResult = series.filter((serie) => serie.videogame_id == game.external_id);
 			return { ...game, series: seriesResult };
 		});
-		return await Promise.all(games);
+		return games;
 	},
 
 	__getTeam: async (params) => {
