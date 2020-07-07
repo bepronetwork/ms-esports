@@ -57,7 +57,7 @@ const processActions = {
     __getSpecificMatch: async (params) => {
         let pandaScore  = await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
         let market      = await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}/markets?token=${PANDA_SCORE_TOKEN}`);
-        let booked      = await BookedMatchRepository.prototype.findByExternalMatchId(pandaScore.id);
+        let booked      = await BookedMatchRepository.prototype.findByExternalMatchId(params.match_id);
         return {
             ...pandaScore.data,
             odds: market.data,
