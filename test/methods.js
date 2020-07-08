@@ -104,6 +104,22 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async setBookedMatch(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/set/matches/booked')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
+    async removeBookedMatch(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/remove/matches/booked')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
     async registerAdmin(params) {
         return (await axios.post(`${MS_MASTER_URL}/api/admins/register`, params)).data;
     },

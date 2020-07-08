@@ -9,6 +9,8 @@ import {
     getBookedMatches,
     getBookedSeriesMatches,
     registerApp,
+    setBookedMatch,
+    removeBookedMatch,
     registerUser,
     loginUser
 } from '../../methods';
@@ -110,6 +112,26 @@ context('Booked Matches', async () => {
             player_id: 1027,
             slug: "league-of-legends"
         });
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should Set Booked Match - BackOffice', mochaAsync(async () => {
+        var res = await setBookedMatch({
+            admin : admin.id,
+            app: app.id,
+            match_external_id: 561326
+        }, admin.bearerToken , {id : admin.id});
+        detectValidationErrors(res);
+        expect(res.data.status).to.equal(200);
+    }));
+
+    it('should Remove Booked Match - BackOffice', mochaAsync(async () => {
+        var res = await removeBookedMatch({
+            admin : admin.id,
+            app: app.id,
+            match_external_id: 561326
+        }, admin.bearerToken , {id : admin.id});
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
     }));
