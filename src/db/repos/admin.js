@@ -32,7 +32,6 @@ class AdminsRepository extends MongoComponent{
         try{
             return new Promise( (resolve, reject) => {
                 AdminsRepository.prototype.schema.model.findById(_id)
-                .populate(populate_admin)
                 .lean()
                 .exec( (err, user) => {
                     if(err) { reject(err)}
