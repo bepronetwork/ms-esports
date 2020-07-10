@@ -8,6 +8,7 @@ import AppRepository from "./app";
 import UsersRepository from "./user";
 import BetEsportsRepository from "./betEsports";
 import CurrencyRepository from "./currency";
+import WalletsRepository from "./wallet";
 
 export {
     VideogameRepository,
@@ -19,5 +20,6 @@ export {
     AppRepository,
     UsersRepository,
     BetEsportsRepository,
-    CurrencyRepository
+    CurrencyRepository,
+    WalletsRepository
 }

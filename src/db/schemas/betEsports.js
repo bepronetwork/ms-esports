@@ -12,6 +12,7 @@ BetEsportsSchema.prototype.schema = {
     app            : { type: mongoose.Schema.Types.ObjectId, ref: 'App' },
     user           : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     currency       : { type: mongoose.Schema.Types.ObjectId, ref: 'Currency' },
+    wallet       : { type: mongoose.Schema.Types.ObjectId, ref: 'Wallet' },
     market         : { type: mongoose.Schema.Types.ObjectId },
     selected       : { type: Number, required: true },
     statistic      : { type: Number, required: true },
