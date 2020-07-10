@@ -51,6 +51,28 @@ class Security{
         }
     }
 
+
+    verifySocket = async ({req}) => {
+        try{
+            const id          = req.id;
+            const bearerToken = req.bearerToken;
+            const payload     = {id};
+
+            let verified = MiddlewareSingleton.verify({token : bearerToken, payload, id, isUser: "user"});
+            if(!verified){throw new Error()}
+            return verified;
+        }catch(err){
+            if(err.code!=undefined) {
+                throw err;
+            } else {
+                throw {
+                    code : 304,
+                    message : 'Forbidden Access'
+                }
+            }
+        }
+    }
+
     verify = async ({type, req, permissions=[]}) => {
         try{
             let id = req.body[type];
