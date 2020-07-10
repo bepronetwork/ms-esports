@@ -1,7 +1,7 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { VideogameRepository, MatchRepository, SerieRepository, BookedMatchRepository } from '../db/repos';
+import { VideogameRepository, MatchRepository, SerieRepository, BookedMatchRepository, AdminsRepository } from '../db/repos';
 import { PANDA_SCORE_TOKEN } from '../config';
 import { PandaScoreSingleton } from '../helpers/matchVideogameSeries';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -28,6 +28,7 @@ let __private = {};
 
 const processActions = {
     __getSeriesMatches: async (params) => {
+        let admin = await AdminsRepository.prototype.findAdminById(params.admin);
         let matches = await MatchRepository.prototype.findMatchBySerieId({
             serie_id: params.serie_id,
             status: params.status == undefined ? {} : { status_external: { $in: params.status } },
@@ -44,7 +45,7 @@ const processActions = {
                 matchesId.push(match.external_id)
             }
             let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
-            let resultBookedMatch = await BookedMatchRepository.prototype.findAll();
+            let resultBookedMatch = await BookedMatchRepository.prototype.findByApp(admin.app);
             pandaScore.data = pandaScore.data.map((match) => {
                 let booked = resultBookedMatch.find((bookedMatch) => bookedMatch.external_match == match.id) != null;
                 let odds = matches.find(resultMatch => resultMatch.external_id == match.id);
@@ -66,6 +67,7 @@ const processActions = {
     },
 
     __getMatchesAll: async (params) => {
+        let admin = await AdminsRepository.prototype.findAdminById(params.admin);
         let matches = await MatchRepository.prototype.findMatchAll({
             status: params.status == undefined ? {} : { status_external: { $in: params.status } },
             begin_at: params.begin_at,
@@ -81,7 +83,7 @@ const processActions = {
                 matchesId.push(match.external_id)
             }
             let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
-            let resultBookedMatch = await BookedMatchRepository.prototype.findAll();
+            let resultBookedMatch = await BookedMatchRepository.prototype.findByApp(admin.app);
             pandaScore.data = pandaScore.data.map((match) => {
                 let booked = resultBookedMatch.find((bookedMatch) => bookedMatch.external_match == match.id) != null;
                 let odds = matches.find(resultMatch => resultMatch.external_id == match.id);
