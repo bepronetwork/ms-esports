@@ -27,12 +27,11 @@ class AdminsRepository extends MongoComponent{
     setModel = (user) => {
         return AdminsRepository.prototype.schema.model(user)
     }
-    
-    async findAdminById(_id){ 
+
+    async findAdminById(_id){
         try{
             return new Promise( (resolve, reject) => {
                 AdminsRepository.prototype.schema.model.findById(_id)
-                .populate(populate_admin)
                 .lean()
                 .exec( (err, user) => {
                     if(err) { reject(err)}
