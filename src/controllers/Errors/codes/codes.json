@@ -26,5 +26,9 @@
     "006" : {
         "key"      : "APP_NOT_EXISTENT",
         "message"   : "App is not attributed"
+    },
+    "007" : {
+        "key"      : "ADMIN_NOT_EXISTENT",
+        "message"   : "Admin is not existent"
     }
 }
