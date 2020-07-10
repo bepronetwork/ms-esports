@@ -20,7 +20,8 @@ ErrorHandler.prototype.KEYS =  {
     'SERIE_NOT_EXISTENT'                    : "003",
     'WRONG_PARAMS'                          : "004",
     'USER_NOT_EXISTENT'                     : "005",
-    'APP_NOT_EXISTENT'                      : "006"
+    'APP_NOT_EXISTENT'                      : "006",
+    'ADMIN_NOT_EXISTENT'                    : "007"
 };
 
 /***************************
