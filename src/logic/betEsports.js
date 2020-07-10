@@ -21,7 +21,7 @@ let __private = {};
  **/
 
 const processActions = {
-	__register : async (params) => {
+	__createBet : async (params) => {
 		return params;
 	}
 }
@@ -35,7 +35,7 @@ const processActions = {
  **/
 
 const progressActions = {
-	__register : async (params) => {
+	__createBet : async (params) => {
 		try{
 
 			let BetEsports = await self.save(params);
@@ -97,8 +97,8 @@ class BetEsportsLogic extends LogicComponent {
 	async objectNormalize(params, processAction) {
 		try{
 			switch(processAction) {
-				case 'Register' : {
-					return library.process.__register(params); break;
+				case 'CreateBet' : {
+					return library.process.__createBet(params); break;
 				};
 			}
 		}catch(err){
@@ -127,8 +127,8 @@ class BetEsportsLogic extends LogicComponent {
 	async progress(params, progressAction){
 		try{
 			switch(progressAction) {
-				case 'Register' : {
-					return await library.progress.__register(params);
+				case 'CreateBet' : {
+					return await library.progress.__createBet(params);
 				}
 			}
 		}catch(err){

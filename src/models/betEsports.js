@@ -20,9 +20,9 @@ class BetEsports extends ModelComponent {
         );
     }
 
-    async register() {
+    async createBet() {
         try {
-            return await this.process('Register');
+            return await this.process('CreateBet');
         } catch (err) {
             throw err;
         }
