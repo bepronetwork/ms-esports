@@ -40,7 +40,25 @@ class UsersRepository extends MongoComponent{
         } catch (err) {
             throw (err)
         }
-    }    
+    }
+
+    async findUserByIdAndApp({_id, app = {}}){
+        try {
+            return new Promise((resolve, reject) => {
+                UsersRepository.prototype.schema.model.findOne({
+                    _id,
+                    ...app
+                })
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }  
 }
 
 UsersRepository.prototype.schema = new UserSchema();
