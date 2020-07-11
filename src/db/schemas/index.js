@@ -6,6 +6,9 @@ import { AdminSchema } from "./admin";
 import { BookedMatchSchema } from "./bookedMatch";
 import { AppSchema } from "./app";
 import { UserSchema } from "./user";
+import { BetEsportsSchema } from "./betEsports";
+import { CurrencySchema } from "./currency";
+import { WalletSchema } from "./wallet";
 
 export {
     VideogameSchema,
@@ -15,5 +18,8 @@ export {
     AdminSchema,
     BookedMatchSchema,
     AppSchema,
-    UserSchema
+    UserSchema,
+    BetEsportsSchema,
+    CurrencySchema,
+    WalletSchema
 }

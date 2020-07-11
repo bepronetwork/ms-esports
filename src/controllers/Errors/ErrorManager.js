@@ -23,6 +23,15 @@ class ErrorManager {
         }
     }
 
+    betEsports = function (object, type){
+        try{
+            switch(type){
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     videogame = function (object, type){
         try{
             switch(type){

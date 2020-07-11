@@ -1,5 +1,6 @@
 import MiddlewareSingleton from '../helpers/middleware';
 import SecuritySingleton from "../helpers/security";
+import { BetEsports } from '../../models';
 
 /**
  * Description of the function.
@@ -14,7 +15,9 @@ import SecuritySingleton from "../helpers/security";
 
 async function createBet(req) {
     try {
-        return true;
+        let bet = new BetEsports(req);
+        let data = await bet.createBet();
+        return data;
     } catch (err) {
         return false;
     }

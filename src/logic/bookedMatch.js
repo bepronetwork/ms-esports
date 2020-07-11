@@ -1,7 +1,7 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import { BookedMatchRepository, MatchRepository, UsersRepository, AppRepository, VideogameRepository } from '../db/repos';
+import { BookedMatchRepository, MatchRepository, UsersRepository, AppRepository, VideogameRepository, AdminsRepository } from '../db/repos';
 
 import { PANDA_SCORE_TOKEN } from '../config';
 import { throwError } from '../controllers/Errors/ErrorManager';
@@ -172,7 +172,12 @@ const processActions = {
     },
     __getBookedMatches: async (params) => {
         try {
+            let admin = await AdminsRepository.prototype.findAdminById(params.admin);
+            if (!admin) { throwError("ADMIN_NOT_EXISTENT") }
+            const app = await AppRepository.prototype.findAppById(admin.app);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
             let matches = await BookedMatchRepository.prototype.findMatchAllPipeline({
+                app: { app: app._id },
                 begin_at: params.begin_at,
                 end_at: params.end_at,
                 offset: params.offset,
@@ -199,7 +204,12 @@ const processActions = {
     },
     __getBookedSeriesMatches: async (params) => {
         try {
+            let admin = await AdminsRepository.prototype.findAdminById(params.admin);
+            if (!admin) { throwError("ADMIN_NOT_EXISTENT") }
+            const app = await AppRepository.prototype.findAppById(admin.app);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
             let matches = await BookedMatchRepository.prototype.findMatchBySerieIdPipeline({
+                app: { app: app._id },
                 external_serie: params.serie_id,
                 begin_at: params.begin_at,
                 end_at: params.end_at,
