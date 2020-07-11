@@ -7,7 +7,7 @@ export const PORT = process.env.PORT;
 
 export const ENV = process.env.ENV;
 
-export const RABBIT_URL_QUEUE_BET =  process.env.RABBIT_URL_QUEUE_BET || "amqp://localhost:5672";
+export const RABBIT_URL_QUEUE_BET =  process.env.RABBIT_URL_QUEUE_BET || "amqp://guest:guest@localhost:5672/";
 
 export const DB_USER =  process.env.DB_USER;
 

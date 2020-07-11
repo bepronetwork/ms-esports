@@ -58,6 +58,11 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
         let bet = await controller.createBet(msg);
         getWorkChannel().ack(msg);
     });
+    workConsume("confirmBet", async (msg) => {
+        msg = JSON.parse(msg.content.toString());
+        let bet = await controller.confirmBets(msg);
+        getWorkChannel().ack(msg);
+    });
 
     app.listen(PORT, async () => {
         Logger.success("Listening in port", PORT);

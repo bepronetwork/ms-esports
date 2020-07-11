@@ -20,6 +20,15 @@ async function createBet(req) {
     }
 }
 
+async function confirmBets(req) {
+    try {
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
 export {
-    createBet
+    createBet,
+    confirmBets
 }
