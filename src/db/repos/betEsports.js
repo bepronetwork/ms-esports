@@ -27,6 +27,21 @@ class BetEsportsRepository extends MongoComponent{
         return BetEsportsRepository.prototype.schema.model(BetEsports)
     }
 
+    async findById(_id) {
+        try {
+            return new Promise((resolve, reject) => {
+                BetEsportsRepository.prototype.schema.model.findById(_id)
+                .lean()
+                .exec((err, user) => {
+                    if (err) { reject(err) }
+                    resolve(user);
+                });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
     async findAll() {
         try {
             return new Promise((resolve, reject) => {

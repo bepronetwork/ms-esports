@@ -24,6 +24,13 @@ let __private = {};
  **/
 
 const processActions = {
+	__confirmBets: async (params) => {
+		try {
+		
+		} catch (err) {
+			throw err;
+		}
+	},
 	__createBet: async (params) => {
 		const app = await AppRepository.prototype.findAppById(params.app);
 		if (!app) { throwError("APP_NOT_EXISTENT") }
@@ -60,6 +67,13 @@ const processActions = {
  **/
 
 const progressActions = {
+	__confirmBets: async (params) => {
+		try {
+			
+		} catch (err) {
+			throw err;
+		}
+	},
 	__createBet: async (params) => {
 		try {
 			var { betAmount, match, app, user, currency, wallet, market, selected, statistic, userWallet } = params

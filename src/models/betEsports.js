@@ -20,6 +20,14 @@ class BetEsports extends ModelComponent {
         );
     }
 
+    async confirmBets() {
+        try {
+            return await this.process('ConfirmBets');
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async createBet() {
         try {
             return await this.process('CreateBet');

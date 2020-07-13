@@ -19,15 +19,16 @@ async function createBet(req) {
         let data = await bet.createBet();
         return data;
     } catch (err) {
-        return false;
+        return err;
     }
 }
 
 async function confirmBets(req) {
     try {
-        return true;
+        let bet = new BetEsports(req);
+        let data = await bet.confirmBets();
     } catch (err) {
-        return false;
+        return err;
     }
 }
 
