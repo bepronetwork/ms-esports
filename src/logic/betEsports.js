@@ -69,7 +69,7 @@ const processActions = {
 const progressActions = {
 	__confirmBets: async (params) => {
 		try {
-			
+
 		} catch (err) {
 			throw err;
 		}
@@ -149,6 +149,9 @@ class BetEsportsLogic extends LogicComponent {
 				case 'CreateBet': {
 					return library.process.__createBet(params); break;
 				};
+				case 'ConfirmBets': {
+					return library.process.__confirmBets(params); break;
+				};
 			}
 		} catch (err) {
 			throw err;
@@ -178,6 +181,9 @@ class BetEsportsLogic extends LogicComponent {
 			switch (progressAction) {
 				case 'CreateBet': {
 					return await library.progress.__createBet(params);
+				}
+				case 'ConfirmBets': {
+					return await library.progress.__confirmBets(params);
 				}
 			}
 		} catch (err) {
