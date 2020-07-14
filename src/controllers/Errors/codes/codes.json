@@ -30,5 +30,17 @@
     "007" : {
         "key"      : "ADMIN_NOT_EXISTENT",
         "message"   : "Admin is not existent"
+    },
+    "008" : {
+        "key"      : "WALLET_NOT_EXISTENT",
+        "message"   : "Wallet is not existent"
+    },
+    "009" : {
+        "key"      : "INSUFFICIENT_FUNDS",
+        "message"   : "Insufficient funds"
+    },
+    "010" : {
+        "key"      : "WRONG_PROBABILITY",
+        "message"   : "The probability is different from the Match"
     }
 }

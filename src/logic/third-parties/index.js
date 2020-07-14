@@ -1,5 +1,9 @@
 import GoogleStorageSingleton from './googleStorage';
+import {ClientQueueSingleton,getWorkChannel,workConsume} from './rabbit';
 
 export {
-    GoogleStorageSingleton
+    GoogleStorageSingleton,
+    ClientQueueSingleton,
+    getWorkChannel,
+    workConsume
 }

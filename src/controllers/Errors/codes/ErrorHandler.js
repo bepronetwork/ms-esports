@@ -21,7 +21,10 @@ ErrorHandler.prototype.KEYS =  {
     'WRONG_PARAMS'                          : "004",
     'USER_NOT_EXISTENT'                     : "005",
     'APP_NOT_EXISTENT'                      : "006",
-    'ADMIN_NOT_EXISTENT'                    : "007"
+    'ADMIN_NOT_EXISTENT'                    : "007",
+    'WALLET_NOT_EXISTENT'                   : "008",
+    'INSUFFICIENT_FUNDS'                    : "009",
+    'WRONG_PROBABILITY'                     : "010"
 };
 
 /***************************

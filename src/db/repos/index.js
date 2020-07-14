@@ -6,6 +6,9 @@ import AdminsRepository from "./admin";
 import BookedMatchRepository from "./bookedMatch";
 import AppRepository from "./app";
 import UsersRepository from "./user";
+import BetEsportsRepository from "./betEsports";
+import CurrencyRepository from "./currency";
+import WalletsRepository from "./wallet";
 
 export {
     VideogameRepository,
@@ -15,5 +18,8 @@ export {
     AdminsRepository,
     BookedMatchRepository,
     AppRepository,
-    UsersRepository
+    UsersRepository,
+    BetEsportsRepository,
+    CurrencyRepository,
+    WalletsRepository
 }
