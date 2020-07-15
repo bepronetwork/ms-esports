@@ -9,7 +9,7 @@ import { UserSchema } from "./user";
 import { BetEsportsSchema } from "./betEsports";
 import { CurrencySchema } from "./currency";
 import { WalletSchema } from "./wallet";
-import { ResultSpaceSchema } from "./resultSpace";
+import { BetResultSpaceSchema } from "./betResultSpace";
 
 export {
     VideogameSchema,
@@ -23,5 +23,5 @@ export {
     BetEsportsSchema,
     CurrencySchema,
     WalletSchema,
-    ResultSpaceSchema
+    BetResultSpaceSchema
 }

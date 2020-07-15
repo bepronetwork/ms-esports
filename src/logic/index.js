@@ -3,7 +3,7 @@ import MatchLogic from "./match";
 import LogLogic from './log';
 import BookedMatchLogic from './bookedMatch';
 import BetEsportsLogic from "./betEsports";
-import ResultSpaceLogic from "./resultSpace";
+import BetResultSpaceLogic from "./betResultSpace";
 
 
 export {
@@ -12,6 +12,6 @@ export {
     LogLogic,
     BookedMatchLogic,
     BetEsportsLogic,
-    ResultSpaceLogic
+    BetResultSpaceLogic
 }
 
