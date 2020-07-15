@@ -2,7 +2,7 @@ import { MatchLogic } from '../logic';
 import ModelComponent from './modelComponent';
 import { MatchRepository } from '../db/repos';
 import {
-    MapperMatchSingleton,
+    MapperMatchSingleton, MapperMatchesAllSingleton,
 } from "../controllers/Mapper";
 
 class Match extends ModelComponent {
@@ -26,8 +26,7 @@ class Match extends ModelComponent {
     async getSeriesMatches() {
         try {
             let res = await this.process('GetSeriesMatches');
-            return res;
-            // return MapperMatchSingleton.output('Match', res._doc);
+            return MapperMatchesAllSingleton.output('MatchesAll', res);
         } catch (err) {
             throw err;
         }
@@ -46,8 +45,7 @@ class Match extends ModelComponent {
     async getMatchesAll() {
         try {
             let res = await this.process('GetMatchesAll');
-            return res;
-            // return MapperMatchSingleton.output('Match', res._doc);
+            return MapperMatchesAllSingleton.output('MatchesAll', res);
         } catch (err) {
             throw err;
         }

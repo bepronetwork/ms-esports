@@ -2,7 +2,7 @@ import { VideogameLogic } from '../logic';
 import ModelComponent from './modelComponent';
 import { VideogameRepository } from '../db/repos';
 import {
-    MapperVideogameSingleton,
+    MapperVideogameSingleton, MapperVideogamesAllSingleton,
 } from "../controllers/Mapper";
 
 class Videogame extends ModelComponent {
@@ -26,8 +26,7 @@ class Videogame extends ModelComponent {
     async getVideoGamesAll() {
         try {
             let res = await this.process('GetVideoGamesAll');
-            return res;
-            // return MapperVideogameSingleton.output('Videogame', res._doc);
+            return MapperVideogamesAllSingleton.output('VideogamesAll', res);
         } catch (err) {
             throw err;
         }
@@ -36,13 +35,12 @@ class Videogame extends ModelComponent {
     async getVideoGamesLayout() {
         try {
             let res = await this.process('GetVideoGamesLayout');
-            return res;
-            // return MapperVideogameSingleton.output('Videogame', res._doc);
+            return MapperVideogamesAllSingleton.output('VideogamesAll', res);
         } catch (err) {
             throw err;
         }
     }
-    
+
     async getTeam() {
         try {
             let res = await this.process('GetTeam');

@@ -36,7 +36,8 @@ class BookedMatch extends ModelComponent {
     }
     async getMatchesLayout() {
         try {
-            return await this.process('GetMatchesLayout');
+            let res = await this.process('GetMatchesLayout');
+            return MapperMatchesAllSingleton.output('MatchesAll', res);
         } catch (err) {
             throw err;
         }
@@ -44,7 +45,8 @@ class BookedMatch extends ModelComponent {
 
     async getSeriesMatchesLayout() {
         try {
-            return await this.process('GetSeriesMatchesLayout');
+            let res = await this.process('GetSeriesMatchesLayout');
+            return MapperMatchesAllSingleton.output('MatchesAll', res);
         } catch (err) {
             throw err;
         }
@@ -76,7 +78,8 @@ class BookedMatch extends ModelComponent {
 
     async getBookedMatches() {
         try {
-            return await this.process('GetBookedMatches');
+            let res = await this.process('GetBookedMatches');
+            return MapperMatchesAllSingleton.output('MatchesAll', res);
         } catch (err) {
             throw err;
         }
@@ -84,7 +87,8 @@ class BookedMatch extends ModelComponent {
 
     async getBookedSeriesMatches() {
         try {
-            return await this.process('GetBookedSeriesMatches');
+            let res = await this.process('GetBookedSeriesMatches');
+            return MapperMatchesAllSingleton.output('MatchesAll', res);
         } catch (err) {
             throw err;
         }
