@@ -1,5 +1,7 @@
-import { MapperHelloSingleton } from "./Hello";
+import { MapperVideogamesAllSingleton } from "./Videogame";
+import { MapperMatchesAllSingleton } from "./Match";
 
 export {
-    MapperHelloSingleton
+    MapperVideogamesAllSingleton,
+    MapperMatchesAllSingleton
 }
