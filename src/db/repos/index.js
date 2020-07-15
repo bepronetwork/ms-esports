@@ -9,6 +9,7 @@ import UsersRepository from "./user";
 import BetEsportsRepository from "./betEsports";
 import CurrencyRepository from "./currency";
 import WalletsRepository from "./wallet";
+import BetResultSpaceRepository from "./betResultSpace";
 
 export {
     VideogameRepository,
@@ -21,5 +22,6 @@ export {
     UsersRepository,
     BetEsportsRepository,
     CurrencyRepository,
-    WalletsRepository
+    WalletsRepository,
+    BetResultSpaceRepository
 }
