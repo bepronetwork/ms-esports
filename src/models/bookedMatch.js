@@ -1,6 +1,7 @@
 import { BookedMatchLogic } from '../logic';
 import ModelComponent from './modelComponent';
 import { BookedMatchRepository } from '../db/repos';
+import { MapperMatchesAllSingleton } from "../controllers/Mapper";
 
 class BookedMatch extends ModelComponent {
 
