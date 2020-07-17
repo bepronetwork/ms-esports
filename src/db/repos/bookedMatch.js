@@ -104,11 +104,12 @@ class BookedMatchRepository extends MongoComponent {
                     _id,
                     ...app
                 })
-                    .lean()
-                    .exec((err, user) => {
-                        if (err) { reject(err) }
-                        resolve(user);
-                    });
+                .populate(["Match"])
+                .lean()
+                .exec((err, user) => {
+                    if (err) { reject(err) }
+                    resolve(user);
+                });
             });
         } catch (err) {
             throw (err)

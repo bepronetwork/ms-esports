@@ -26,15 +26,8 @@ let __private = {};
   
 const processActions = {
 	__register : async (params) => {
-
-		// TO DO : Check the Type of BetResultSpace and all the fields
-		let normalized = {
-			place           	: params.place,
-            value               : params.value,     
-		}
-
-		return normalized;
-    }  
+		return params;
+    }
 }
 
 

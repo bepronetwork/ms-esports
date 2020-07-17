@@ -1,5 +1,5 @@
 import MongoComponent from './MongoComponent';
-import { BetResultSpaceSchema } from '../schemas';
+import { BetResultSchema } from '../schemas';
 /**
  * Accounts database interaction class.
  *
@@ -17,7 +17,7 @@ const foreignKeys = [];
 class BetResultSpacesRepository extends MongoComponent{
 
     constructor(){
-        super(BetResultSpaceSchema)
+        super(BetResultSchema)
     }
     /**
      * @function setBetResultSpaceModel
@@ -41,6 +41,6 @@ class BetResultSpacesRepository extends MongoComponent{
 
 }
 
-BetResultSpacesRepository.prototype.schema = new BetResultSpaceSchema();
+BetResultSpacesRepository.prototype.schema = new BetResultSchema();
 
 export default BetResultSpacesRepository;
