@@ -1,10 +1,9 @@
 import { ErrorManager } from '../controllers/Errors';
 import LogicComponent from './logicComponent';
 import _ from 'lodash';
-import BookedMatchRepository from '../db/repos/bookedMatch';
 import UsersRepository from '../db/repos/user';
-import { WalletsRepository } from '../db/repos';
-import {BetResultSpace} from "../models"
+import { WalletsRepository, BetEsportsRepository, MatchRepository, BookedMatchRepository, AppRepository, BetResultSpacesRepository } from '../db/repos';
+import {BetResultSpace} from "../models";
 let error = new ErrorManager();
 
 
@@ -24,10 +23,79 @@ let __private = {};
  * @param {function} params - Function Params
  **/
 
+const checkWinner = {
+	winnerTwoWay   : (betResult, param)=>{
+		if(betResult.participantId == param.winner) return true;
+		return false;
+	},
+	winnerThreeWay : (betResult, param)=>{
+		if(betResult.participantId == param.winner) return true;
+		return false;
+	}
+}
+
+
 const processActions = {
+	// params : { betResultId, matchId, winner }
 	__confirmBets: async (params) => {
 		try {
-		
+			let betResult = await BetResultSpacesRepository.prototype.findById(params.betResultId);
+			let betEsport = await BetEsportsRepository.prototype.findByBetResultId(params.betResultId);
+			let match  	  = await MatchRepository.prototype.findById(params.matchId);
+
+			// check id user exist
+			const user = await UsersRepository.prototype.findUserByIdAndApp({ _id: match.user, app: match.app })
+			if (!user) { throwError("USER_NOT_EXISTENT") }
+
+			// check id app exist
+			const app = await AppRepository.prototype.findAppById(match.app);
+			if (!app) { throwError("APP_NOT_EXISTENT") }
+
+			// check id currency exist
+			const appWallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(betEsport.currency).toString());
+			if (!appWallet) { throwError("WALLET_NOT_EXISTENT") }
+
+			// check id currency exist
+			const userWallet = user.wallet.find(w => new String(w.currency._id).toString() == new String(betEsport.currency).toString());
+			if (!userWallet) { throwError("WALLET_NOT_EXISTENT") }
+
+			let isWonThatMatch = checkWinner[betResult.marketType](betResult, params);
+
+			let fakeResult = betEsport.result.map((res) => {
+				if(res._id == params.betResultId) {
+					res.finished = true;
+					res.status   = (isWonThatMatch===true) ? "gain" : "loss";
+				}
+				return {
+					match 			: res.match,
+					marketType 		: res.marketType,
+					betType 		: res.betType,
+					participantId 	: res.participantId,
+					statistic 		: res.statistic,
+					finished 		: res.finished,
+					status 			: res.status
+				};
+			});
+
+			const cameToAnEnd = (fakeResult.find((res) => res.status=="pending")) == null ? true : false;
+			const isWon       = (((fakeResult.find((res) => res.status=="loss")) == null ? true : false) && cameToAnEnd);
+			let winAmount     = 0;
+			if(isWon) {
+				const odd = fakeResult.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.statistic, 1);
+				winAmount = (betEsport.betAmount) * odd;
+			}
+
+			return {
+				winAmount,
+				isWon,
+				isWonThatMatch,
+				appWallet,
+				userWallet,
+				betResult,
+				cameToAnEnd,
+				betEsport
+			};
+
 		} catch (err) {
 			throw err;
 		}
@@ -54,7 +122,7 @@ const processActions = {
 		if (!app) { throwError("APP_NOT_EXISTENT") }
 
 		// check if all match exist
-		const resultSpace = params.resultSpace.map((result) => {
+		let resultSpace = params.resultSpace.map((result) => {
 			let resultLocal = (await BookedMatchRepository.prototype.findMatchByIdAndApp({ _id: result.matchId, app: app._id }));
 			return (resultLocal!=null || resultLocal!=undefined) ? {...result, ...resultLocal} : false;
 		});
@@ -72,6 +140,7 @@ const processActions = {
 		// check if probability is valid
 		for(let res of resultSpace) {
 			if (res.odds[res.marketType][res.betType].probability != res.statistic) { throwError("WRONG_PROBABILITY") }
+			res["participantId"] = res.odds[res.marketType][res.betType].participant_id;
 		}
 
 		// list videogames
@@ -105,7 +174,21 @@ const processActions = {
 const progressActions = {
 	__confirmBets: async (params) => {
 		try {
+			let { betEsport, winAmount, isWon, isWonThatMatch, appWallet, userWallet, betResult, cameToAnEnd } = params;
 
+			await BetResultSpacesRepository.prototype.updateStatus(betResult._id, {
+				status: isWonThatMatch ? "gain" : "loss",
+				finished : true
+			});
+			if(!cameToAnEnd) return;
+			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon});
+			if(isWon) {
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -winAmount);
+				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount+betEsport.betAmount));
+			} else {
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, betEsport.betAmount);
+			}
+			return;
 		} catch (err) {
 			throw err;
 		}

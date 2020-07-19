@@ -27,6 +27,37 @@ class BetEsportsRepository extends MongoComponent{
         return BetEsportsRepository.prototype.schema.model(BetEsports)
     }
 
+    async updateResultEnd(_id, {winAmount, isWon}) {
+        try {
+            return new Promise((resolve, reject) => {
+                BetEsportsRepository.prototype.schema.model.findByIdAndUpdate(_id, {winAmount, isWon})
+                .exec((err, item) => {
+                    if (err) { reject(err) }
+                    resolve(item);
+                });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findByBetResultId(result) {
+        try {
+            return new Promise((resolve, reject) => {
+                BetEsportsRepository.prototype.schema.model.find({ result : { $in: [result] } })
+                .populate(["BetResult"])
+                .exec((err, item) => {
+                    if (err) { reject(err) }
+                    resolve(item[0] == null ? [] : item[0]);
+                });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    
+
     async findById(_id) {
         try {
             return new Promise((resolve, reject) => {

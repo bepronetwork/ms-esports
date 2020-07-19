@@ -27,6 +27,7 @@ async function confirmBets(req) {
     try {
         let bet = new BetEsports(req);
         let data = await bet.confirmBets();
+        return data;
     } catch (err) {
         return err;
     }

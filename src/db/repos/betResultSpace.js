@@ -29,7 +29,17 @@ class BetResultSpacesRepository extends MongoComponent{
         return BetResultSpacesRepository.prototype.schema.model(bet)
     }
 
-    findBetResultSpaceById(_id){ 
+    updateStatus(_id, {status, finished}){ 
+        return new Promise( (resolve, reject) => {
+            BetResultSpacesRepository.prototype.schema.model.findOneAndUpdate(_id, {status, finished})
+            .exec( (err, BetResultSpace) => {
+                if(err) { reject(err)}
+                resolve(BetResultSpace);
+            });
+        });
+    }
+
+    findById(_id){ 
         return new Promise( (resolve, reject) => {
             BetResultSpacesRepository.prototype.schema.model.findById(_id)
             .exec( (err, BetResultSpace) => {
