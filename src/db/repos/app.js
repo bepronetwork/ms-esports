@@ -32,6 +32,7 @@ class AppRepository extends MongoComponent{
         try {
             return new Promise((resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
+                    .populate(["wallet"])
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }

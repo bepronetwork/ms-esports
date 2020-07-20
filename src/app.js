@@ -54,17 +54,20 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
 
     // Rabbit queue
     workConsume("createBet", async (msg) => {
+        const originMSG = msg;
         msg = JSON.parse(msg.content.toString());
         let bet = await controller.createBet(msg);
-        getWorkChannel().ack(msg);
+        IOSingleton.getIO().to(`Auth/${msg.user}`).emit(JSON.stringify(bet));
+        getWorkChannel().ack(originMSG);
     });
     workConsume("confirmBet", async (msg) => {
+        const originMSG = msg;
         msg = JSON.parse(msg.content.toString());
         let bet = await controller.confirmBets(msg);
-        getWorkChannel().ack(msg);
+        getWorkChannel().ack(originMSG);
     });
 
-    app.listen(PORT, async () => {
+    http.listen(PORT, async () => {
         Logger.success("Listening in port", PORT);
 	});
 

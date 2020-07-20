@@ -59,6 +59,20 @@ class MatchRepository extends MongoComponent{
         }
     }
 
+    async findById(_id) {
+        try {
+            return new Promise((resolve, reject) => {
+                MatchRepository.prototype.schema.model.findById(_id)
+                    .exec((err, item) => {
+                        if (err) { reject(err) }
+                        resolve(item);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
     async findMatchBySerieId({serie_id, offset, size, begin_at, end_at, status = {}}) {
         try {
             switch (begin_at) {

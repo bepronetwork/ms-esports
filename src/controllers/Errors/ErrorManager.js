@@ -61,6 +61,16 @@ class ErrorManager {
         }
     }
 
+    resultSpace = function (object, type){
+        try{
+            switch(type){
+               
+            }
+        }catch(err){
+            throw err
+        }
+    }
+
     security = function (security, type){
         try{
             switch(type){
