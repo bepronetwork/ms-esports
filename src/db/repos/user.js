@@ -42,12 +42,12 @@ class UsersRepository extends MongoComponent{
         }
     }
 
-    async findUserByIdAndApp({_id, app}){
+    async findUserByIdAndApp({_id, app_id}){
         try {
             return new Promise((resolve, reject) => {
                 UsersRepository.prototype.schema.model.findOne({
                     _id,
-                    app
+                    app_id
                 })
                 .populate(["wallet"])
                 .lean()

@@ -97,12 +97,12 @@ class BookedMatchRepository extends MongoComponent {
         }
     }
 
-    async findMatchByIdAndApp({ _id, app = {}}) {
+    async findMatchByIdAndApp({ match, app = {}}) {
         try {
             return new Promise((resolve, reject) => {
                 BookedMatchRepository.prototype.schema.model.findOne({
-                    _id,
-                    ...app
+                    match,
+                    app
                 })
                 .populate(["Match"])
                 .lean()

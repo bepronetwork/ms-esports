@@ -4,6 +4,7 @@ import _ from 'lodash';
 import UsersRepository from '../db/repos/user';
 import { WalletsRepository, BetEsportsRepository, MatchRepository, BookedMatchRepository, AppRepository, BetResultSpacesRepository } from '../db/repos';
 import {BetResultSpace} from "../models";
+import { throwError } from '../controllers/Errors/ErrorManager';
 let error = new ErrorManager();
 
 
@@ -44,7 +45,7 @@ const processActions = {
 			let match  	  = await MatchRepository.prototype.findById(params.matchId);
 
 			// check id user exist
-			const user = await UsersRepository.prototype.findUserByIdAndApp({ _id: match.user, app: match.app })
+			const user = await UsersRepository.prototype.findUserByIdAndApp({ _id: match.user, app_id: match.app })
 			if (!user) { throwError("USER_NOT_EXISTENT") }
 
 			// check id app exist
@@ -107,11 +108,10 @@ const processActions = {
 	 * @param {function} params
 	 * 	- app 			: String
 	 * 	- resultSpace 	: Array<JSON>
-	 * 		- match  		: String
-	 *      - market 		: String - Ex.: winnerTwoWay || winnerThreeWay...
+	 * 		- matchId  		: String
+	 *      - marketType 	: String - Ex.: winnerTwoWay || winnerThreeWay...
 	 *      - betType 		: Number - Ex.: 0 || 1 || 2...
 	 *      - statistic     : Number
-	 *      - finished      : Boolean
 	 * 	- user 			: String
 	 * 	- betAmount 	: Number
 	 * 	- currency      : String
@@ -122,14 +122,15 @@ const processActions = {
 		if (!app) { throwError("APP_NOT_EXISTENT") }
 
 		// check if all match exist
-		let resultSpace = params.resultSpace.map((result) => {
-			let resultLocal = (await BookedMatchRepository.prototype.findMatchByIdAndApp({ _id: result.matchId, app: app._id }));
+		let resultSpace = params.resultSpace.map(async (result) => {
+			let resultLocal = (await BookedMatchRepository.prototype.findMatchByIdAndApp({ match: result.matchId, app: app._id }));
 			return (resultLocal!=null || resultLocal!=undefined) ? {...result, ...resultLocal} : false;
 		});
+		resultSpace = await Promise.all(resultSpace);
 		if (resultSpace.indexOf(false)!=-1) { throwError("MATCH_NOT_EXISTENT") }
 
 		// check user exist in app
-		const user = await UsersRepository.prototype.findUserByIdAndApp({ _id: params.user, app: app._id })
+		const user = await UsersRepository.prototype.findUserByIdAndApp({ _id: params.user, app_id: app._id })
 		if (!user) { throwError("USER_NOT_EXISTENT") }
 
 		// check wallet exist and funds is sufficient
