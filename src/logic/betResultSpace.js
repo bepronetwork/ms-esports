@@ -44,8 +44,8 @@ const processActions = {
   
 const progressActions = {
 	__register : async (params) => {
-
-        let resultSpace = await self.save({...params, _id: null});
+		delete params["_id"];
+        let resultSpace = await self.save(params);
         return resultSpace;
 	}
 }
