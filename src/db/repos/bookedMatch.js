@@ -104,7 +104,11 @@ class BookedMatchRepository extends MongoComponent {
                     match,
                     app
                 })
-                .populate(["Match"])
+                .populate([{
+                    path: 'match',
+                    model: 'Match',
+                    select: { '__v': 0 },
+                }])
                 .lean()
                 .exec((err, user) => {
                     if (err) { reject(err) }

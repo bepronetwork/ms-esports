@@ -124,6 +124,7 @@ const processActions = {
 		// check if all match exist
 		let resultSpace = params.resultSpace.map(async (result) => {
 			let resultLocal = (await BookedMatchRepository.prototype.findMatchByIdAndApp({ match: result.matchId, app: app._id }));
+			console.log("]0", resultLocal);
 			return (resultLocal!=null || resultLocal!=undefined) ? {...result, ...resultLocal} : false;
 		});
 		resultSpace = await Promise.all(resultSpace);
@@ -146,6 +147,7 @@ const processActions = {
 
 		// list videogames
 		const videoGames = resultSpace.map((res) => res.match.videogame);
+		console.log("1", resultSpace);
 
 		// check type bet is simple or multiple (if videoGames.length==1 then simple, if not, then multiple, because if <=0 then it should have gone wrong already in conditions bef)
 		let type = videoGames.length == 1 ? "simple" : "multiple";
@@ -214,13 +216,13 @@ const progressActions = {
 			let result = await Promise.all(dependentObjects);
 
 			let bet = {
-				videoGames,
 				betAmount,
 				app,
 				user,
 				currency,
 				result,
-				type
+				type,
+				videogames: videoGames,
 			}
 
 			await self.save(bet);
