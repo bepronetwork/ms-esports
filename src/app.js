@@ -30,19 +30,6 @@ var config = {
   	appRoot: __dirname // required config
 };
 
-// Setting Socket
-IOSingleton.push(io);
-io.on('connection', socketIOJwt.authorize({
-    secret: publicKEY,
-    timeout: 15000
-}))
-.on('authenticated', (socket) => {
-    socket.join(socket.decoded_token.id);
-    socket.on("createBet", (data) => {
-        ClientQueueSingleton.sendToQueue("createBet", data);
-    });
-});
-
 SwaggerExpress.create(config, async (err, swaggerExpress) => {
     if (err) { throw err; }
     // set the ENV variables if Production
@@ -56,7 +43,9 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
     workConsume("createBet", async (msg) => {
         const originMSG = msg;
         msg = JSON.parse(msg.content.toString());
+        console.log("msg ", msg );
         let bet = await controller.createBet(msg);
+        console.log(bet);
         IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", bet);
         getWorkChannel().ack(originMSG);
     });
@@ -65,6 +54,19 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
         msg = JSON.parse(msg.content.toString());
         let bet = await controller.confirmBets(msg);
         getWorkChannel().ack(originMSG);
+    });
+
+    // Setting Socket
+    IOSingleton.push(io);
+    io.on('connection', socketIOJwt.authorize({
+        secret: publicKEY,
+        timeout: 15000
+    }))
+    .on('authenticated', (socket) => {
+        socket.join(socket.decoded_token.id);
+        socket.on("createBet", (data) => {
+            ClientQueueSingleton.sendToQueue("createBet", data);
+        });
     });
 
     http.listen(PORT, async () => {
