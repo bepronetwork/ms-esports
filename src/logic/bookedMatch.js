@@ -34,6 +34,9 @@ const processActions = {
                 oddWinnerTwoWay   = oddWinnerTwoWay==null ? [] : oddWinnerTwoWay.selections;
             let oddWinnerThreeWay = match.market.find((m) => m.template == "winner-3-way");
                 oddWinnerThreeWay = oddWinnerThreeWay==null ? [] : oddWinnerThreeWay.selections;
+
+            if(oddWinnerTwoWay.length==0 && oddWinnerThreeWay==0) {throwError("NOT_PROBABILITY")}
+
             return {
                 app: params.app,
                 match: match._id,
