@@ -1,5 +1,6 @@
 import MongoComponent from './MongoComponent';
 import { AppSchema } from '../schemas';
+import { populate_wallet } from './populates';
 
 /**
  * Accounts database interaction class.
@@ -32,7 +33,7 @@ class AppRepository extends MongoComponent{
         try {
             return new Promise((resolve, reject) => {
                 AppRepository.prototype.schema.model.findById(_id)
-                    .populate(["wallet"])
+                    .populate(populate_wallet)
                     .lean()
                     .exec((err, user) => {
                         if (err) { reject(err) }

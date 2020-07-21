@@ -1,5 +1,6 @@
 import MongoComponent from './MongoComponent';
 import { UserSchema } from '../schemas/user';
+import { populate_wallet } from './populates';
 /**
  * Accounts database interaction class.
  *
@@ -49,7 +50,7 @@ class UsersRepository extends MongoComponent{
                     _id,
                     app_id
                 })
-                .populate(["wallet"])
+                .populate(populate_wallet)
                 .lean()
                 .exec((err, user) => {
                     if (err) { reject(err) }
