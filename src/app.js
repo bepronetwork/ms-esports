@@ -46,7 +46,7 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
         console.log("msg ", msg );
         let bet = await controller.createBet(msg);
         console.log(bet);
-        IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", bet);
+        IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", {...bet, bid: msg.bid});
         getWorkChannel().ack(originMSG);
     });
     workConsume("confirmBet", async (msg) => {
