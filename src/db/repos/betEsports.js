@@ -1,5 +1,6 @@
 import { BetEsportsSchema } from '../schemas';
 import MongoComponent from './MongoComponent';
+import { populate_bet_result } from './populates';
 
 /**
  * Accounts database interaction class.
@@ -45,7 +46,7 @@ class BetEsportsRepository extends MongoComponent{
         try {
             return new Promise((resolve, reject) => {
                 BetEsportsRepository.prototype.schema.model.find({ result : { $in: [result] } })
-                .populate(["BetResult"])
+                .populate(populate_bet_result)
                 .exec((err, item) => {
                     if (err) { reject(err) }
                     resolve(item[0] == null ? [] : item[0]);

@@ -42,5 +42,9 @@
     "010" : {
         "key"      : "WRONG_PROBABILITY",
         "message"   : "The probability is different from the Match"
+    },
+    "011" : {
+        "key"      : "NOT_PROBABILITY",
+        "message"   : "Probability not found for that match"
     }
 }
