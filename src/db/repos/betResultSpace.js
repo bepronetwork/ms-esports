@@ -31,8 +31,9 @@ class BetResultSpacesRepository extends MongoComponent{
 
     updateStatus(_id, {status, finished}){ 
         return new Promise( (resolve, reject) => {
-            BetResultSpacesRepository.prototype.schema.model.findOneAndUpdate(_id, {status, finished})
+            BetResultSpacesRepository.prototype.schema.model.findOneAndUpdate({_id}, {status, finished})
             .exec( (err, BetResultSpace) => {
+                console.log(BetResultSpace)
                 if(err) { reject(err)}
                 resolve(BetResultSpace);
             });
