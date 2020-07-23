@@ -142,7 +142,7 @@ const processActions = {
             // if (!app) { throwError("APP_NOT_EXISTENT") }
             let matches     = await BookedMatchRepository.prototype.findByExternalMatchId(params.match_id);
             let pandaScore  = await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
-            return { ...pandaScore.data, match_id: matches.match, odds: matches == (undefined || null) ? {} : matches.odds };
+            return { ...pandaScore.data, match_id: matches!=null ? matches.match : null, odds: matches == (undefined || null) ? {} : matches.odds };
         } catch (err) {
             throw err;
         }
