@@ -42,7 +42,7 @@ const processActions = {
 		try {
 			let betResult = await BetResultSpacesRepository.prototype.findById(params.betResultId);
 			let betEsport = await BetEsportsRepository.prototype.findByBetResultId(params.betResultId);
-			let match  	  = await MatchRepository.prototype.findById(params.matchId);
+			// let match  	  = await MatchRepository.prototype.findById(params.matchId);
 			// check id user exist
 			const user = await UsersRepository.prototype.findUserByIdAndApp({ _id: betEsport.user, app_id: betEsport.app })
 			if (!user) { throwError("USER_NOT_EXISTENT") }

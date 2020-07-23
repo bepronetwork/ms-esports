@@ -3,6 +3,7 @@ import { globals } from './Globals';
 import { Logger } from './helpers/logger';
 import { IOSingleton } from './logic/utils/io';
 import { workConsume, getWorkChannel, ClientQueueSingleton } from './logic/third-parties';
+import { throwError } from './controllers/Errors/ErrorManager';
 
 /** MACROS */
 const socketIOJwt = require('socketio-jwt');
@@ -43,11 +44,17 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
     workConsume("createBet", async (msg) => {
         const originMSG = msg;
         msg = JSON.parse(msg.content.toString());
-        console.log("msg ", msg );
-        let bet = await controller.createBet(msg);
-        console.log(bet);
-        IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", {...bet, bid: msg.bid});
-        getWorkChannel().ack(originMSG);
+        try {
+            console.log("msg ", msg );
+            if(`Auth/${msg.user}` != msg.auth_id){throwError("AUTH_USER");}
+            let bet = await controller.createBet(msg);
+            console.log(bet);
+            IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", {...bet, bid: msg.bid});
+            getWorkChannel().ack(originMSG);
+        } catch(error) {
+            IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", {...error, bid: msg.bid});
+            getWorkChannel().ack(originMSG);
+        }
     });
     workConsume("confirmBet", async (msg) => {
         const originMSG = msg;
@@ -65,7 +72,7 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
     .on('authenticated', (socket) => {
         socket.join(socket.decoded_token.id);
         socket.on("createBet", (data) => {
-            ClientQueueSingleton.sendToQueue("createBet", data);
+            ClientQueueSingleton.sendToQueue("createBet", {...data, auth_id: socket.decoded_token.id});
         });
     });
 

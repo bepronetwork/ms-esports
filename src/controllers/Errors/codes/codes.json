@@ -46,5 +46,9 @@
     "011" : {
         "key"      : "NOT_PROBABILITY",
         "message"   : "Probability not found for that match"
+    },
+    "012" : {
+        "key"      : "AUTH_USER",
+        "message"   : "Unauthenticated User"
     }
 }
