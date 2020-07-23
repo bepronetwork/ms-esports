@@ -91,7 +91,7 @@ const processActions = {
                 let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&sort=${(params.sort == "DESC" ? "-scheduled_at" : "scheduled_at")}&token=${PANDA_SCORE_TOKEN}`);
                 pandaScore.data = pandaScore.data.map((match) => {
                     let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
-                    return { ...match, odds: oddsResult.odds, match_id: oddsResult.match};
+                    return { ...match, odds: oddsResult.odds, match_id: oddsResult.match._id};
                 })
                 return pandaScore.data;
             }
@@ -126,7 +126,7 @@ const processActions = {
                 let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&%5Bdetailed_stats%5D=true&per_page=${params.size}&sort=${(params.sort == "DESC" ? "-scheduled_at" : "scheduled_at")}&token=${PANDA_SCORE_TOKEN}`);
                 pandaScore.data = pandaScore.data.map((match) => {
                     let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
-                    return { ...match, match_id: oddsResult.match, odds: oddsResult.odds };
+                    return { ...match, match_id: oddsResult.match._id, odds: oddsResult.odds };
                 })
                 return pandaScore.data;
             }
