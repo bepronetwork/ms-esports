@@ -26,7 +26,8 @@ ErrorHandler.prototype.KEYS =  {
     'INSUFFICIENT_FUNDS'                    : "009",
     'WRONG_PROBABILITY'                     : "010",
     'NOT_PROBABILITY'                       : "011",
-    'AUTH_USER'                             : "012"
+    'AUTH_USER'                             : "012",
+    'MATCH_FINISHED'                        : "013"
 };
 
 /***************************

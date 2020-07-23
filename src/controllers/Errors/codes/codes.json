@@ -50,5 +50,9 @@
     "012" : {
         "key"      : "AUTH_USER",
         "message"   : "Unauthenticated User"
+    },
+    "013" : {
+        "key"      : "MATCH_FINISHED",
+        "message"   : "Match already finished"
     }
 }

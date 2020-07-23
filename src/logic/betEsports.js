@@ -42,6 +42,8 @@ const processActions = {
 		try {
 			let betResult = await BetResultSpacesRepository.prototype.findById(params.betResultId);
 			let betEsport = await BetEsportsRepository.prototype.findByBetResultId(params.betResultId);
+
+			if(betResult.finished) { throwError("USER_NOT_EXISTENT") }
 			// let match  	  = await MatchRepository.prototype.findById(params.matchId);
 			// check id user exist
 			const user = await UsersRepository.prototype.findUserByIdAndApp({ _id: betEsport.user, app_id: betEsport.app })
@@ -139,6 +141,7 @@ const processActions = {
 
 		// check if probability is valid
 		for(let res of resultSpace) {
+			if (res.match.status_external!="pre_match") { throwError("MATCH_FINISHED") }
 			if (res.odds[res.marketType][res.betType].probability != res.statistic) { throwError("WRONG_PROBABILITY") }
 			res["participantId"] = res.odds[res.marketType][res.betType].participant_id;
 		}
