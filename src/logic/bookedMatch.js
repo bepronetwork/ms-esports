@@ -29,7 +29,7 @@ const processActions = {
     __register: async (params) => {
         try {
             let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
-            let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
+            let bookedMatch = await BookedMatchRepository.prototype.findByMatchId({match: match._id, app: params.app});
             let oddWinnerTwoWay   = match.market.find((m) => m.template == "winner-2-way");
                 oddWinnerTwoWay   = oddWinnerTwoWay==null ? [] : oddWinnerTwoWay.selections;
             let oddWinnerThreeWay = match.market.find((m) => m.template == "winner-3-way");
