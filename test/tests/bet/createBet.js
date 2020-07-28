@@ -40,7 +40,6 @@ context('Bet', async () => {
         await (() => {
             return new Promise((resolve)=>{
                 socket.on("createBetReturn", (msg)=>{
-                    console.log(msg);
                     res = msg;
                     resolve(res);
                 });
