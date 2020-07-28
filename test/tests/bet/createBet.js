@@ -1,7 +1,7 @@
 import {GlobalESportSingleton} from "../../GlobalESport";
 import chai from 'chai';
 import { detectValidationErrors, mochaAsync } from '../../utils';
-import { SOCKET_HOST } from "../../../src/config";
+import { SOCKET_HOST, PORT } from "../../../src/config";
 import io from 'socket.io-client';
 const expect = chai.expect;
 
