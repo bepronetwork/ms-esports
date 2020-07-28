@@ -9,6 +9,8 @@ export const ENV = process.env.ENV;
 
 export const RABBIT_URL_QUEUE_BET =  process.env.RABBIT_URL_QUEUE_BET || "amqp://guest:guest@localhost:5672/";
 
+export const SOCKET_HOST =  process.env.SOCKET_HOST || "ws://localhost:"+PORT;
+
 export const DB_USER =  process.env.DB_USER;
 
 export const LIMIT =  process.env.LIMIT || 1;
