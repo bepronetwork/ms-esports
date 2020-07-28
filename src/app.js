@@ -71,14 +71,13 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
     io.on('connection', (socket) => {
         socket.join(socket.decoded_token.id);
         socket.on("createBet", (data) => {
+            console.log("entrou");
             ClientQueueSingleton.sendToQueue("createBet", {...data, auth_id: socket.decoded_token.id});
         });
     });
-
-    http.listen(PORT, async () => {
-        Logger.success("Listening in port", PORT);
-	});
-
+});
+http.listen(PORT, async () => {
+    Logger.success("Listening in port", PORT);
 });
 
 module.exports = app;
