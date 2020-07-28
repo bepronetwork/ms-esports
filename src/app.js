@@ -1,4 +1,4 @@
-import { PORT, QUOTA_GUARD_URL, PUBLIC_KEY } from './config';
+import { PORT, PUBLIC_KEY } from './config';
 import { globals } from './Globals';
 import { Logger } from './helpers/logger';
 import { IOSingleton } from './logic/utils/io';
@@ -16,7 +16,7 @@ const cors = require('cors');
 /** CODE */
 var cookieParser    = require('cookie-parser');
 var bodyParser      = require('body-parser');
-var publicKEY       =  new String("-----BEGIN PUBLIC KEY-----\n" + PUBLIC_KEY + "\n-----END PUBLIC KEY-----").trim();
+var publicKEY       = new String("-----BEGIN PUBLIC KEY-----\n" + PUBLIC_KEY + "\n-----END PUBLIC KEY-----").trim();
 
 
 //---------CODING-CHOICES--------------/
@@ -24,6 +24,10 @@ app.use(cors());
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
 app.use(expressIp().getIpInfoMiddleware);
+io.use(socketIOJwt.authorize({
+    secret: publicKEY,
+    handshake: true
+}));
 
 //--------RUN APP-------------------//
 
@@ -45,10 +49,9 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
         const originMSG = msg;
         msg = JSON.parse(msg.content.toString());
         try {
-            console.log("msg ", msg );
             if(`Auth/${msg.user}` != msg.auth_id){throwError("AUTH_USER");}
             let bet = await controller.createBet(msg);
-            console.log(bet);
+            // console.log(bet);
             IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", {...bet, bid: msg.bid});
             getWorkChannel().ack(originMSG);
         } catch(error) {
@@ -65,11 +68,7 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
 
     // Setting Socket
     IOSingleton.push(io);
-    io.on('connection', socketIOJwt.authorize({
-        secret: publicKEY,
-        timeout: 15000
-    }))
-    .on('authenticated', (socket) => {
+    io.on('connection', (socket) => {
         socket.join(socket.decoded_token.id);
         socket.on("createBet", (data) => {
             ClientQueueSingleton.sendToQueue("createBet", {...data, auth_id: socket.decoded_token.id});

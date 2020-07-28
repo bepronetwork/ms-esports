@@ -83,8 +83,9 @@ const processActions = {
 			const isWon       = (((fakeResult.find((res) => res.status=="loss")) == null ? true : false) && cameToAnEnd);
 			let winAmount     = 0;
 			if(isWon) {
-				const odd = fakeResult.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.statistic, 1);
-				winAmount = (betEsport.betAmount) * odd;
+				const odd 			= fakeResult.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.statistic, 1);
+				let edgeRealValue 	= app.esports_edge * 0.01 * betEsport.betAmount;
+				winAmount 			= (betEsport.betAmount-edgeRealValue) * odd;
 			}
 
 			return {

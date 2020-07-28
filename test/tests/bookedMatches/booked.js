@@ -13,6 +13,7 @@ import {
     loginUser
 } from '../../methods';
 
+import {GlobalESportSingleton} from "../../GlobalESport";
 import chai from 'chai';
 import { detectValidationErrors, mochaAsync } from '../../utils';
 
@@ -38,16 +39,20 @@ context('Booked Matches', async () => {
             marketType : 0
         }
         app = (await registerApp(postData)).data.message;
-        // var postDataUser = {
-        //     username : "sdfg" + parseInt(Math.random()*10000),
-        //     name : "test",
-        //     email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
-        //     password : 'test123',
-        //     address : '90x',
-        //     app : app.id
-        // }
-        // user = await registerUser(postDataUser);
-        // user = (await loginUser(postDataUser)).data.message;
+        var postDataUser = {
+            username : "sdfg" + parseInt(Math.random()*10000),
+            name : "test",
+            email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
+            password : 'test123',
+            address : '90x',
+            app : app.id
+        }
+        user = await registerUser(postDataUser);
+        user = (await loginUser(postDataUser)).data.message;
+
+        GlobalESportSingleton.setAdmin(admin);
+        GlobalESportSingleton.setUser(user);
+        GlobalESportSingleton.setApp(app);
     });
 
     it('should get All Booked Matches - BackOffice', mochaAsync(async () => {
