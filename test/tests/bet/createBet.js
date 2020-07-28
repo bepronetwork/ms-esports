@@ -1,7 +1,7 @@
 import {GlobalESportSingleton} from "../../GlobalESport";
 import chai from 'chai';
 import { detectValidationErrors, mochaAsync } from '../../utils';
-import { PORT } from "../../../src/config";
+import { SOCKET_HOST } from "../../../src/config";
 import io from 'socket.io-client';
 const expect = chai.expect;
 
@@ -13,7 +13,7 @@ context('Bet', async () => {
         user   = GlobalESportSingleton.getUser();
         app    = GlobalESportSingleton.getApp();
 
-        socket = io.connect(`ws://localhost:${PORT}`, {
+        socket = io.connect(`${SOCKET_HOST}:${PORT}`, {
             extraHeaders: { Authorization: `Bearer ${user.bearerToken}` }
         });
     });
