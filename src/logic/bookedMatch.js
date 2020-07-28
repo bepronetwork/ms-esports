@@ -56,7 +56,7 @@ const processActions = {
     __remove: async (params) => {
         try {
             let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
-            let bookedMatch = await BookedMatchRepository.prototype.findByMatchId(match._id);
+            let bookedMatch = await BookedMatchRepository.prototype.findByMatchId({match: match._id, app: params.app});
             if (!bookedMatch) { throwError("MATCH_NOT_EXISTENT") }
             return {
                 app: params.app,
