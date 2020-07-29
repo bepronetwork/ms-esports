@@ -59,6 +59,7 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
     workConsume("confirmBet", async (msg) => {
         const originMSG = msg;
         msg = JSON.parse(msg.content.toString());
+        console.log("Confirm Bet ",msg);
         let bet = await controller.confirmBets(msg);
         getWorkChannel().ack(originMSG);
     });
