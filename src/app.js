@@ -9,7 +9,6 @@ import { throwError } from './controllers/Errors/ErrorManager';
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
 const http = require('http').createServer(app);
-import ioC from 'socket.io-client';
 const io = require('socket.io')(http);
 const socketIOJwt = require('socketio-jwt');
 const expressIp = require('express-ip');

@@ -4,6 +4,7 @@ jobs: # a collection of steps
     working_directory: ~/mern-starter # directory where steps will run
     docker: # run the steps with Docker
       - image: circleci/node:8.12.0 # ...with this image as the primary container; this is where all `steps` will run
+      - image: brandembassy/rabbitmq:latest
     steps: # a collection of executable commands
       - checkout # special step to check out source code to working directory
       - run:
@@ -50,7 +51,7 @@ jobs: # a collection of steps
             source $BASH_ENV
       - run: # run tests
           name: test
-          command: npm start & npm test
+          command: npm test
       - save_cache: # special step to save the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
