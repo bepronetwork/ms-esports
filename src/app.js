@@ -2,7 +2,7 @@ import { PORT, QUOTA_GUARD_URL, PUBLIC_KEY } from './config';
 import { globals } from './Globals';
 import { Logger } from './helpers/logger';
 import { IOSingleton } from './logic/utils/io';
-import { workConsume, getWorkChannel, ClientQueueSingleton } from './logic/third-parties';
+import { WorkRabbitMQ, ClientQueueSingleton } from './logic/third-parties';
 import { throwError } from './controllers/Errors/ErrorManager';
 
 /** MACROS */
@@ -40,8 +40,10 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
     await globals.__init__();
     const controller = require('./api/controllers/bet');
 
+    const workRabbitMQ1 = new WorkRabbitMQ();
+    const workRabbitMQ2 = new WorkRabbitMQ();
     // Rabbit queue
-    workConsume("createBet", async (msg) => {
+    workRabbitMQ1.consume("createBet", async (msg) => {
         const originMSG = msg;
         msg = JSON.parse(msg.content.toString());
         try {
@@ -50,19 +52,19 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
             let bet = await controller.createBet(msg);
             console.log(bet);
             IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", {...bet, bid: msg.bid});
-            getWorkChannel().ack(originMSG);
+            workRabbitMQ1.getChannel().ack(originMSG);
         } catch(error) {
             IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", {...error, bid: msg.bid});
-            getWorkChannel().ack(originMSG);
+            workRabbitMQ1.getChannel().ack(originMSG);
         }
     });
-    // workConsume("confirmBet", async (msg) => {
-    //     const originMSG = msg;
-    //     msg = JSON.parse(msg.content.toString());
-    //     console.log("Confirm Bet ",msg);
-    //     let bet = await controller.confirmBets(msg);
-    //     getWorkChannel().ack(originMSG);
-    // });
+    workRabbitMQ2.consume("confirmBet", async (msg) => {
+        const originMSG = msg;
+        msg = JSON.parse(msg.content.toString());
+        console.log("Confirm Bet ",msg);
+        let bet = await controller.confirmBets(msg);
+        workRabbitMQ2.getChannel().ack(originMSG);
+    });
 
     // Setting Socket
     io.on('connection', socketIOJwt.authorize({
