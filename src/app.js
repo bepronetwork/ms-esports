@@ -45,9 +45,10 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
         const originMSG = msg;
         msg = JSON.parse(msg.content.toString());
         try {
+            console.log(originMSG);
             if(`Auth/${msg.user}` != msg.auth_id){throwError("AUTH_USER");}
             let bet = await controller.createBet(msg);
-            // console.log(bet);
+            console.log(bet);
             IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", {...bet, bid: msg.bid});
             getWorkChannel().ack(originMSG);
         } catch(error) {
