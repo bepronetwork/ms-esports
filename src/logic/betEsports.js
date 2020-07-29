@@ -43,6 +43,7 @@ const processActions = {
 		try {
 			let betResult = await BetResultSpacesRepository.prototype.findById(params.betResultId);
 			let betEsport = await BetEsportsRepository.prototype.findByBetResultId(params.betResultId);
+			if (betEsport.resolved === true) return;
 			// let match  	  = await MatchRepository.prototype.findById(params.matchId);
 			// check id user exist
 			const user = await UsersRepository.prototype.findUserByIdAndApp({ _id: betEsport.user, app_id: betEsport.app })
@@ -184,7 +185,8 @@ const progressActions = {
 				finished : true
 			});
 			if(!cameToAnEnd) return;
-			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon});
+			const resolved = true;
+			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon, resolved});
 			if(isWon) {
 				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -winAmount);
 				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount+betEsport.betAmount));
