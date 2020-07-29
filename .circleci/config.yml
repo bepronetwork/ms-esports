@@ -18,7 +18,7 @@ jobs: # a collection of steps
       - run:
           name: Define Environment Variable at Runtime
           command: |
-            echo 'export RABBIT_URL_QUEUE_BET=' >> $BASH_ENV
+            echo 'export RABBIT_URL_QUEUE_BET=amqp://krqwzdkx:7fMXz-WKF2TkFjPW5Vvs_o9bR0V147kC@whale.rmq.cloudamqp.com/krqwzdkx' >> $BASH_ENV
             echo 'export ETH_NET_NAME=rinkeby' >> $BASH_ENV
             echo 'export DB_USER=BetProtocolAdmin' >> $BASH_ENV
             echo 'export DB_PASSWORD=wNmm4OmASXEp8UXi' >> $BASH_ENV
