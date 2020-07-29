@@ -50,7 +50,7 @@ jobs: # a collection of steps
             source $BASH_ENV
       - run: # run tests
           name: test
-          command: npm test
+          command: npm start & npm test
       - save_cache: # special step to save the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
