@@ -6,11 +6,11 @@ import { workConsume, getWorkChannel, ClientQueueSingleton } from './logic/third
 import { throwError } from './controllers/Errors/ErrorManager';
 
 /** MACROS */
-const socketIOJwt = require('socketio-jwt');
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
+const socketIOJwt = require('socketio-jwt');
 const expressIp = require('express-ip');
 const cors = require('cors');
 /** CODE */
@@ -45,10 +45,9 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
         const originMSG = msg;
         msg = JSON.parse(msg.content.toString());
         try {
-            console.log("msg ", msg );
             if(`Auth/${msg.user}` != msg.auth_id){throwError("AUTH_USER");}
             let bet = await controller.createBet(msg);
-            console.log(bet);
+            // console.log(bet);
             IOSingleton.getIO().to(`Auth/${msg.user}`).emit("createBetReturn", {...bet, bid: msg.bid});
             getWorkChannel().ack(originMSG);
         } catch(error) {
@@ -64,7 +63,6 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
     });
 
     // Setting Socket
-    IOSingleton.push(io);
     io.on('connection', socketIOJwt.authorize({
         secret: publicKEY,
         timeout: 15000
@@ -75,10 +73,11 @@ SwaggerExpress.create(config, async (err, swaggerExpress) => {
             ClientQueueSingleton.sendToQueue("createBet", {...data, auth_id: socket.decoded_token.id});
         });
     });
+    IOSingleton.push(io);
 
     http.listen(PORT, async () => {
         Logger.success("Listening in port", PORT);
-	});
+    });
 
 });
 

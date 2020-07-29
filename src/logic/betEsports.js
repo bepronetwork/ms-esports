@@ -30,6 +30,7 @@ const checkWinner = {
 		return false;
 	},
 	winnerThreeWay : (betResult, param)=>{
+		if(betResult.participantId==0 && param.winner==null) return true;
 		if(betResult.participantId == param.winner) return true;
 		return false;
 	}
@@ -82,7 +83,8 @@ const processActions = {
 			let winAmount     = 0;
 			if(isWon) {
 				const odd = fakeResult.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.statistic, 1);
-				winAmount = (betEsport.betAmount) * odd;
+				let edgeRealValue 	= ((app.esports_edge==null || app.esports_edge==undefined) ? 0 : app.esports_edge) * 0.01 * betEsport.betAmount;
+				winAmount 			= (betEsport.betAmount-edgeRealValue) * odd;
 			}
 
 			return {
@@ -140,7 +142,8 @@ const processActions = {
 		// check if probability is valid
 		for(let res of resultSpace) {
 			if (res.odds[res.marketType][res.betType].probability != res.statistic) { throwError("WRONG_PROBABILITY") }
-			res["participantId"] = res.odds[res.marketType][res.betType].participant_id;
+			let participantId = res.odds[res.marketType][res.betType].participant_id;
+			res["participantId"] = participantId == null ? 0 : participantId;
 		}
 
 		// list videogames
