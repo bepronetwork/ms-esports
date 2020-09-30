@@ -63,7 +63,7 @@ const processActions = {
 
 			let isWonThatMatch = checkWinner[betResult.marketType](betResult, params);
 
-			let fakeResult = betEsport.result.map((res) => {
+			let prepareResult = betEsport.result.map((res) => {
 				if(res._id == params.betResultId) {
 					res.finished = true;
 					res.status   = (isWonThatMatch===true) ? "gain" : "loss";
@@ -79,13 +79,13 @@ const processActions = {
 				};
 			});
 
-			const cameToAnEnd = (fakeResult.find((res) => res.status=="pending")) == null ? true : false;
-			const isWon       = (((fakeResult.find((res) => res.status=="loss")) == null ? true : false) && cameToAnEnd);
+			const cameToAnEnd = (prepareResult.find((res) => res.status=="pending")) == null ? true : false;
+			const isWon       = (((prepareResult.find((res) => res.status=="loss")) == null ? true : false) && cameToAnEnd);
 			let winAmount     = 0;
 			if(isWon) {
-				const odd = fakeResult.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.statistic, 1);
-				let edgeRealValue 	= ((app.esports_edge==null || app.esports_edge==undefined) ? 0 : app.esports_edge) * 0.01 * betEsport.betAmount;
-				winAmount 			= (betEsport.betAmount-edgeRealValue) * odd;
+				// const odds = prepareResult.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.statistic, 1);
+				// let edgeRealValue 	= ((app.esports_edge==null || app.esports_edge==undefined) ? 0 : app.esports_edge) * 0.01 * betEsport.betAmount;
+				winAmount = (betEsport.betAmount) * betEsport.odds;
 			}
 
 			return {
@@ -122,6 +122,8 @@ const processActions = {
 		// check id app exist
 		const app = await AppRepository.prototype.findAppById(params.app);
 		if (!app) { throwError("APP_NOT_EXISTENT") }
+		const appWallet = app.wallet.find(w => new String(w.currency._id).toString() == new String(params.currency).toString());
+		if (!appWallet) { throwError("WALLET_NOT_EXISTENT") }
 
 		// check if all match exist
 		let resultSpace = params.resultSpace.map(async (result) => {
@@ -146,6 +148,7 @@ const processActions = {
 			let participantId = res.odds[res.marketType][res.betType].participant_id;
 			res["participantId"] = participantId == null ? 0 : participantId;
 		}
+		const odds = resultSpace.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.statistic, 1);
 
 		// list videogames
 		const videoGames = resultSpace.map((res) => res.match.videogame);
@@ -161,7 +164,10 @@ const processActions = {
 			type,
 			userWallet,
 			resultSpace,
-			videoGames
+			videoGames,
+			appWallet,
+			odds,
+			edge: app.esports_edge
 		}
 		return normalized;
 	}
@@ -188,10 +194,8 @@ const progressActions = {
 			const resolved = true;
 			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon, resolved});
 			if(isWon) {
-				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -winAmount);
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmount+betEsport.betAmount) );
 				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount+betEsport.betAmount));
-			} else {
-				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, betEsport.betAmount);
 			}
 			return;
 		} catch (err) {
@@ -208,7 +212,10 @@ const progressActions = {
 				type,
 				userWallet,
 				resultSpace,
-				videoGames
+				videoGames,
+				appWallet,
+				edge,
+				odds,
 			} = params;
 
 			let dependentObjects = resultSpace.map( async item => {
@@ -219,6 +226,8 @@ const progressActions = {
 
 			let bet = {
 				betAmount,
+				edge,
+				odds,
 				app,
 				user,
 				currency,
@@ -229,7 +238,8 @@ const progressActions = {
 
 			await self.save(bet);
 			let negativeBetAmount = (Math.abs(betAmount) * -1);
-			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, negativeBetAmount);
+			await WalletsRepository.prototype.updatePlayBalance(appWallet._id, Math.abs(betAmount) + (Math.abs(betAmount) * odds ));
+			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, negativeBetAmount - (Math.abs(betAmount) * odds) );
 			return {success: true};
 		} catch (err) {
 			throw err;

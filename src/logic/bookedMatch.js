@@ -28,6 +28,7 @@ let __private = {};
 const processActions = {
     __register: async (params) => {
         try {
+            let app   = await AppRepository.prototype.findAppById(params.app);
             let match = await MatchRepository.prototype.findMatchByExternalId(params.match_external_id);
             let bookedMatch = await BookedMatchRepository.prototype.findByMatchId({match: match._id, app: params.app});
             let oddWinnerTwoWay   = match.market.find((m) => m.template == "winner-2-way");
@@ -45,8 +46,8 @@ const processActions = {
                 isRegister: (bookedMatch == null),
                 game_date: match.game_date,
                 odds: {
-                    winnerTwoWay    : oddWinnerTwoWay,
-                    winnerThreeWay  : oddWinnerThreeWay
+                    winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } }),
+                    winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, probability: res.probability - app.esports_edge*0.01 } })
                 }
             };
         } catch (err) {

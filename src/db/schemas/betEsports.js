@@ -16,7 +16,9 @@ BetEsportsSchema.prototype.schema = {
     result      : [{ type : mongoose.Schema.Types.ObjectId, ref: 'BetResult', required : true }],
     type        : { type: String, required : true },
     winAmount   : { type : Number, required : true, default: 0 },
-    resolved    : { type : Boolean, required : true, default: false }
+    resolved    : { type : Boolean, required : true, default: false },
+    edge        : { type : Number, required : true},
+    odds        : { type : Number, required : true}
 }
 
 BetEsportsSchema.prototype.model = db.model(BetEsportsSchema.prototype.name, new db.Schema(BetEsportsSchema.prototype.schema, { timestamps: { createdAt: 'created_at' } }));
