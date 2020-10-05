@@ -76,22 +76,19 @@ export const PANDA_SCORE_TOKEN = process.env.PANDA_SCORE_TOKEN;
 /* Later to be change with route to change price */
 export const PRICE_VIRTUAL_CURRENCY_GLOBAL = 0.001;
 
+export const MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
+
+export const TIMEOUT_MONGO_MS = process.env.TIMEOUT_MONGO_MS;
+
 /* Variables */
 
 var ETH_NETWORK = config.eth;
 
-var DB_MONGO = config.mongo;
 
 /**
  * @function SET_ENV
  */
 
-
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_USER', DB_USER);
-
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'DB_PASSWORD', DB_PASSWORD);
-        
-DB_MONGO = changeAllStringsInObjectRecursive(DB_MONGO, 'MONGO_ID', MONGO_ID);
 
 if(ETH_RPC_URL){
     ETH_NETWORK = ETH_RPC_URL
@@ -101,6 +98,5 @@ if(ETH_RPC_URL){
 }
 
 export {
-    ETH_NETWORK,
-    DB_MONGO
+    ETH_NETWORK
 }
