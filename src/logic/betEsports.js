@@ -121,11 +121,11 @@ const processActions = {
 	__createBet: async (params) => {
 
 		// check if match is booked
-		for(let result of params.resultSpace) {
-			if((await MatchRepository.prototype.findById(result.matchId)).status_external!="booked") {
-				throwError("NOT_BOOKED");
-			}
-		}
+		// for(let result of params.resultSpace) {
+		// 	if((await MatchRepository.prototype.findById(result.matchId)).status_external!="pre_match") {
+		// 		throwError("NOT_BOOKED");
+		// 	}
+		// }
 
 		// check id app exist
 		const app = await AppRepository.prototype.findAppById(params.app);
