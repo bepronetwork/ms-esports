@@ -73,7 +73,6 @@ const processActions = {
 					marketType 		: res.marketType,
 					betType 		: res.betType,
 					participantId 	: res.participantId,
-					statistic 		: res.statistic,
 					finished 		: res.finished,
 					status 			: res.status
 				};
