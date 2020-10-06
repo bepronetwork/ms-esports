@@ -202,8 +202,8 @@ const progressActions = {
 			const resolved = true;
 			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon, resolved});
 			if(isWon) {
-				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmount+betEsport.betAmount) );
-				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount+betEsport.betAmount));
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmount));
+				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount));
 			}
 			return;
 		} catch (err) {
