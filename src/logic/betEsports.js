@@ -113,12 +113,20 @@ const processActions = {
 	 * 		- matchId  		: String
 	 *      - marketType 	: String - Ex.: winnerTwoWay || winnerThreeWay...
 	 *      - betType 		: Number - Ex.: 0 || 1 || 2...
-	 *      - statistic     : Number
+	 *      - odds          : Number
 	 * 	- user 			: String
 	 * 	- betAmount 	: Number
 	 * 	- currency      : String
 	 **/
 	__createBet: async (params) => {
+
+		// check if match is booked
+		for(let result of params.resultSpace) {
+			if((await MatchRepository.prototype.findById(result.matchId)).status_external!="booked") {
+				throwError("NOT_BOOKED");
+			}
+		}
+
 		// check id app exist
 		const app = await AppRepository.prototype.findAppById(params.app);
 		if (!app) { throwError("APP_NOT_EXISTENT") }
@@ -142,13 +150,13 @@ const processActions = {
 		if (!userWallet) { throwError("WALLET_NOT_EXISTENT") }
 		if (userWallet.playBalance < params.betAmount) { throwError("INSUFFICIENT_FUNDS") }
 
-		// check if probability is valid
+		// check if odds is valid
 		for(let res of resultSpace) {
-			if (res.odds[res.marketType][res.betType].probability != res.statistic) { throwError("WRONG_PROBABILITY") }
+			if (res.odds[res.marketType][res.betType].odds != res.odds) { throwError("WRONG_PROBABILITY") }
 			let participantId = res.odds[res.marketType][res.betType].participant_id;
 			res["participantId"] = participantId == null ? 0 : participantId;
 		}
-		const odds = resultSpace.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.statistic, 1);
+		const odds = resultSpace.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.odds, 1);
 
 		// list videogames
 		const videoGames = resultSpace.map((res) => res.match.videogame);
@@ -237,9 +245,9 @@ const progressActions = {
 			}
 
 			await self.save(bet);
-			let negativeBetAmount = (Math.abs(betAmount) * -1);
-			await WalletsRepository.prototype.updatePlayBalance(appWallet._id, Math.abs(betAmount) + (Math.abs(betAmount) * odds ));
-			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, negativeBetAmount - (Math.abs(betAmount) * odds) );
+			// let negativeBetAmount = (Math.abs(betAmount) * -1);
+			await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (Math.abs(betAmount) * odds) );
+			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, -(Math.abs(betAmount) * odds) );
 			return {success: true};
 		} catch (err) {
 			throw err;

@@ -50,5 +50,9 @@
     "012" : {
         "key"      : "AUTH_USER",
         "message"   : "Unauthenticated User"
+    },
+    "013" : {
+        "key"      : "NOT_BOOKED",
+        "message"   : "Match not booked"
     }
 }
