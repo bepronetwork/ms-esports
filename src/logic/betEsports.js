@@ -152,11 +152,11 @@ const processActions = {
 
 		// check if odds is valid
 		for(let res of resultSpace) {
-			if (res.odds[res.marketType][res.betType].odds != res.odds) { throwError("WRONG_PROBABILITY") }
+			if (res.odds[res.marketType][res.betType].odd != res.odd) { throwError("WRONG_PROBABILITY") }
 			let participantId = res.odds[res.marketType][res.betType].participant_id;
 			res["participantId"] = participantId == null ? 0 : participantId;
 		}
-		const odds = resultSpace.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.odds, 1);
+		const odds = resultSpace.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.odd, 1);
 
 		// list videogames
 		const videoGames = resultSpace.map((res) => res.match.videogame);

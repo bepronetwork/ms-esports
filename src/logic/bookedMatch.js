@@ -46,8 +46,8 @@ const processActions = {
                 isRegister: (bookedMatch == null),
                 game_date: match.game_date,
                 odds: {
-                    winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, odds: parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2) } }),
-                    winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, odds: (1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01)) } })
+                    winnerTwoWay    : oddWinnerTwoWay.map((res)=>{ return {...res, odd: parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2) } }),
+                    winnerThreeWay  : oddWinnerThreeWay.map((res)=>{ return {...res, odd: parseFloat((1/res.probability) - ((1/res.probability) * (app.esports_edge*0.01))).toFixed(2) } })
                 }
             };
         } catch (err) {
