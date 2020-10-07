@@ -1,0 +1,13 @@
+node_modules
+build
+.env
+.env.development
+.env.production
+.env.local
+env.dmg
+package-lock.json
+
+test/outputs
+/test/outputs
+test/outputs/
+/test/outputs/

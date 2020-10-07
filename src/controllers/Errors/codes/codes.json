@@ -1,0 +1,58 @@
+{
+    "000" : {
+        "key"      : "UNKNOWN",
+        "message"   : "Internal Error, Please contact the Customer Service"
+    },
+    "001" : {
+        "key"      : "MATCH_NOT_EXISTENT",
+        "message"   : "This Match Doesn't Exist"
+    },
+    "002" : {
+        "key"      : "GAME_NOT_EXISTENT",
+        "message"   : "This Game Doesn't Exist"
+    },
+    "003" : {
+        "key"      : "SERIE_NOT_EXISTENT",
+        "message"   : "This Serie Doesn't Exist"
+    },
+    "004" : {
+        "key"      : "WRONG_PARAMS",
+        "message"   : "This Params are wrong or dont exist"
+    },
+    "005" : {
+        "key"      : "USER_NOT_EXISTENT",
+        "message"   : "User is not attributed"
+    },
+    "006" : {
+        "key"      : "APP_NOT_EXISTENT",
+        "message"   : "App is not attributed"
+    },
+    "007" : {
+        "key"      : "ADMIN_NOT_EXISTENT",
+        "message"   : "Admin is not existent"
+    },
+    "008" : {
+        "key"      : "WALLET_NOT_EXISTENT",
+        "message"   : "Wallet is not existent"
+    },
+    "009" : {
+        "key"      : "INSUFFICIENT_FUNDS",
+        "message"   : "Insufficient funds"
+    },
+    "010" : {
+        "key"      : "WRONG_PROBABILITY",
+        "message"   : "The probability is different from the Match"
+    },
+    "011" : {
+        "key"      : "NOT_PROBABILITY",
+        "message"   : "Probability not found for that match"
+    },
+    "012" : {
+        "key"      : "AUTH_USER",
+        "message"   : "Unauthenticated User"
+    },
+    "013" : {
+        "key"      : "NOT_BOOKED",
+        "message"   : "Match not booked"
+    }
+}
