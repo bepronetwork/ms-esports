@@ -81,6 +81,7 @@ const processActions = {
 			const cameToAnEnd = (prepareResult.find((res) => res.status=="pending")) == null ? true : false;
 			const isWon       = (((prepareResult.find((res) => res.status=="loss")) == null ? true : false) && cameToAnEnd);
 			let winAmount     = 0;
+			const betAmount   = betEsport.betAmount;
 			if(isWon) {
 				// const odds = prepareResult.reduce(( accumulator, valueCurrent ) => accumulator * valueCurrent.statistic, 1);
 				// let edgeRealValue 	= ((app.esports_edge==null || app.esports_edge==undefined) ? 0 : app.esports_edge) * 0.01 * betEsport.betAmount;
@@ -88,6 +89,7 @@ const processActions = {
 			}
 
 			return {
+				betAmount,
 				winAmount,
 				isWon,
 				isWonThatMatch,
@@ -191,7 +193,7 @@ const processActions = {
 const progressActions = {
 	__confirmBets: async (params) => {
 		try {
-			let { betEsport, winAmount, isWon, isWonThatMatch, appWallet, userWallet, betResult, cameToAnEnd } = params;
+			let { betEsport, winAmount, isWon, isWonThatMatch, appWallet, userWallet, betResult, cameToAnEnd, betAmount } = params;
 
 			await BetResultSpacesRepository.prototype.updateStatus(betResult._id, {
 				status: isWonThatMatch ? "gain" : "loss",
@@ -201,8 +203,9 @@ const progressActions = {
 			const resolved = true;
 			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon, resolved});
 			if(isWon) {
-				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmount));
 				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount));
+			} else {
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, betAmount);
 			}
 			return;
 		} catch (err) {
@@ -244,8 +247,6 @@ const progressActions = {
 			}
 
 			await self.save(bet);
-			// let negativeBetAmount = (Math.abs(betAmount) * -1);
-			await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (Math.abs(betAmount)) );
 			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, -(Math.abs(betAmount)) );
 			return {success: true};
 		} catch (err) {
