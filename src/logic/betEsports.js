@@ -245,8 +245,8 @@ const progressActions = {
 
 			await self.save(bet);
 			// let negativeBetAmount = (Math.abs(betAmount) * -1);
-			await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (Math.abs(betAmount) * odds) );
-			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, -(Math.abs(betAmount) * odds) );
+			await WalletsRepository.prototype.updatePlayBalance(appWallet._id, (Math.abs(betAmount)) );
+			await WalletsRepository.prototype.updatePlayBalance(userWallet._id, -(Math.abs(betAmount)) );
 			return {success: true};
 		} catch (err) {
 			throw err;
