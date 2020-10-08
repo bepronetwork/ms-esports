@@ -54,5 +54,9 @@
     "013" : {
         "key"      : "NOT_BOOKED",
         "message"   : "Match not booked"
+    },
+    "014" : {
+        "key"      : "WIN_AMOUNT_LESS_BET_AMOUNT",
+        "message"   : "The win amount is less than the bet amount"
     }
 }

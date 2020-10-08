@@ -203,7 +203,9 @@ const progressActions = {
 			const resolved = true;
 			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon, resolved});
 			if(isWon) {
+				if(winAmount>betAmount){throwError("WIN_AMOUNT_LESS_BET_AMOUNT")}
 				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount));
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmount-betAmount));
 			} else {
 				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, betAmount);
 			}

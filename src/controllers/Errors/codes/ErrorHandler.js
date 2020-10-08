@@ -27,7 +27,8 @@ ErrorHandler.prototype.KEYS =  {
     'WRONG_PROBABILITY'                     : "010",
     'NOT_PROBABILITY'                       : "011",
     'AUTH_USER'                             : "012",
-    'NOT_BOOKED'                            : "013"
+    'NOT_BOOKED'                            : "013",
+    'WIN_AMOUNT_LESS_BET_AMOUNT'            : "014"
 };
 
 /***************************
