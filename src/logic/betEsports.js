@@ -121,12 +121,13 @@ const processActions = {
 	 **/
 	__createBet: async (params) => {
 
-		// check if match is booked
-		// for(let result of params.resultSpace) {
-		// 	if((await MatchRepository.prototype.findById(result.matchId)).status_external!="pre_match") {
-		// 		throwError("NOT_BOOKED");
-		// 	}
-		// }
+		// check if match is pre_match or live
+		for(let result of params.resultSpace) {
+			let status_external = (await MatchRepository.prototype.findById(result.matchId)).status_external;
+			if(status_external!="pre_match" && status_external!="live") {
+				throwError("NOT_BOOKED");
+			}
+		}
 
 		// check id app exist
 		const app = await AppRepository.prototype.findAppById(params.app);
@@ -200,12 +201,15 @@ const progressActions = {
 				finished : true
 			});
 			if(!cameToAnEnd) return;
-			const resolved = true;
-			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon, resolved});
+			const resolved       = true;
+			const winAmountDelta = Math.abs(winAmount);
+			const betAmountDelta = Math.abs(betAmount);
+			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmountDelta, isWon, resolved});
 			if(isWon) {
-				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount));
+				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmountDelta));
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmountDelta-betAmountDelta));
 			} else {
-				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, betAmount);
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, betAmountDelta);
 			}
 			return;
 		} catch (err) {
