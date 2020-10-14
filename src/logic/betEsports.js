@@ -121,12 +121,13 @@ const processActions = {
 	 **/
 	__createBet: async (params) => {
 
-		// check if match is booked
-		// for(let result of params.resultSpace) {
-		// 	if((await MatchRepository.prototype.findById(result.matchId)).status_external!="pre_match") {
-		// 		throwError("NOT_BOOKED");
-		// 	}
-		// }
+		// check if match is pre_match or live
+		for(let result of params.resultSpace) {
+			let status_external = (await MatchRepository.prototype.findById(result.matchId)).status_external;
+			if(status_external!="pre_match" && status_external!="live") {
+				throwError("NOT_BOOKED");
+			}
+		}
 
 		// check id app exist
 		const app = await AppRepository.prototype.findAppById(params.app);
@@ -204,6 +205,7 @@ const progressActions = {
 			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon, resolved});
 			if(isWon) {
 				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount));
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmount-betAmount));
 			} else {
 				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, betAmount);
 			}
