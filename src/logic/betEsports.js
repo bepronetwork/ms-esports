@@ -201,13 +201,15 @@ const progressActions = {
 				finished : true
 			});
 			if(!cameToAnEnd) return;
-			const resolved = true;
-			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount, isWon, resolved});
+			const resolved       = true;
+			const winAmountDelta = Math.abs(winAmount);
+			const betAmountDelta = Math.abs(betAmount);
+			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmountDelta, isWon, resolved});
 			if(isWon) {
-				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmount));
-				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmount-betAmount));
+				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmountDelta));
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmountDelta-betAmountDelta));
 			} else {
-				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, betAmount);
+				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, betAmountDelta);
 			}
 			return;
 		} catch (err) {
