@@ -120,7 +120,9 @@ const processActions = {
 	 * 	- currency      : String
 	 **/
 	__createBet: async (params) => {
-
+		if(params.betAmount <= 0) {
+			throwError("AMOUNT_INVALID");
+		}
 		// check if match is pre_match or live
 		for(let result of params.resultSpace) {
 			let status_external = (await MatchRepository.prototype.findById(result.matchId)).status_external;
