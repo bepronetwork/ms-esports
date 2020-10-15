@@ -54,5 +54,9 @@
     "013" : {
         "key"      : "NOT_BOOKED",
         "message"   : "Match not booked"
+    },
+    "014" : {
+        "key"      : "AMOUNT_INVALID",
+        "message"   : "Invalid bet amount"
     }
 }
