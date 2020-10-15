@@ -206,7 +206,7 @@ const progressActions = {
 			const resolved       = true;
 			const winAmountDelta = Math.abs(winAmount);
 			const betAmountDelta = Math.abs(betAmount);
-			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmountDelta, isWon, resolved});
+			await BetEsportsRepository.prototype.updateResultEnd(betEsport._id, {winAmount: winAmountDelta, isWon, resolved});
 			if(isWon) {
 				await WalletsRepository.prototype.updatePlayBalance(userWallet._id, (winAmountDelta));
 				await WalletsRepository.prototype.updatePlayBalance(appWallet._id, -(winAmountDelta-betAmountDelta));
