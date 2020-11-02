@@ -7,6 +7,11 @@ jobs:
       matrix:
         node-version: [10.13.0]
     steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
       - checkout # special step to check out source code to working directory
       - run:
           name: update-npm
