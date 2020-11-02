@@ -1,64 +1,49 @@
-version: 2 # use CircleCI 2.0
-jobs: # a collection of steps
-  build: # runs not using Workflows must have a `build` job as entry point
-    working_directory: ~/mern-starter # directory where steps will run
-    docker: # run the steps with Docker
-      - image: circleci/node:8.12.0 # 
-    steps: # a collection of executable commands
-      - checkout # special step to check out source code to working directory
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache: # special step to restore the dependency cache
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: install-npm-wee
-          command: npm install
-      - run:
-          name: Define Environment Variable at Runtime
-          command: |
-            echo 'export RABBIT_URL_QUEUE_BET=amqp://krqwzdkx:7fMXz-WKF2TkFjPW5Vvs_o9bR0V147kC@whale.rmq.cloudamqp.com/krqwzdkx' >> $BASH_ENV
-            echo 'export ETH_NET_NAME=rinkeby' >> $BASH_ENV
-            echo 'export INFURA_KEY=811fe4fa5c4b41cb9b92f9656aaeaa3b' >> $BASH_ENV
-            echo 'export CONFIRMATION_NEEDED=1' >> $BASH_ENV
-            echo 'export PRIVATE_KEY=MIIBOgIBAAJBALLaXE1qt9my6cWkh9NGYr+mM/WLagt8AqObSNs9sNbL9da6qrYxuq57XUepaWWgyA81bZXOUy25wfkBpwwQmXsCAwEAAQJAT6hrtdtTGTXTYsC98f6GWr9movU9/PF1p3KxB1y5l2Cu0Zef2aGXsSc6+QaFRQXgs3KL9giUam4DknOdmfY9AQIhAOh7N0vocqKsu9N33RMNg4if/uzsJ0ysLH965mImxIaBAiEAxPJIHQpxVRPZ3bUWgZYesEWalA7MCpxMPppssXxuOfsCIQCwquojojpzSsbVddInp25chhGI5BEdX/3UxoWK8yEHgQIgFb9/cR2HGFMB2va1TogKSYLWKAVeSMmrrboVyJ+p+GMCIGmPcNLl+QdKxivLLYVLK8JRRTglt9fJpLFKqZDboTUQ' >> $BASH_ENV
-            echo 'export PUBLIC_KEY=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALLaXE1qt9my6cWkh9NGYr+mM/WLagt8AqObSNs9sNbL9da6qrYxuq57XUepaWWgyA81bZXOUy25wfkBpwwQmXsCAwEAAQ==' >> $BASH_ENV
-            echo 'export ENV=development' >> $BASH_ENV
-            echo 'export HEROKU_API_TOKEN=7c3a85a2-a80c-4ced-bcb9-97c0f18d3568' >> $BASH_ENV
-            echo 'export HEROKU_API_BEARER_TOKEN=b39c70fe-d147-468f-93ac-73f70ed7c8ee' >> $BASH_ENV
-            echo 'export MS_MASTER_URL=https://sandbox-ms-master.betprotocol.com' >> $BASH_ENV
-            echo 'export MS_WITHDRAW_URL=https://sandbox-ms-withdraw.betprotocol.com' >> $BASH_ENV
-            echo 'export GITHUB_LAYOUT_REPO=layout-1' >> $BASH_ENV
-            echo 'export BITGO_ENTERPRISE_ID=5e2ee3674141b74006f37e0b0fdf6813' >> $BASH_ENV
-            echo 'export BITGO_KEY=v2x9c8c188179741a91e4778ae69e76116a2ef3980dacb035737c0feb55b76367c1' >> $BASH_ENV
-            echo 'export QUOTA_GUARD_URL=http://1uf1vgmue9ztet:3k1ajq0eev28rmx06uvrj2ox8t@eu-west-static-04.quotaguard.com:9293' >> $BASH_ENV 
-            echo 'export SENDINBLUE_API_KEY=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' >> $BASH_ENV                 
-            echo 'export SENDINBLUE_EMAIL_TO=sandbox.betprotocol.com' >> $BASH_ENV                 
-            echo 'export LIMIT=1' >> $BASH_ENV
-            echo 'export RATE=100' >> $BASH_ENV
-            echo 'export PANDA_SCORE_TOKEN=wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0' >> $BASH_ENV
-            echo 'export RABBIT_URL_QUEUE_BET=amqp://shvwutoa:g8F8io8gmWy8DXxDcFg5_N10ixChlUTJ@crow.rmq.cloudamqp.com/shvwutoa' >> $BASH_ENV
-            echo 'export MONGO_CONNECTION_STRING=mongodb+srv://BetProtocolAdmin:wNmm4OmASXEp8UXi@cluster0.2gxjd.mongodb.net' >> $BASH_ENV
-            echo 'export PUSHER_APP_SECRET=52c83171cf20882a3407' >> $BASH_ENV
-            echo 'export IS_LOCAL_DEV=false' >> $BASH_ENV
-            echo 'export PORT=3000' >> $BASH_ENV
-            echo 'export SOCKET_HOST=wss://ms-esports-dev.herokuapp.com' >> $BASH_ENV
-            source $BASH_ENV
-      - run: # run tests
-          name: test socket
-          command: npm run test-socket
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
-      - store_artifacts: # special step to save test results as as artifact
-          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
-          path: test-results.xml
-          prefix: tests
-      - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
-          path: coverage
-          prefix: coverage
-      - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: test-results.xml
-      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
+name: Tests Socket
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.13.0]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install and test
+        env:
+          CI: true
+        run: |
+          sudo npm install -g npm@latest
+          echo 'export RABBIT_URL_QUEUE_BET=amqp://krqwzdkx:7fMXz-WKF2TkFjPW5Vvs_o9bR0V147kC@whale.rmq.cloudamqp.com/krqwzdkx' >> .env
+          echo 'export ETH_NET_NAME=rinkeby' >> .env
+          echo 'export INFURA_KEY=811fe4fa5c4b41cb9b92f9656aaeaa3b' >> .env
+          echo 'export CONFIRMATION_NEEDED=1' >> .env
+          echo 'export PRIVATE_KEY=MIIBOgIBAAJBALLaXE1qt9my6cWkh9NGYr+mM/WLagt8AqObSNs9sNbL9da6qrYxuq57XUepaWWgyA81bZXOUy25wfkBpwwQmXsCAwEAAQJAT6hrtdtTGTXTYsC98f6GWr9movU9/PF1p3KxB1y5l2Cu0Zef2aGXsSc6+QaFRQXgs3KL9giUam4DknOdmfY9AQIhAOh7N0vocqKsu9N33RMNg4if/uzsJ0ysLH965mImxIaBAiEAxPJIHQpxVRPZ3bUWgZYesEWalA7MCpxMPppssXxuOfsCIQCwquojojpzSsbVddInp25chhGI5BEdX/3UxoWK8yEHgQIgFb9/cR2HGFMB2va1TogKSYLWKAVeSMmrrboVyJ+p+GMCIGmPcNLl+QdKxivLLYVLK8JRRTglt9fJpLFKqZDboTUQ' >> .env
+          echo 'export PUBLIC_KEY=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALLaXE1qt9my6cWkh9NGYr+mM/WLagt8AqObSNs9sNbL9da6qrYxuq57XUepaWWgyA81bZXOUy25wfkBpwwQmXsCAwEAAQ==' >> .env
+          echo 'export ENV=development' >> .env
+          echo 'export HEROKU_API_TOKEN=7c3a85a2-a80c-4ced-bcb9-97c0f18d3568' >> .env
+          echo 'export HEROKU_API_BEARER_TOKEN=b39c70fe-d147-468f-93ac-73f70ed7c8ee' >> .env
+          echo 'export MS_MASTER_URL=https://sandbox-ms-master.betprotocol.com' >> .env
+          echo 'export MS_WITHDRAW_URL=https://sandbox-ms-withdraw.betprotocol.com' >> .env
+          echo 'export GITHUB_LAYOUT_REPO=layout-1' >> .env
+          echo 'export BITGO_ENTERPRISE_ID=5e2ee3674141b74006f37e0b0fdf6813' >> .env
+          echo 'export BITGO_KEY=v2x9c8c188179741a91e4778ae69e76116a2ef3980dacb035737c0feb55b76367c1' >> .env
+          echo 'export QUOTA_GUARD_URL=http://1uf1vgmue9ztet:3k1ajq0eev28rmx06uvrj2ox8t@eu-west-static-04.quotaguard.com:9293' >> .env 
+          echo 'export SENDINBLUE_API_KEY=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' >> .env                 
+          echo 'export SENDINBLUE_EMAIL_TO=sandbox.betprotocol.com' >> .env                 
+          echo 'export LIMIT=1' >> .env
+          echo 'export RATE=100' >> .env
+          echo 'export PANDA_SCORE_TOKEN=wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0' >> .env
+          echo 'export RABBIT_URL_QUEUE_BET=amqp://shvwutoa:g8F8io8gmWy8DXxDcFg5_N10ixChlUTJ@crow.rmq.cloudamqp.com/shvwutoa' >> .env
+          echo 'export MONGO_CONNECTION_STRING=mongodb+srv://BetProtocolAdmin:wNmm4OmASXEp8UXi@cluster0.2gxjd.mongodb.net' >> .env
+          echo 'export PUSHER_APP_SECRET=52c83171cf20882a3407' >> .env
+          echo 'export IS_LOCAL_DEV=false' >> .env
+          echo 'export PORT=3000' >> .env
+          echo 'export SOCKET_HOST=wss://ms-esports-dev.herokuapp.com' >> .env
+          source .env
+          npm ci
+          npm i
+          npm run test-socket
