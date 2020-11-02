@@ -45,7 +45,7 @@ jobs:
             echo 'export PUSHER_APP_SECRET=52c83171cf20882a3407' >> $BASH_ENV
             echo 'export IS_LOCAL_DEV=false' >> $BASH_ENV
             echo 'export PORT=3000' >> $BASH_ENV
-            echo 'export SOCKET_HOST=http://localhost' >> $BASH_ENV
+            echo 'export SOCKET_HOST=wss://ms-esports-dev.herokuapp.com' >> $BASH_ENV
             source $BASH_ENV
       - run: # run tests
           name: test
