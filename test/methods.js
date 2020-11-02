@@ -104,6 +104,17 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async addCurrencyWalletToApp(params, bearerToken, payload) {
+        return await axios.post(`${MS_MASTER_URL}/api/app/wallet/currency/add`, params, {
+            headers: {
+                "authorization": `Bearer ${bearerToken}`,
+                "payload": getPayloadString(payload)
+            }
+        })
+    },
+    async getEcosystemData() {
+        return (await axios.get(`${MS_MASTER_URL}/api/ecosystem/all`)).data
+    },
     async registerAdmin(params) {
         return (await axios.post(`${MS_MASTER_URL}/api/admins/register`, params)).data;
     },

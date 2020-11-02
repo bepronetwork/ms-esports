@@ -1,0 +1,21 @@
+name: Tests Socket
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.13.0]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install and test
+        env:
+          CI: true
+        run: |
+          npm ci
+          npm i
+          npm run test-socket
