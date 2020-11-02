@@ -98,6 +98,7 @@ var mochaAsync = (fn) => {
 };
 
 const runTests = async () => {
+    mocha.addFile('./test/tests/odds');
     mocha.addFile('./test/tests/videogame');
     mocha.addFile('./test/tests/match');
     mocha.addFile('./test/tests/bookedMatches');
