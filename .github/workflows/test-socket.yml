@@ -17,11 +17,11 @@ jobs:
           CI: true
         run: |
           npm install -g npm@latest
-      - name: npm ci
-        env:
-          CI: true
-        run: |
-          npm ci
+      # - name: npm ci
+      #   env:
+      #     CI: true
+      #   run: |
+      #     npm ci
       - name: npm install
         env:
           CI: true
