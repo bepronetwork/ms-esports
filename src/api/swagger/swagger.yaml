@@ -521,12 +521,18 @@ definitions:
     type: object
     required :
       - match_id
+      - app
     properties:
       match_id:
         type : number
         example: "24234g234g23g"
         description: |
           Match ID
+      app:
+        type : number
+        example: "24234g234g23g"
+        description: |
+          App ID
   GetBookedMatchesRequest:
     type: object
     required :
