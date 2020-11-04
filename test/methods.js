@@ -104,6 +104,14 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async setBookedMatch(params, bearerToken, payload) {
+        return request(global.server)
+            .post('/api/set/matches/booked')
+            .set("authorization", "Bearer " + bearerToken)
+            .set("payload", getPayloadString(payload))
+            .send(params)
+            .then(res => detectServerError(res))
+    },
     async addCurrencyWalletToApp(params, bearerToken, payload) {
         return await axios.post(`${MS_MASTER_URL}/api/app/wallet/currency/add`, params, {
             headers: {

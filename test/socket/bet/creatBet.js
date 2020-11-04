@@ -6,7 +6,12 @@ import {
     registerUser,
     loginUser,
     getEcosystemData,
-    addCurrencyWalletToApp
+    addCurrencyWalletToApp,
+    setBookedMatch,
+    getMatchAll,
+    getSpecificMatch,
+    getSpecificMatchLayout,
+    getMatchLayout
 } from '../../methods';
 import chai from 'chai';
 import { mochaAsync } from '../../utils';
@@ -19,16 +24,16 @@ context('Create Bet', async () => {
     var admin, user, app, socket;
     before( async () =>  {
         var postDataAdmin = {
-            username : "admin1" + parseInt(Math.random()*30000+ "bxdwj"),
+            username : "admin1" + parseInt(Math.random()*30000+ "bxdlwj"),
             name : "test",
-            email : `testt${parseInt(Math.random()*30000)}bah@gmail.com`,
-            password : 'test123'
+            email : `testt${parseInt(Math.random()*30000)}balh@gmail.com`,
+            password : 'test12l3'
         }
         admin = await registerAdmin(postDataAdmin);
         admin = (await loginAdmin(postDataAdmin)).data.message;
         var postData = {
-            name : "companuy" + parseInt(Math.random()*10000),
-            description : "sresy4",
+            name : "companuly" + parseInt(Math.random()*10000),
+            description : "slresy4",
             metadataJSON : JSON.stringify({}),
             admin_id : admin.id,
             marketType : 0
@@ -38,7 +43,7 @@ context('Create Bet', async () => {
         // Add currency
         const eco_data = (await getEcosystemData()).data.message;
         const eco_currencies = eco_data.currencies;
-        const currency = eco_currencies.find( c => new String(c.ticker).toLowerCase() == 'eth')
+        const currency = eco_currencies.find( c => new String(c.ticker).toLowerCase() == 'eth');
 
         const postData2 = {
             app : app.id,
@@ -46,15 +51,17 @@ context('Create Bet', async () => {
             currency_id : currency._id
         };
         let currencyT = await addCurrencyWalletToApp({...postData2, admin: admin.id}, admin.bearerToken , {id : admin.id});
+        console.log(currencyT.data)
         var postDataUser = {
-            username : "sdfg" + parseInt(Math.random()*10000),
-            name : "test",
-            email : `testt${parseInt(Math.random()*10000)}@gmail.com`,
+            username : "sdfgu" + parseInt(Math.random()*10000),
+            name : "testu",
+            email : `testtu${parseInt(Math.random()*10000)}@gmail.com`,
             password : 'test123',
             address : '90x',
             app : app.id
         }
         user = await registerUser(postDataUser);
+        console.log(">>>>>>>> ", user);
         user = (await loginUser(postDataUser)).data.message;
         GlobalESportSingleton.setAdmin(admin);
         GlobalESportSingleton.setUser(user);
@@ -66,6 +73,9 @@ context('Create Bet', async () => {
         app    = GlobalESportSingleton.getApp();
 
         socket = require('socket.io-client')(`${SOCKET_HOST}`);
+
+        console.log(user.data);
+
         socket.on('connect', () => {
             socket.emit('authenticate', { token: user.bearerToken })
             .on('authenticated', () => {
@@ -78,17 +88,17 @@ context('Create Bet', async () => {
         });
     });
 
-
-    it('should create bet', mochaAsync(async () => {
-        await delay(10000);
+    it('Should create bet with match not booked!', mochaAsync(async () => {
+        await delay(5000);
         let res = null;
         await (() => {
             return new Promise((resolve)=>{
                 socket.on("createBetReturn", (msg)=>{
+                    console.log("<><><");
+                    console.log(msg);
                     res = msg;
                     resolve(res);
                 });
-
                 socket.emit("createBet",
                     {
                         app: app.id,
@@ -110,6 +120,68 @@ context('Create Bet', async () => {
         })();
         expect(res).to.not.equal(null);
         expect(res.bid).to.equal(1);
-        socket.close();
+        expect(res.code).to.equal(13);
+    }));
+
+    it('Should create bet with Success!', mochaAsync(async () => {
+
+        let getMatches = await getMatchAll({admin : admin.id, status: ["pre_match"]}, admin.bearerToken, {id : admin.id});
+
+        let matchOne = getMatches.data.message[0];
+
+        await setBookedMatch(
+            {
+                match_external_id : matchOne.id,
+                app               : app.id,
+                admin             : admin.id
+            }, admin.bearerToken , {id : admin.id}
+        );
+
+        let getMatchesLayout = await getMatchLayout(
+            {
+                app    : app.id,
+                size   : 10,
+                status : ["pre_match"]
+            }
+        );
+
+        let matchesLayoutOne = getMatchesLayout.data.message[0];
+            matchesLayoutOne = await getSpecificMatchLayout({match_id: matchesLayoutOne.id});
+
+        let odd = (matchesLayoutOne.data.message.odds.winnerTwoWay.length == 0) ? matchesLayoutOne.data.message.odds.winnerThreeWay : matchesLayoutOne.data.message.odds.winnerTwoWay;
+        let marketName = (matchesLayoutOne.data.message.odds.winnerTwoWay.length == 0) ? "winnerThreeWay" : "winnerTwoWay";
+
+        let res = null;
+        await (() => {
+            return new Promise(async (resolve)=>{
+                socket.on("createBetReturn", (msg)=>{
+                    console.log('gfffffffffffffffffff')
+                    res = msg;
+                    resolve(res);
+                });
+                await delay(5000);
+                console.log(">>>>5000");
+                socket.emit("createBet",
+                    {
+                        app: app.id,
+                        resultSpace: [
+                            {
+                                matchId: matchesLayoutOne.data.message.match_id,
+                                marketType: marketName,
+                                betType: 0,
+                                odds: (1/odd[0].probability)
+                            }
+                        ],
+                        user:user.id,
+                        betAmount:0.001,
+                        currency:"5e108498049eba079930ae1c",
+                        bid:1
+                    }
+                );
+            });
+        })();
+        expect(res).to.not.equal(null);
+        expect(res.bid).to.equal(1);
+        expect(res.code).to.equal(200);
     }));
 })
