@@ -44,6 +44,21 @@ class AppRepository extends MongoComponent{
             throw (err)
         }
     }
+
+    async findAppByIdNotPopulated(_id){
+        try {
+            return new Promise((resolve, reject) => {
+                AppRepository.prototype.schema.model.findById(_id)
+                    .lean()
+                    .exec((err, user) => {
+                        if (err) { reject(err) }
+                        resolve(user);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
 }
 
 AppRepository.prototype.schema = new AppSchema();

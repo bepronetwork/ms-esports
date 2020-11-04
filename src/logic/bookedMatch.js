@@ -145,8 +145,8 @@ const processActions = {
         try {
             // let user = await UsersRepository.prototype.findUserById(params.user);
             // if (!user) { throwError('USER_NOT_EXISTENT') }
-            // const app = await AppRepository.prototype.findAppById(user.app_id);
-            // if (!app) { throwError("APP_NOT_EXISTENT") }
+            const app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
             let matches     = await BookedMatchRepository.prototype.findByExternalMatchId({external_match: params.match_id, app: params.app});
             let pandaScore  = await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
             return { ...pandaScore.data, match_id: matches!=null ? matches.match : null, odds: matches == (undefined || null) ? {} : matches.odds };
