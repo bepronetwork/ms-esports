@@ -46,7 +46,15 @@ context('Odds', async () => {
             const firstTeamThreeWayMarketProbability = !oddWinnerThreeWayMarket[0] ? null : oddWinnerThreeWayMarket[0].probability;
             const tieThreeWayMarketProbability = !oddWinnerThreeWayMarket[1] ? null : oddWinnerThreeWayMarket[1].probability;
             const secondTeamThreeWayMarketProbability = !oddWinnerThreeWayMarket[2] ? null : oddWinnerThreeWayMarket[2].probability;
-
+            console.log("firstTeamTwoWayMatchProbability:: ", firstTeamTwoWayMatchProbability)
+            console.log("firstTeamTwoWayMarketProbability:: ", firstTeamTwoWayMarketProbability)
+            console.log("secondTeamTwoWayMatchProbability:: ", secondTeamTwoWayMatchProbability)
+            console.log("secondTeamTwoWayMarketProbability:: ", secondTeamTwoWayMarketProbability)
+            console.log("firstTeamThreeWayMatchProbability:: ", firstTeamThreeWayMatchProbability)
+            console.log("firstTeamThreeWayMarketProbability:: ", firstTeamThreeWayMarketProbability)
+            console.log("tieThreeWayMatchProbability:: ", tieThreeWayMatchProbability)
+            console.log("tieThreeWayMarketProbability:: ", tieThreeWayMarketProbability)
+            console.log("secondTeamThreeWayMatchProbability:: ", secondTeamThreeWayMatchProbability)
             //Comparisons between probabilities
             expect(firstTeamTwoWayMatchProbability).to.equal(firstTeamTwoWayMarketProbability);
             expect(secondTeamTwoWayMatchProbability).to.equal(secondTeamTwoWayMarketProbability);
