@@ -48,7 +48,7 @@ class BookedMatchRepository extends MongoComponent {
             });
         });
     }
-    findByExternalMatchId(external_match, app) {
+    findByExternalMatchId({external_match, app}) {
         return new Promise((resolve, reject)=>{
             BookedMatchRepository.prototype.schema.model.findOne({external_match, app})
             .exec((err, item) => {
