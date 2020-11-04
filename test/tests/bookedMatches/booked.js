@@ -95,7 +95,8 @@ context('Booked Matches', async () => {
 
     it('should get Match By Id Layout', mochaAsync(async () => {
         var res = await getSpecificMatchLayout({
-            match_id: 564165
+            match_id: 564165,
+            app: app.id
         });
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
