@@ -31,7 +31,7 @@ jobs:
         env:
           CI: true
         run: |
-          echo 'export RABBIT_URL_QUEUE_BET=amqp://krqwzdkx:7fMXz-WKF2TkFjPW5Vvs_o9bR0V147kC@whale.rmq.cloudamqp.com/krqwzdkx' >> .env
+          echo 'export RABBIT_URL_QUEUE_BET=amqps://krqwzdkx:7fMXz-WKF2TkFjPW5Vvs_o9bR0V147kC@whale.rmq.cloudamqp.com/krqwzdkx' >> .env
           echo 'export ETH_NET_NAME=rinkeby' >> .env
           echo 'export INFURA_KEY=811fe4fa5c4b41cb9b92f9656aaeaa3b' >> .env
           echo 'export CONFIRMATION_NEEDED=1' >> .env
@@ -56,6 +56,6 @@ jobs:
           echo 'export PUSHER_APP_SECRET=52c83171cf20882a3407' >> .env
           echo 'export IS_LOCAL_DEV=false' >> .env
           echo 'export PORT=3000' >> .env
-          echo 'export SOCKET_HOST=wss://ms-esports-dev.herokuapp.com' >> .env
+          echo 'export SOCKET_HOST=ws://localhost:8000' >> .env
           source .env
           npm run test-socket
