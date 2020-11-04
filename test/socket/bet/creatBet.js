@@ -17,6 +17,7 @@ import chai from 'chai';
 import { mochaAsync } from '../../utils';
 import { SOCKET_HOST, PORT } from "../../../src/config";
 import delay from 'delay';
+const io = require('socket.io-client');
 
 const expect = chai.expect;
 
@@ -51,7 +52,6 @@ context('Create Bet', async () => {
             currency_id : currency._id
         };
         let currencyT = await addCurrencyWalletToApp({...postData2, admin: admin.id}, admin.bearerToken , {id : admin.id});
-        console.log(currencyT.data)
         var postDataUser = {
             username : "sdfgu" + parseInt(Math.random()*10000),
             name : "testu",
@@ -61,7 +61,6 @@ context('Create Bet', async () => {
             app : app.id
         }
         user = await registerUser(postDataUser);
-        console.log(">>>>>>>> ", user);
         user = (await loginUser(postDataUser)).data.message;
         GlobalESportSingleton.setAdmin(admin);
         GlobalESportSingleton.setUser(user);
@@ -71,11 +70,14 @@ context('Create Bet', async () => {
         admin  = GlobalESportSingleton.getAdmin();
         user   = GlobalESportSingleton.getUser();
         app    = GlobalESportSingleton.getApp();
+    });
 
-        socket = require('socket.io-client')(`${SOCKET_HOST}`);
-
-        console.log(user.data);
-
+    it('Should create bet with match not booked!', mochaAsync(async () => {
+        socket = io.connect(`${SOCKET_HOST}`, {
+            'reconnection delay' : 0,
+            'reopen delay' : 0,
+            'force new connection' : true
+        });
         socket.on('connect', () => {
             socket.emit('authenticate', { token: user.bearerToken })
             .on('authenticated', () => {
@@ -86,16 +88,11 @@ context('Create Bet', async () => {
                 throw new Error(msg.data.type);
             });
         });
-    });
-
-    it('Should create bet with match not booked!', mochaAsync(async () => {
         await delay(5000);
         let res = null;
         await (() => {
             return new Promise((resolve)=>{
                 socket.on("createBetReturn", (msg)=>{
-                    console.log("<><><");
-                    console.log(msg);
                     res = msg;
                     resolve(res);
                 });
@@ -123,57 +120,43 @@ context('Create Bet', async () => {
         expect(res.code).to.equal(13);
     }));
 
-    it('Should create bet with Success!', mochaAsync(async () => {
-
-        let getMatches = await getMatchAll({admin : admin.id, status: ["pre_match"]}, admin.bearerToken, {id : admin.id});
-
-        let matchOne = getMatches.data.message[0];
-
-        await setBookedMatch(
-            {
-                match_external_id : matchOne.id,
-                app               : app.id,
-                admin             : admin.id
-            }, admin.bearerToken , {id : admin.id}
-        );
-
-        let getMatchesLayout = await getMatchLayout(
-            {
-                app    : app.id,
-                size   : 10,
-                status : ["pre_match"]
-            }
-        );
-
-        let matchesLayoutOne = getMatchesLayout.data.message[0];
-            matchesLayoutOne = await getSpecificMatchLayout({match_id: matchesLayoutOne.id});
-
-        let odd = (matchesLayoutOne.data.message.odds.winnerTwoWay.length == 0) ? matchesLayoutOne.data.message.odds.winnerThreeWay : matchesLayoutOne.data.message.odds.winnerTwoWay;
-        let marketName = (matchesLayoutOne.data.message.odds.winnerTwoWay.length == 0) ? "winnerThreeWay" : "winnerTwoWay";
-
+    it('Should create bet with match not booked!', mochaAsync(async () => {
+        socket = io.connect(`${SOCKET_HOST}`, {
+            'reconnection delay' : 0,
+            'reopen delay' : 0,
+            'force new connection' : true
+        });
+        socket.on('connect', () => {
+            socket.emit('authenticate', { token: user.bearerToken })
+            .on('authenticated', () => {
+                console.log("connected");
+            })
+            .on('unauthorized', (msg) => {
+                console.log(`unauthorized: ${JSON.stringify(msg.data)}`);
+                throw new Error(msg.data.type);
+            });
+        });
+        await delay(5000);
         let res = null;
         await (() => {
-            return new Promise(async (resolve)=>{
+            return new Promise((resolve)=>{
                 socket.on("createBetReturn", (msg)=>{
-                    console.log('gfffffffffffffffffff')
                     res = msg;
                     resolve(res);
                 });
-                await delay(5000);
-                console.log(">>>>5000");
                 socket.emit("createBet",
                     {
                         app: app.id,
                         resultSpace: [
                             {
-                                matchId: matchesLayoutOne.data.message.match_id,
-                                marketType: marketName,
+                                matchId: "5f1006c9a10c4000216e8fb7",
+                                marketType:"winnerTwoWay",
                                 betType: 0,
-                                odds: (1/odd[0].probability)
+                                statistic: 0.5
                             }
                         ],
                         user:user.id,
-                        betAmount:0.001,
+                        betAmount:0.02,
                         currency:"5e108498049eba079930ae1c",
                         bid:1
                     }
@@ -182,6 +165,116 @@ context('Create Bet', async () => {
         })();
         expect(res).to.not.equal(null);
         expect(res.bid).to.equal(1);
-        expect(res.code).to.equal(200);
+        expect(res.code).to.equal(13);
     }));
+
+
+    // it('Should create bet with Success!', mochaAsync(async () => {
+    //     socket.on('disconnect', () => {
+    //         console.log("disconnect");
+    //         socket.disconnect();
+    //         socket.close();
+    //     });
+    //     socket.disconnect();
+    //     socket = io.connect(`${SOCKET_HOST}`, {
+    //         'reconnection delay' : 0,
+    //         'reopen delay' : 0,
+    //         'force new connection' : true
+    //     });
+    //     socket.on('connect', () => {
+    //         socket.emit('authenticate', { token: user.bearerToken })
+    //         .on('authenticated', () => {
+    //             console.log("connected");
+    //         })
+    //         .on('unauthorized', (msg) => {
+    //             console.log(`unauthorized: ${JSON.stringify(msg.data)}`);
+    //             throw new Error(msg.data.type);
+    //         });
+    //     });
+    //     await delay(5000);
+
+    //     let getMatches = await getMatchAll({admin : admin.id, status: ["pre_match"]}, admin.bearerToken, {id : admin.id});
+
+    //     let matchOne = getMatches.data.message[0];
+
+    //     await setBookedMatch(
+    //         {
+    //             match_external_id : matchOne.id,
+    //             app               : app.id,
+    //             admin             : admin.id
+    //         }, admin.bearerToken , {id : admin.id}
+    //     );
+
+    //     let getMatchesLayout = await getMatchLayout(
+    //         {
+    //             app    : app.id,
+    //             size   : 10,
+    //             status : ["pre_match"]
+    //         }
+    //     );
+
+    //     let matchesLayoutOne = getMatchesLayout.data.message[0];
+    //         matchesLayoutOne = await getSpecificMatchLayout({match_id: matchesLayoutOne.id});
+
+    //     let odd = (matchesLayoutOne.data.message.odds.winnerTwoWay.length == 0) ? matchesLayoutOne.data.message.odds.winnerThreeWay : matchesLayoutOne.data.message.odds.winnerTwoWay;
+    //     let marketName = (matchesLayoutOne.data.message.odds.winnerTwoWay.length == 0) ? "winnerThreeWay" : "winnerTwoWay";
+
+    //     let res = null;
+        
+    //     await (() => {
+    //         return new Promise((resolve)=>{
+    //             socket.on("createBetReturn", (msg)=>{
+    //                 res = msg;
+    //                 resolve(res);
+    //             });
+    //             socket.emit("createBet",
+    //                 {
+    //                     app: app.id,
+    //                     resultSpace: [
+    //                         {
+    //                             matchId: "5f1006c9a10c4000216e8fb7",
+    //                             marketType:"winnerTwoWay",
+    //                             betType: 0,
+    //                             statistic: 0.5
+    //                         }
+    //                     ],
+    //                     user:user.id,
+    //                     betAmount:0.02,
+    //                     currency:"5e108498049eba079930ae1c",
+    //                     bid:1
+    //                 }
+    //             );
+    //         });
+    //     })();
+
+    //     // await (() => {
+    //     //     return new Promise((resolve)=>{
+    //     //         socket.on("createBetReturn", (msg)=>{
+    //     //             res = msg;
+    //     //             resolve(res);
+    //     //         });
+    //     //         socket.emit("createBet",
+    //     //             {
+    //     //                 app: app.id,
+    //     //                 resultSpace: [
+    //     //                     {
+    //     //                         matchId: matchesLayoutOne.data.message.match_id,
+    //     //                         marketType: marketName,
+    //     //                         betType: 0,
+    //     //                         odds: (1/odd[0].probability)
+    //     //                     }
+    //     //                 ],
+    //     //                 user:user.id,
+    //     //                 betAmount:0.001,
+    //     //                 currency:"5e108498049eba079930ae1c",
+    //     //                 bid:2
+    //     //             }
+    //     //         );
+    //     //     });
+    //     // })();
+    //     expect(res).to.not.equal(null);
+    //     expect(res.bid).to.equal(2);
+    //     expect(res.code).to.equal(200);
+    // }));
+
 })
