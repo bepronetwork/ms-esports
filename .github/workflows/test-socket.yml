@@ -2,13 +2,12 @@ name: Tests Socket
 on: [push, pull_request]
 jobs:
   tests:
+    docker:
+      - image: bitnami/rabbitmq:latest
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [10.13.0]
-
-    docker:
-      - image: bitnami/rabbitmq:latest
     steps:
       - uses: actions/checkout@v1
       - name: Use Node.js ${{ matrix.node-version }}
