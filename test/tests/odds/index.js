@@ -6,10 +6,10 @@ import { detectValidationErrors, mochaAsync } from '../../utils';
 
 const expect = chai.expect;
 
-context('Odds', async () => {
+context('Database and PandaScore Comparison', async () => {
 
     it('should verify if Database Odds Equal To PandaScore Odds', mochaAsync(async () => {
-        const matches = await MatchRepository.prototype.findMatchToTest();
+        const matches = await MatchRepository.prototype.findMatchToTest({ status : "pre_match" });
         for (let match of matches) {
             const market = (await axios.get(`https://api.pandascore.co/betting/matches/${match.external_id}/markets?token=${PANDA_SCORE_TOKEN}`)).data;
             
@@ -52,6 +52,21 @@ context('Odds', async () => {
             expect(firstTeamThreeWayMatchProbability).to.equal(firstTeamThreeWayMarketProbability);
             expect(tieThreeWayMatchProbability).to.equal(tieThreeWayMarketProbability);
             expect(secondTeamThreeWayMatchProbability).to.equal(secondTeamThreeWayMarketProbability);
+        }
+    }));
+
+    it('should verify if Database Status Equal To PandaScore Status - Postponed', mochaAsync(async () => {
+        const matches = await MatchRepository.prototype.findMatchToTest({ status : "postponed" });
+        console.log("matches:: ", matches)
+        for (let match of matches) {
+            const matchPanda = (await axios.get(`https://api.pandascore.co/betting/matches/${match.external_id}?token=${PANDA_SCORE_TOKEN}`)).data;
+            console.log("matchPanda:: ", matchPanda)
+            //Comparisons between probabilities
+            // expect(firstTeamTwoWayMatchProbability).to.equal(firstTeamTwoWayMarketProbability);
+            // expect(secondTeamTwoWayMatchProbability).to.equal(secondTeamTwoWayMarketProbability);
+            // expect(firstTeamThreeWayMatchProbability).to.equal(firstTeamThreeWayMarketProbability);
+            // expect(tieThreeWayMatchProbability).to.equal(tieThreeWayMarketProbability);
+            // expect(secondTeamThreeWayMatchProbability).to.equal(secondTeamThreeWayMarketProbability);
         }
     }));
 })
