@@ -156,7 +156,7 @@ class MatchRepository extends MongoComponent{
         }
     }
 
-    async findMatchToTest({status}) {
+    async findMatchToTest(status) {
         try {
             return new Promise((resolve, reject) => {
                 MatchRepository.prototype.schema.model.find({ 
@@ -167,7 +167,7 @@ class MatchRepository extends MongoComponent{
                     status_external: status
                 })
                     .sort({game_date : 1})
-                    .limit(10)
+                    .limit(100)
                     .lean()
                     .exec((err, data) => {
                         if (err) { reject(err) }

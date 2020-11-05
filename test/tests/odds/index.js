@@ -9,7 +9,7 @@ const expect = chai.expect;
 context('Database and PandaScore Comparison', async () => {
 
     it('should verify if Database Odds Equal To PandaScore Odds', mochaAsync(async () => {
-        const matches = await MatchRepository.prototype.findMatchToTest({ status : "pre_match" });
+        const matches = await MatchRepository.prototype.findMatchToTest("pre_match");
         for (let match of matches) {
             const market = (await axios.get(`https://api.pandascore.co/betting/matches/${match.external_id}/markets?token=${PANDA_SCORE_TOKEN}`)).data;
             
@@ -56,17 +56,26 @@ context('Database and PandaScore Comparison', async () => {
     }));
 
     it('should verify if Database Status Equal To PandaScore Status - Postponed', mochaAsync(async () => {
-        const matches = await MatchRepository.prototype.findMatchToTest({ status : "postponed" });
-        console.log("matches:: ", matches)
-        for (let match of matches) {
-            const matchPanda = (await axios.get(`https://api.pandascore.co/betting/matches/${match.external_id}?token=${PANDA_SCORE_TOKEN}`)).data;
-            console.log("matchPanda:: ", matchPanda)
-            //Comparisons between probabilities
-            // expect(firstTeamTwoWayMatchProbability).to.equal(firstTeamTwoWayMarketProbability);
-            // expect(secondTeamTwoWayMatchProbability).to.equal(secondTeamTwoWayMarketProbability);
-            // expect(firstTeamThreeWayMatchProbability).to.equal(firstTeamThreeWayMarketProbability);
-            // expect(tieThreeWayMatchProbability).to.equal(tieThreeWayMarketProbability);
-            // expect(secondTeamThreeWayMatchProbability).to.equal(secondTeamThreeWayMarketProbability);
+        const matches = await MatchRepository.prototype.findMatchToTest("postponed");
+        if(matches.length == 0){
+            expect(matches.length).to.equal(0);
+        } else {
+            for (let match of matches) {
+                const matchPanda = (await axios.get(`https://api.pandascore.co/betting/matches/${match.external_id}?token=${PANDA_SCORE_TOKEN}`)).data;
+                expect(match.status_external).to.equal(matchPanda.status);
+            }
+        }
+    }));
+
+    it('should verify if Database Status Equal To PandaScore Status - Canceled', mochaAsync(async () => {
+        const matches = await MatchRepository.prototype.findMatchToTest("canceled");
+        if(matches.length == 0){
+            expect(matches.length).to.equal(0);
+        } else {
+            for (let match of matches) {
+                const matchPanda = (await axios.get(`https://api.pandascore.co/betting/matches/${match.external_id}?token=${PANDA_SCORE_TOKEN}`)).data;
+                expect(match.status_external).to.equal(matchPanda.status);
+            }
         }
     }));
 })
