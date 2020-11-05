@@ -20,8 +20,7 @@ const runTests = async () => {
 
 
 const test = async () => {
-    // const app = require('../src/app');
-    // global.server = app;
+    const app = require('./appSocket');
     await delay(40000);
     await runTests();
 }

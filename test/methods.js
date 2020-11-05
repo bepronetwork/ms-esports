@@ -1,7 +1,7 @@
 import request from 'supertest';
 import _ from 'lodash';
 import axios from 'axios';
-import { MS_MASTER_URL } from '../src/config';
+import { MS_MASTER_URL, MS_ESPORT_URL } from '../src/config';
 
 module.exports = {
     async getVideogames(params, bearerToken, payload) {
@@ -112,6 +112,14 @@ module.exports = {
             .send(params)
             .then(res => detectServerError(res))
     },
+    async getAppAuth(params, bearerToken, payload) {
+        return (await axios.post(`${MS_MASTER_URL}/api/app/get/auth`, params, {
+            headers: {
+                "authorization": `Bearer ${bearerToken}`,
+                "payload": getPayloadString(payload)
+            }
+        })).data
+    },
     async addCurrencyWalletToApp(params, bearerToken, payload) {
         return await axios.post(`${MS_MASTER_URL}/api/app/wallet/currency/add`, params, {
             headers: {
@@ -119,6 +127,38 @@ module.exports = {
                 "payload": getPayloadString(payload)
             }
         })
+    },
+    async getSpecificMatchLayoutEsport(params, bearerToken, payload) {
+        return (await axios.post(`${MS_ESPORT_URL}/api/get/match/specific/layout`, params, {
+            headers: {
+                "authorization": `Bearer ${bearerToken}`,
+                "payload": getPayloadString(payload)
+            }
+        })).data
+    },
+    async getMatchLayoutEsport(params, bearerToken, payload) {
+        return (await axios.post(`${MS_ESPORT_URL}/api/get/matches/all/layout`, params, {
+            headers: {
+                "authorization": `Bearer ${bearerToken}`,
+                "payload": getPayloadString(payload)
+            }
+        })).data
+    },
+    async setBookedMatchEsport(params, bearerToken, payload) {
+        return (await axios.post(`${MS_ESPORT_URL}/api/set/matches/booked`, params, {
+            headers: {
+                "authorization": `Bearer ${bearerToken}`,
+                "payload": getPayloadString(payload)
+            }
+        })).data
+    },
+    async getMatchAllEsport(params, bearerToken, payload) {
+        return (await axios.post(`${MS_ESPORT_URL}/api/get/matches/all`, params, {
+            headers: {
+                "authorization": `Bearer ${bearerToken}`,
+                "payload": getPayloadString(payload)
+            }
+        })).data
     },
     async getEcosystemData() {
         return (await axios.get(`${MS_MASTER_URL}/api/ecosystem/all`)).data
