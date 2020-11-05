@@ -58,7 +58,7 @@ jobs:
           echo 'export LIMIT=1' >> .env
           echo 'export RATE=100' >> .env
           echo 'export PANDA_SCORE_TOKEN=wYwfdN96aghYf05IrYKI3Lu54vtUBphAaX4wKp9Iq0W9VnBoGR0' >> .env
-          echo 'export RABBIT_URL_QUEUE_BET=amqp://guest:guest@localhost/' >> .env
+          echo 'export RABBIT_URL_QUEUE_BET=amqp://guest:guest@localhost/localhost' >> .env
           echo 'export MONGO_CONNECTION_STRING=mongodb+srv://BetProtocolAdmin:wNmm4OmASXEp8UXi@cluster0.2gxjd.mongodb.net' >> .env
           echo 'export SOCKET_HOST=http://localhost:8000' >> .env
           echo 'export MS_ESPORT_URL=http://localhost:8000' >> .env
