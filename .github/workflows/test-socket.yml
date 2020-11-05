@@ -56,7 +56,7 @@ jobs:
           echo 'export PUSHER_APP_SECRET=52c83171cf20882a3407' >> .env
           echo 'export IS_LOCAL_DEV=false' >> .env
           echo 'export PORT=3000' >> .env
-          echo 'export SOCKET_HOST=ws://localhost:3000' >> .env
+          echo 'export SOCKET_HOST=http://localhost:3000' >> .env
           source .env
           npm run build
           npm run test-socket
