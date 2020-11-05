@@ -125,7 +125,9 @@ const processActions = {
 		}
 		// check if match is pre_match or live
 		for(let result of params.resultSpace) {
-			let status_external = (await MatchRepository.prototype.findById(result.matchId)).status_external;
+			let localMatch = (await MatchRepository.prototype.findById(result.matchId));
+			if(!localMatch) {throwError("MATCH_NOT_EXISTENT")}
+			let status_external = localMatch.status_external;
 			if(status_external!="pre_match" && status_external!="live") {
 				throwError("NOT_BOOKED");
 			}

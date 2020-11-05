@@ -76,10 +76,109 @@ context('Create Bet', async () => {
         appWallet  = app.wallet.find((w)=>w.currency.ticker.toLowerCase()=="eth");
         userWallet = user.wallet.find((w)=>w.currency.ticker.toLowerCase()=="eth");
 
-        console.log(">>>>>>>>>>>", appWallet)
-        console.log(">>>>>>>>>>>", userWallet)
-
     });
+
+
+    it('Should create bet with match does not exist', mochaAsync(async () => {
+        socket = io.connect(`${SOCKET_HOST}`, {
+            'reconnection delay' : 0,
+            'reopen delay' : 0,
+            'force new connection' : true
+        });
+        socket.on('connect', () => {
+            socket.emit('authenticate', { token: user.bearerToken })
+            .on('authenticated', () => {
+                console.log("connected");
+            })
+            .on('unauthorized', (msg) => {
+                console.log(`unauthorized: ${JSON.stringify(msg.data)}`);
+                throw new Error(msg.data.type);
+            });
+        });
+
+
+        let res = null;
+        await (() => {
+            return new Promise((resolve)=>{
+                socket.on("createBetReturn", (msg)=>{
+                    res = msg;
+                    resolve(res);
+                });
+                let betLocal = {
+                    app: app.id,
+                    resultSpace: [
+                        {
+                            matchId: "5f1006c9a10c4000216eefb7",
+                            marketType: "winnerTwoWay",
+                            betType: 0,
+                            odd: 0.01
+                        }
+                    ],
+                    user:user.id,
+                    betAmount:0.001,
+                    currency:"5e108498049eba079930ae1c",
+                    bid:2
+                };
+                socket.emit("createBet",
+                    betLocal
+                );
+            });
+        })();
+        expect(res).to.not.equal(null);
+        expect(res.bid).to.equal(2);
+        expect(res.code).to.equal(1);
+    }));
+
+    it('Should create bet with match not booked', mochaAsync(async () => {
+        socket = io.connect(`${SOCKET_HOST}`, {
+            'reconnection delay' : 0,
+            'reopen delay' : 0,
+            'force new connection' : true
+        });
+        socket.on('connect', () => {
+            socket.emit('authenticate', { token: user.bearerToken })
+            .on('authenticated', () => {
+                console.log("connected");
+            })
+            .on('unauthorized', (msg) => {
+                console.log(`unauthorized: ${JSON.stringify(msg.data)}`);
+                throw new Error(msg.data.type);
+            });
+        });
+
+
+        let res = null;
+        await (() => {
+            return new Promise((resolve)=>{
+                socket.on("createBetReturn", (msg)=>{
+                    res = msg;
+                    resolve(res);
+                });
+                let betLocal = {
+                    app: app.id,
+                    resultSpace: [
+                        {
+                            matchId: "5f1006c9a10c4000216e8fb7",
+                            marketType: "winnerTwoWay",
+                            betType: 0,
+                            odd: 0.01
+                        }
+                    ],
+                    user:user.id,
+                    betAmount:0.001,
+                    currency:"5e108498049eba079930ae1c",
+                    bid:2
+                };
+                socket.emit("createBet",
+                    betLocal
+                );
+            });
+        })();
+        expect(res).to.not.equal(null);
+        expect(res.bid).to.equal(2);
+        expect(res.code).to.equal(13);
+    }));
+
 
     it('Should create bet with Insufficient funds!', mochaAsync(async () => {
         socket = io.connect(`${SOCKET_HOST}`, {
@@ -119,7 +218,7 @@ context('Create Bet', async () => {
         );
 
         let matchesLayoutOne = getMatchesLayout.data.message[0];
-            matchesLayoutOne = await getSpecificMatchLayoutEsport({match_id: matchesLayoutOne.id});
+            matchesLayoutOne = await getSpecificMatchLayoutEsport({match_id: matchesLayoutOne.id, app:app.id});
 
         let odd = (matchesLayoutOne.data.message.odds.winnerTwoWay.length == 0) ? matchesLayoutOne.data.message.odds.winnerThreeWay : matchesLayoutOne.data.message.odds.winnerTwoWay;
         let marketName = (matchesLayoutOne.data.message.odds.winnerTwoWay.length == 0) ? "winnerThreeWay" : "winnerTwoWay";
@@ -138,7 +237,7 @@ context('Create Bet', async () => {
                             matchId: matchesLayoutOne.data.message.match_id,
                             marketType: marketName,
                             betType: 0,
-                            odds: odd[0].odd
+                            odd: odd[0].odd
                         }
                     ],
                     user:user.id,
@@ -156,7 +255,7 @@ context('Create Bet', async () => {
         expect(res.code).to.equal(9);
     }));
 
-    it('Should create bet with Insufficient funds!', mochaAsync(async () => {
+    it('Should create bet Success!', mochaAsync(async () => {
 
         await WalletsRepository.prototype.updatePlayBalance( userWallet._id, 1);
         await WalletsRepository.prototype.updatePlayBalance( appWallet._id, 1);
@@ -190,7 +289,7 @@ context('Create Bet', async () => {
         })();
         expect(res).to.not.equal(null);
         expect(res.bid).to.equal(2);
-        expect(res.code).to.equal(9);
+        expect(res.success).to.equal(true);
     }));
 
 })
