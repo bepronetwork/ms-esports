@@ -79,7 +79,8 @@ context('Create Bet', async () => {
             'force new connection' : true
         });
         socket.on('connect', () => {
-            socket.emit('authenticate', { token: user.bearerToken })
+            console.log(user.bearerToken);
+            socket.emit('authenticate', { token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWY4MGE4YWNjZmM2OTgwMDE3MzJjZDU5IiwidGltZSI6MTYwNDg1OTMxMDM2NywiaWF0IjoxNjAyMjY3MzEwfQ.ePE8vSDvw02XxacNHILXUlEKclwXKGMYEjytZGT3J5QfbYQyHu71vc1ZzePn6jip0b5fhbL9qf34v9_L0wBXmA"})
             .on('authenticated', () => {
                 console.log("connected");
             })
@@ -88,7 +89,7 @@ context('Create Bet', async () => {
                 throw new Error(msg.data.type);
             });
         });
-        await delay(5000);
+        // await delay(5000);
         let res = null;
         await (() => {
             return new Promise((resolve)=>{
@@ -97,27 +98,24 @@ context('Create Bet', async () => {
                     resolve(res);
                 });
                 socket.emit("createBet",
-                    {
-                        app: app.id,
-                        resultSpace: [
-                            {
-                                matchId: "5f1006c9a10c4000216e8fb7",
-                                marketType:"winnerTwoWay",
-                                betType: 0,
-                                statistic: 0.5
-                            }
-                        ],
-                        user:user.id,
-                        betAmount:0.02,
-                        currency:"5e108498049eba079930ae1c",
-                        bid:1
-                    }
-                );
+                {
+                    "bid":1,
+                    "app":"5f5295d31534320027631bb4",
+                    "resultSpace":[{
+                        "matchId":"5fa141d13985a50023f57e3f",
+                        "marketType":"winnerTwoWay",
+                        "betType":1,
+                        "odd":1.65
+                    }],
+                    "user":"5f80a8accfc698001732cd59",
+                    "betAmount":0.0001,
+                    "currency":"5e108498049eba079930ae1c"
+                });
             });
         })();
         expect(res).to.not.equal(null);
         expect(res.bid).to.equal(1);
-        expect(res.code).to.equal(13);
+        expect(res.success).to.equal(true);
     }));
 
     it('Should create bet with match not booked!', mochaAsync(async () => {
@@ -127,7 +125,8 @@ context('Create Bet', async () => {
             'force new connection' : true
         });
         socket.on('connect', () => {
-            socket.emit('authenticate', { token: user.bearerToken })
+            console.log(user.bearerToken);
+            socket.emit('authenticate', { token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IkF1dGgvNWY4MGE4YWNjZmM2OTgwMDE3MzJjZDU5IiwidGltZSI6MTYwNDg1OTMxMDM2NywiaWF0IjoxNjAyMjY3MzEwfQ.ePE8vSDvw02XxacNHILXUlEKclwXKGMYEjytZGT3J5QfbYQyHu71vc1ZzePn6jip0b5fhbL9qf34v9_L0wBXmA"})
             .on('authenticated', () => {
                 console.log("connected");
             })
@@ -136,7 +135,7 @@ context('Create Bet', async () => {
                 throw new Error(msg.data.type);
             });
         });
-        await delay(5000);
+        // await delay(5000);
         let res = null;
         await (() => {
             return new Promise((resolve)=>{
@@ -145,29 +144,25 @@ context('Create Bet', async () => {
                     resolve(res);
                 });
                 socket.emit("createBet",
-                    {
-                        app: app.id,
-                        resultSpace: [
-                            {
-                                matchId: "5f1006c9a10c4000216e8fb7",
-                                marketType:"winnerTwoWay",
-                                betType: 0,
-                                statistic: 0.5
-                            }
-                        ],
-                        user:user.id,
-                        betAmount:0.02,
-                        currency:"5e108498049eba079930ae1c",
-                        bid:1
-                    }
-                );
+                {
+                    "bid":1,
+                    "app":"5f5295d31534320027631bb4",
+                    "resultSpace":[{
+                        "matchId":"5fa141d13985a50023f57e3f",
+                        "marketType":"winnerTwoWay",
+                        "betType":1,
+                        "odd":1.65
+                    }],
+                    "user":"5f80a8accfc698001732cd59",
+                    "betAmount":0.0001,
+                    "currency":"5e108498049eba079930ae1c"
+                });
             });
         })();
         expect(res).to.not.equal(null);
         expect(res.bid).to.equal(1);
-        expect(res.code).to.equal(13);
+        expect(res.success).to.equal(true);
     }));
-
 
     // it('Should create bet with Success!', mochaAsync(async () => {
     //     socket.on('disconnect', () => {
