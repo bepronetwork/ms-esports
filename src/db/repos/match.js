@@ -167,7 +167,7 @@ class MatchRepository extends MongoComponent{
                     status_external: status
                 })
                     .sort({game_date : 1})
-                    .limit(100)
+                    .limit(10)
                     .lean()
                     .exec((err, data) => {
                         if (err) { reject(err) }
