@@ -39,12 +39,8 @@ const processActions = {
 	},
 
 	__getVideoGamesLayout: async (params) => {
-		// let user = await UsersRepository.prototype.findUserById(params.user);
-		// if (!user) { throwError('USER_NOT_EXISTENT') }
-		// const app = await AppRepository.prototype.findAppById(user.app_id);
-		// if (!app) { throwError("APP_NOT_EXISTENT") }
 		let games = await VideogameRepository.prototype.findAllVideogame();
-		let series = await SerieRepository.prototype.findAll();
+		let series = await SerieRepository.prototype.findAllWithSerieEnded();
 		games = games.map((game) => {
 			let seriesResult = series.filter((serie) => serie.videogame_id == game.external_id);
 			return { ...game, series: seriesResult };

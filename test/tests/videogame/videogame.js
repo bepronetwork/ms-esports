@@ -53,12 +53,18 @@ context('Videogame', async () => {
         }, admin.bearerToken , {id : admin.id});
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
+        // console.log(res.data.message[0].series);
     }));
 
     it('should get All Videogames Layout', mochaAsync(async () => {
         var res = await getVideogamesLayout({});
         detectValidationErrors(res);
         expect(res.data.status).to.equal(200);
+        for(let videoGame of res.data.message) {
+            for(let series of videoGame.series) {
+                expect(series.end_at).to.equal(null);
+            }
+        }
     }));
     
     it('should get Team', mochaAsync(async () => {
