@@ -58,5 +58,9 @@
     "014" : {
         "key"      : "AMOUNT_INVALID",
         "message"   : "Invalid bet amount"
+    },
+    "015" : {
+        "key"      : "ODDS_NOT_ACTIVE",
+        "message"   : "Odds does not active"
     }
 }
