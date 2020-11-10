@@ -95,10 +95,12 @@ const processActions = {
                 for (let matchResult of matches) {
                     matchesId.push(matchResult.match.external_id)
                 }
-                let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&sort=${(params.sort == "DESC" ? "-scheduled_at" : "scheduled_at")}&token=${PANDA_SCORE_TOKEN}`);
+                let pandaScore  = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&sort=${(params.sort == "DESC" ? "-scheduled_at" : "scheduled_at")}&token=${PANDA_SCORE_TOKEN}`);
+                let marketMatch = await axios.get(`https://tangerine.pandascore.co/api/matches/winner_markets?match_ids=${matchesId.toString()}&token=${PANDA_SCORE_TOKEN}`);
                 pandaScore.data = pandaScore.data.map((match) => {
                     let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
-                    return { ...match, odds: oddsResult.odds, match_id: oddsResult.match._id};
+                    let market    = marketMatch.find((m)=>m.event_id==match.id);
+                    return { ...match, odds: oddsResult.odds, match_id: oddsResult.match._id, market};
                 })
                 return pandaScore.data;
             }
@@ -202,12 +204,9 @@ const processActions = {
                     matchesId.push(matchResult.match.external_id)
                 }
                 let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
-                let marketMatch = await axios.get(`https://tangerine.pandascore.co/api/matches/winner_markets?match_ids=${matchesId.toString()}&token=${PANDA_SCORE_TOKEN}`);
-                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>",marketMatch);
                 pandaScore.data = pandaScore.data.map((match) => {
                     let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
-                    let markets    = marketMatch.find((m)=>m.event_id==match.id)
-                    return { ...match, odds: oddsResult.odds, market: markets };
+                    return { ...match, odds: oddsResult.odds};
                 })
                 return pandaScore.data;
             }
