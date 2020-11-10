@@ -206,7 +206,7 @@ const processActions = {
                 pandaScore.data = pandaScore.data.map((match) => {
                     let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
                     let markets    = marketMatch.find((m)=>m.event_id==match.id)
-                    return { ...match, odds: oddsResult.odds, market };
+                    return { ...match, odds: oddsResult.odds, market: markets };
                 })
                 return pandaScore.data;
             }
