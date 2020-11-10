@@ -160,6 +160,14 @@ module.exports = {
             }
         })).data
     },
+    async authAdmin(params, bearerToken, payload) {
+        return (await axios.post(`${MS_MASTER_URL}/api/admins/auth`, params, {
+            headers: {
+                "authorization": `Bearer ${bearerToken}`,
+                "payload": getPayloadString(payload)
+            }
+        })).data
+    },
     async getEcosystemData() {
         return (await axios.get(`${MS_MASTER_URL}/api/ecosystem/all`)).data
     },

@@ -246,9 +246,14 @@ context('Create Bet', async () => {
         });
 
         let getMatches = await getMatchAllEsport({admin : admin.id, status: ["pre_match"]}, admin.bearerToken, {id : admin.id});
-
-        let matchOne = getMatches.data.message[0];
-
+        let matchOne = null;
+        for(let match of getMatches.data.message){
+            console.log(match);
+            if(match.odds.find((m)=>m.template=="winner-2-way").status=="active") {
+                matchOne = match;
+                break;
+            }
+        }
         await setBookedMatchEsport(
             {
                 match_external_id : matchOne.id,
