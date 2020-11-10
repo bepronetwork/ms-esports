@@ -155,6 +155,29 @@ class MatchRepository extends MongoComponent{
             throw (err)
         }
     }
+
+    async findMatchToTest(status) {
+        try {
+            return new Promise((resolve, reject) => {
+                MatchRepository.prototype.schema.model.find({ 
+                    game_date: { 
+                        $gte: new Date((new Date()).toISOString().split("T")[0]), 
+                        $lte: new Date ((new Date(new Date().setDate(new Date().getDate() + 100))).toISOString().split("T")[0])
+                    },
+                    status_external: status
+                })
+                    .sort({game_date : 1})
+                    .limit(10)
+                    .lean()
+                    .exec((err, data) => {
+                        if (err) { reject(err) }
+                        resolve(data);
+                    });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
 }
 
 MatchRepository.prototype.schema = new MatchSchema();

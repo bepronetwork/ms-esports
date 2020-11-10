@@ -8,9 +8,10 @@
     },
     "scripts": {
         "migration": "migrate-mongo up",
-        "start": "babel-node app --nopresets es2015,stage-2",
+        "start": "node build/app",
         "pm2": "pm2-runtime start ./app.js --interpreter ./node_modules/babel-cli/bin/babel-node.js",
-        "build": "babel src -d build",
+        "build": "babel ./src --out-dir lib --copy-files -d ./build",
+        "dev": "babel-node app --nopresets es2015,stage-2",
         "server": "node build/app",
         "test": "./node_modules/.bin/mocha ./test.js --timeout 3000000 --require babel-core/register --require babel-polyfill",
         "simulator": "babel-node test/simulator --nopresets es2015,stage-2",
@@ -19,7 +20,8 @@
         "swagger": "swagger project edit",
         "generate-result-space": "node scripts/createResultSpace",
         "scripts": "babel-node scripts --nopresets es2015,stage-2",
-        "docs": "npm run md-docs && npm run generate-docs"
+        "docs": "npm run md-docs && npm run generate-docs",
+        "test-socket": "babel-node app --nopresets es2015,stage-2 & mocha ./test/test-socket --timeout 3000000 --require babel-core/register --require babel-polyfill"
     },
     "husky": {
         "hooks": {

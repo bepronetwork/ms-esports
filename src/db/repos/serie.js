@@ -31,11 +31,31 @@ class SerieRepository extends MongoComponent{
         try {
             return new Promise((resolve, reject) => {
                 SerieRepository.prototype.schema.model.find()
+                .lean()
+                .exec((err, user) => {
+                    if (err) { reject(err) }
+                    resolve(user);
+                });
+            });
+        } catch (err) {
+            throw (err)
+        }
+    }
+
+    async findAllWithSerieEnded() {
+        try {
+            return new Promise((resolve, reject) => {
+                SerieRepository.prototype.schema.model.find({ end_at: { $gte: new Date(new Date().getTime()-(1000*60*60*24*1000)).getTime(), $lte: new Date(new Date().getTime()+1000*60*60*24*1000).getTime() } })
+                .lean()
+                .exec((err, user) => {
+                    if (err) { reject(err) }
+                    SerieRepository.prototype.schema.model.find({end_at: null})
                     .lean()
-                    .exec((err, user) => {
-                        if (err) { reject(err) }
-                        resolve(user);
+                    .exec((err2, user2) => {
+                        if (err2) { reject(err2) }
+                        resolve([...JSON.parse(JSON.stringify(user)), ...JSON.parse(JSON.stringify(user2))]);
                     });
+                });
             });
         } catch (err) {
             throw (err)
