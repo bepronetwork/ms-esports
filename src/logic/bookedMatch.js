@@ -203,6 +203,7 @@ const processActions = {
                 }
                 let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
                 let marketMatch = await axios.get(`https://tangerine.pandascore.co/api/matches/winner_markets?match_ids=${matchesId.toString()}&token=${PANDA_SCORE_TOKEN}`);
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>",marketMatch);
                 pandaScore.data = pandaScore.data.map((match) => {
                     let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
                     let markets    = marketMatch.find((m)=>m.event_id==match.id)
