@@ -45,7 +45,7 @@ class SerieRepository extends MongoComponent{
     async findAllWithSerieEnded() {
         try {
             return new Promise((resolve, reject) => {
-                SerieRepository.prototype.schema.model.find({ end_at: { $gte: new Date(new Date().getTime()-(1000*60*60*24*1000)).getTime(), $lte: new Date(new Date().getTime()+1000*60*60*24*1000).getTime() } })
+                SerieRepository.prototype.schema.model.find({ end_at: { $gte: new Date(new Date().getTime()-(1000*60*60*24*10)), $lte: new Date(new Date().getTime()+1000*60*60*24*1000) } })
                 .lean()
                 .exec((err, user) => {
                     if (err) { reject(err) }
