@@ -40,6 +40,17 @@ class BetResultSpacesRepository extends MongoComponent{
         });
     }
 
+    updateFinish(_id, {finished}){
+        return new Promise( (resolve, reject) => {
+            BetResultSpacesRepository.prototype.schema.model.findOneAndUpdate({_id}, {finished})
+            .exec( (err, BetResultSpace) => {
+                console.log(BetResultSpace)
+                if(err) { reject(err)}
+                resolve(BetResultSpace);
+            });
+        });
+    }
+
     findById(_id){ 
         return new Promise( (resolve, reject) => {
             BetResultSpacesRepository.prototype.schema.model.findById(_id)

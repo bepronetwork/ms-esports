@@ -28,7 +28,8 @@ ErrorHandler.prototype.KEYS =  {
     'NOT_PROBABILITY'                       : "011",
     'AUTH_USER'                             : "012",
     'NOT_BOOKED'                            : "013",
-    'AMOUNT_INVALID'                        : "014"
+    'AMOUNT_INVALID'                        : "014",
+    'ODDS_NOT_ACTIVE'                       : "015"
 };
 
 /***************************

@@ -120,12 +120,19 @@ const processActions = {
 	 * 	- currency      : String
 	 **/
 	__createBet: async (params) => {
+
 		if(params.betAmount <= 0) {
 			throwError("AMOUNT_INVALID");
 		}
 		// check if match is pre_match or live
 		for(let result of params.resultSpace) {
-			let status_external = (await MatchRepository.prototype.findById(result.matchId)).status_external;
+
+			let marketTypeConverted = (result.marketType=="winnerTwoWay" ? "winner-2-way" : "winner-3-way")
+			let localMatch = (await MatchRepository.prototype.findById(result.matchId));
+			if(!localMatch) {throwError("MATCH_NOT_EXISTENT")}
+			let marketLocal = localMatch.market.find((item)=>item.template==marketTypeConverted);
+			if(marketLocal.status!="active"){throwError("ODDS_NOT_ACTIVE")}
+			let status_external = localMatch.status_external;
 			if(status_external!="pre_match" && status_external!="live") {
 				throwError("NOT_BOOKED");
 			}

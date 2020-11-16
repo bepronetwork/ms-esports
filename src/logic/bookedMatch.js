@@ -95,10 +95,12 @@ const processActions = {
                 for (let matchResult of matches) {
                     matchesId.push(matchResult.match.external_id)
                 }
-                let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&sort=${(params.sort == "DESC" ? "-scheduled_at" : "scheduled_at")}&token=${PANDA_SCORE_TOKEN}`);
+                let pandaScore  = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&sort=${(params.sort == "DESC" ? "-scheduled_at" : "scheduled_at")}&token=${PANDA_SCORE_TOKEN}`);
+                let marketMatch = (await axios.get(`https://tangerine.pandascore.co/api/matches/winner_markets?match_ids=${matchesId.toString()}&token=${PANDA_SCORE_TOKEN}`)).data;
                 pandaScore.data = pandaScore.data.map((match) => {
                     let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
-                    return { ...match, odds: oddsResult.odds, match_id: oddsResult.match._id};
+                    let market    = marketMatch.find((m)=>m.event_id==match.id);
+                    return { ...match, odds: oddsResult.odds, match_id: oddsResult.match._id, market};
                 })
                 return pandaScore.data;
             }
@@ -145,11 +147,12 @@ const processActions = {
         try {
             // let user = await UsersRepository.prototype.findUserById(params.user);
             // if (!user) { throwError('USER_NOT_EXISTENT') }
-            // const app = await AppRepository.prototype.findAppById(user.app_id);
-            // if (!app) { throwError("APP_NOT_EXISTENT") }
-            let matches     = await BookedMatchRepository.prototype.findByExternalMatchId(params.match_id);
+            const app = await AppRepository.prototype.findAppByIdNotPopulated(params.app);
+            if (!app) { throwError("APP_NOT_EXISTENT") }
+            let matches     = await BookedMatchRepository.prototype.findByExternalMatchId({external_match: params.match_id, app: params.app});
             let pandaScore  = await axios.get(`https://api.pandascore.co/betting/matches/${params.match_id}?token=${PANDA_SCORE_TOKEN}`);
-            return { ...pandaScore.data, match_id: matches!=null ? matches.match : null, odds: matches == (undefined || null) ? {} : matches.odds };
+            let marketMatch = (await axios.get(`https://tangerine.pandascore.co/api/matches/winner_markets?match_ids=${params.match_id}&token=${PANDA_SCORE_TOKEN}`)).data;
+            return { ...pandaScore.data, match_id: matches!=null ? matches.match : null, odds: matches == (undefined || null) ? {} : matches.odds, market: marketMatch[0] };
         } catch (err) {
             throw err;
         }
@@ -204,7 +207,7 @@ const processActions = {
                 let pandaScore = await axios.get(`https://api.pandascore.co/betting/matches?filter%5Bid%5D=${matchesId.toString()}&per_page=${params.size}&token=${PANDA_SCORE_TOKEN}`);
                 pandaScore.data = pandaScore.data.map((match) => {
                     let oddsResult = matches.find(resultMatch => resultMatch.match.external_id == match.id);
-                    return { ...match, odds: oddsResult.odds };
+                    return { ...match, odds: oddsResult.odds};
                 })
                 return pandaScore.data;
             }
